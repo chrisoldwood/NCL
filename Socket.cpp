@@ -89,6 +89,12 @@ void CSocket::Close()
 
 	// Reset members.
 	m_hSocket = INVALID_SOCKET;
+
+	if (m_pSendBuffer != NULL)
+		m_pSendBuffer->Clear();
+
+	if (m_pRecvBuffer != NULL)
+		m_pRecvBuffer->Clear();
 }
 
 /******************************************************************************
@@ -166,9 +172,8 @@ uint CSocket::Available()
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		ASSERT(m_pRecvBuffer != NULL);
-
-		lAvailable = m_pRecvBuffer->Size();
+		if (m_pRecvBuffer != NULL)
+			lAvailable = m_pRecvBuffer->Size();
 	}
 
 	return lAvailable;
@@ -277,18 +282,19 @@ uint CSocket::Recv(void* pBuffer, uint nBufSize)
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		ASSERT(m_pRecvBuffer != NULL);
-
-		nBufSize = min(nBufSize, m_pRecvBuffer->Size());
-
-		if (nBufSize != 0)
+		if (m_pRecvBuffer != NULL)
 		{
-			memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
+			nBufSize = min(nBufSize, m_pRecvBuffer->Size());
 
-			m_pRecvBuffer->Discard(nBufSize);
+			if (nBufSize != 0)
+			{
+				memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
+
+				m_pRecvBuffer->Discard(nBufSize);
+			}
+
+			nResult = nBufSize;
 		}
-
-		nResult = nBufSize;
 	}
 
 	return nResult;
@@ -327,14 +333,15 @@ uint CSocket::Peek(void* pBuffer, uint nBufSize)
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		ASSERT(m_pRecvBuffer != NULL);
+		if (m_pRecvBuffer != NULL)
+		{
+			nBufSize = min(nBufSize, m_pRecvBuffer->Size());
 
-		nBufSize = min(nBufSize, m_pRecvBuffer->Size());
+			if (nBufSize != 0)
+				memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
 
-		if (nBufSize != 0)
-			memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
-
-		nResult = nBufSize;
+			nResult = nBufSize;
+		}
 	}
 
 	return nResult;
@@ -654,8 +661,6 @@ void CSocket::OnWriteReady()
 	// Anything still to send?
 	if ( (m_pSendBuffer != NULL) && (m_pSendBuffer->Size() > 0) )
 	{
-		TRACE1("OnWriteReady: %u\n", m_pSendBuffer->Size());
-
 		// Try and send the entire buffer.
 		int nResult = send(m_hSocket, (const char*)m_pSendBuffer->Ptr(), m_pSendBuffer->Size(), 0);
 

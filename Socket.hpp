@@ -22,7 +22,6 @@
 class CSocket
 {
 public:
-	virtual void Close();
 	virtual ~CSocket();
 
 	//
@@ -37,6 +36,8 @@ public:
 	//
 	// Methods.
 	//
+	virtual void Close();
+
 	uint Send(const void* pBuffer, uint nBufSize);
 	uint Send(const CBuffer& oBuffer);
 	uint Send(const char* pszString);
@@ -46,6 +47,7 @@ public:
 
 	uint Available();
 	uint Peek(void* pBuffer, uint nBufSize);
+	uint Peek(CBuffer& oBuffer, uint nBufSize);
 
 	//
 	// Class methods.
@@ -137,6 +139,11 @@ inline uint CSocket::Send(const char* pszString)
 inline uint CSocket::Recv(CBuffer& oBuffer)
 {
 	return Recv(oBuffer.Buffer(), oBuffer.Size());
+}
+
+inline uint CSocket::Peek(CBuffer& oBuffer, uint nBufSize)
+{
+	return Peek(oBuffer.Buffer(), nBufSize);
 }
 
 #endif // SOCKET_HPP
