@@ -26,20 +26,25 @@ class CDDELink
 {
 public:
 	//
-	// Accessors.
+	// Properties.
 	//
+	uint           RefCount() const;
 	CDDEConv*	   Conversation() const;
 	const CString& Item() const;
 	uint           Format() const;
+
+	IDDELinkData*  AppData() const;
+	void           SetAppData(IDDELinkData* pAppData);
 	
 protected:
 	//
 	// Members.
 	//
-	uint		m_nRefCount;	// The reference count.
-	CDDEConv*	m_pConv;		// The parent conversation.
-	CString		m_strItem;		// The item name.
-	uint		m_nFormat;		// The data format.
+	uint			m_nRefCount;	// The reference count.
+	CDDEConv*		m_pConv;		// The parent conversation.
+	CString			m_strItem;		// The item name.
+	uint			m_nFormat;		// The data format.
+	IDDELinkData*	m_pAppData;		// Custom data.
 
 	//
 	// Constructors/Destructor.
@@ -65,12 +70,18 @@ inline CDDELink::CDDELink(CDDEConv* pConv, const char* pszItem, uint nFormat)
 	, m_pConv(pConv)
 	, m_strItem(pszItem)
 	, m_nFormat(nFormat)
+	, m_pAppData(NULL)
 {
 }
 
 inline CDDELink::~CDDELink()
 {
 	ASSERT(m_nRefCount == 0);
+}
+
+inline uint CDDELink::RefCount() const
+{
+	return m_nRefCount;
 }
 
 inline CDDEConv* CDDELink::Conversation() const
@@ -86,6 +97,16 @@ inline const CString& CDDELink::Item() const
 inline uint CDDELink::Format() const
 {
 	return m_nFormat;
+}
+
+inline IDDELinkData* CDDELink::AppData() const
+{
+	return m_pAppData;
+}
+
+inline void CDDELink::SetAppData(IDDELinkData* pAppData)
+{
+	m_pAppData = pAppData;
 }
 
 #endif // DDELINK_HPP
