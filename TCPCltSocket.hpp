@@ -1,0 +1,60 @@
+/******************************************************************************
+** (C) Chris Oldwood
+**
+** MODULE:		TCPCLTSOCKET.HPP
+** COMPONENT:	Network & Comms Library
+** DESCRIPTION:	The CTCPCltSocket class declaration.
+**
+*******************************************************************************
+*/
+
+// Check for previous inclusion
+#ifndef TCPCLTSOCKET_HPP
+#define TCPCLTSOCKET_HPP
+
+/******************************************************************************
+** 
+** A client side TCP socket.
+**
+*******************************************************************************
+*/
+
+class CTCPCltSocket : public CTCPSocket
+{
+public:
+	//
+	// Constructors/Destructor.
+	//
+	CTCPCltSocket();
+	virtual ~CTCPCltSocket();
+	
+	//
+	// Methods.
+	//
+	void Connect(const char* pszHost, uint nPort);
+
+protected:
+	//
+	// Members.
+	//
+
+	// For use by CTCPSvrSocket.
+	CTCPCltSocket(SOCKET hSocket);
+
+	// Friends.
+	friend class CTCPSvrSocket;
+};
+
+/******************************************************************************
+**
+** Implementation of inline functions.
+**
+*******************************************************************************
+*/
+
+inline void CTCPCltSocket::Connect(const char* pszHost, uint nPort)
+{
+	CSocket::Connect(pszHost, nPort);
+}
+
+#endif // TCPCLTSOCKET_HPP
