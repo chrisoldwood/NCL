@@ -28,6 +28,7 @@ public:
 	CDDEData(CDDEInst* pInst);
 	CDDEData(CDDEInst* pInst, HDDEDATA hData, bool bOwn = true);
 	CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat = CF_TEXT, uint nFlags = 0, bool bOwn = false);
+	CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset = 0, bool bOwn = false);
 	CDDEData(const CDDEData& oData);
 	~CDDEData();
 
@@ -130,6 +131,18 @@ inline CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, uint nFlags,
 {
 	// Allocate data handle.
 	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), NULL, 0, 0, hItem, nFormat, nFlags);
+
+	if (hData == NULL)
+		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
+
+	// Attach handle.
+	m_pHandle = new CHandle(pInst, hData, bOwn);
+}
+
+inline CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset, bool bOwn)
+{
+	// Allocate data handle.
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), (byte*)pBuffer, nSize, nOffset, NULL, 0, 0);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
