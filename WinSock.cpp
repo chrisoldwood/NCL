@@ -216,8 +216,29 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 		{
 			ASSERT(pSocket != NULL);
 
+#ifdef _DEBUG
+			try
+			{
+#endif
+
 			// Forward event.
 			pSocket->OnAsyncSelect(nEvent, nError);
+
+#ifdef _DEBUG
+			}
+			catch (CException& e)
+			{
+				TRACE3("EXCEPTION in OnAsyncSelect(0x%08X, 0x%08X) [%s]\n", nEvent, nError, e.ErrorText());
+
+				ASSERT_FALSE();
+			}
+			catch (...)
+			{
+				TRACE2("EXCEPTION in OnAsyncSelect(0x%08X, 0x%08X) [unknown]\n", nEvent, nError);
+
+				ASSERT_FALSE();
+			}
+#endif
 		}
 
 		return 0;
