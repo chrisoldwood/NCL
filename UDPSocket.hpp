@@ -25,14 +25,20 @@ public:
 	virtual ~CUDPSocket();
 
 	//
+	// Properties.
+	//
+	virtual int Type()     const;
+	virtual int Protocol() const;
+
+	//
 	// Methods.
 	//
-	int SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, int nPort);
-	int SendTo(const CBuffer& oBuffer, const in_addr& oAddr, int nPort);
-	int SendTo(const char* pszString, const in_addr& oAddr, int nPort);
+	int SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, uint nPort);
+	int SendTo(const CBuffer& oBuffer, const in_addr& oAddr, uint nPort);
+	int SendTo(const char* pszString, const in_addr& oAddr, uint nPort);
 
-	int RecvFrom(void* pBuffer, int nBufSize, in_addr& oAddr, int& nPort);
-	int RecvFrom(CBuffer& oBuffer, in_addr& oAddr, int& nPort);
+	int RecvFrom(void* pBuffer, int nBufSize, in_addr& oAddr, uint& nPort);
+	int RecvFrom(CBuffer& oBuffer, in_addr& oAddr, uint& nPort);
 
 protected:
 	//
@@ -43,12 +49,6 @@ protected:
 	CUDPSocket();
 	CUDPSocket(const CUDPSocket&);
 	void operator=(const CUDPSocket&);
-
-	//
-	// Template methods.
-	//
-	virtual int Type()     const;
-	virtual int Protocol() const;
 };
 
 /******************************************************************************
@@ -58,17 +58,17 @@ protected:
 *******************************************************************************
 */
 
-inline int CUDPSocket::SendTo(const CBuffer& oBuffer, const in_addr& oAddr, int nPort)
+inline int CUDPSocket::SendTo(const CBuffer& oBuffer, const in_addr& oAddr, uint nPort)
 {
 	return SendTo(oBuffer.Buffer(), oBuffer.Size(), oAddr, nPort);
 }
 
-inline int CUDPSocket::SendTo(const char* pszString, const in_addr& oAddr, int nPort)
+inline int CUDPSocket::SendTo(const char* pszString, const in_addr& oAddr, uint nPort)
 {
 	return SendTo(pszString, strlen(pszString), oAddr, nPort);
 }
 
-inline int CUDPSocket::RecvFrom(CBuffer& oBuffer, in_addr& oAddr, int& nPort)
+inline int CUDPSocket::RecvFrom(CBuffer& oBuffer, in_addr& oAddr, uint& nPort)
 {
 	return RecvFrom(oBuffer.Buffer(), oBuffer.Size(), oAddr, nPort);
 }

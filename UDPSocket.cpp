@@ -86,7 +86,7 @@ int CUDPSocket::Protocol() const
 *******************************************************************************
 */
 
-int CUDPSocket::SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, int nPort)
+int CUDPSocket::SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, uint nPort)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
@@ -123,12 +123,12 @@ int CUDPSocket::SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, 
 *******************************************************************************
 */
 
-int CUDPSocket::RecvFrom(void* pBuffer, int nBufSize, in_addr& oAddr, int& nPort)
+int CUDPSocket::RecvFrom(void* pBuffer, int nBufSize, in_addr& oAddr, uint& nPort)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
 	sockaddr_in	addr;
-	int         nLength;
+	int         nLength = sizeof(addr);
 
 	int nResult = recvfrom(m_hSocket, (char*)pBuffer, nBufSize, 0, (sockaddr*)&addr, &nLength);
 
