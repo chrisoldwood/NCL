@@ -29,9 +29,8 @@ public:
 	// Methods.
 	//
 	virtual void OnReadReady(CSocket* pSocket) = 0;
-	virtual void OnWriteReady(CSocket* pSocket) = 0;
 	virtual void OnClosed(CSocket* pSocket, int nReason) = 0;
-//	virtual void OnError(CSocket* pSocket, int nEvent, int nError) = 0;
+	virtual void OnError(CSocket* pSocket, int nEvent, int nError) = 0;
 	
 protected:
 	// Make interface.
