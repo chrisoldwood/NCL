@@ -67,6 +67,9 @@ void CUDPSvrSocket::Listen(uint nPort)
 	ASSERT(m_hSocket == INVALID_SOCKET);
 	ASSERT(nPort     <= USHRT_MAX);
 
+	// Save parameters.
+	m_nPort = nPort;
+
 	sockaddr_in	addr = { 0 };
 
 	addr.sin_family      = AF_INET;
@@ -74,9 +77,9 @@ void CUDPSvrSocket::Listen(uint nPort)
 	addr.sin_port        = htons((ushort)nPort);
 
 	// Create the socket.
-	Create(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	Create(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	// Bind socket to port.
 	if (bind(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_CONNECT_FAILED, CWinSock::LastError());
+		throw CSocketException(CSocketException::E_BIND_FAILED, CWinSock::LastError());
 }
