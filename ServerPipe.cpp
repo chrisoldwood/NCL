@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Constants.
@@ -17,7 +22,7 @@
 *******************************************************************************
 */
 
-const DWORD CServerPipe::DEF_OPEN_MODE = PIPE_ACCESS_DUPLEX;
+const DWORD CServerPipe::DEF_OPEN_MODE = PIPE_ACCESS_DUPLEX /*| FILE_FLAG_WRITE_THROUGH*/;
 const DWORD CServerPipe::DEF_PIPE_MODE = PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_NOWAIT;
 const DWORD CServerPipe::DEF_BUF_SIZE  = 4096;
 const DWORD CServerPipe::DEF_TIMEOUT   = 30000;
