@@ -111,7 +111,7 @@ uint CNetBuffer::Discard(uint nCount)
 		char* pBuffer = (char*)m_oBuffer.Buffer();
 
 		// Shuffle data down.
-		memmove(pBuffer, pBuffer+nCount, nCount);
+		memmove(pBuffer, pBuffer+nCount, m_nDataSize-nCount);
 
 		// Update state.
 		m_nDataSize -= nCount;
