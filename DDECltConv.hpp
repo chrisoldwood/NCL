@@ -44,6 +44,7 @@ public:
 	void      DestroyAllLinks();
 	CDDELink* FindLink(const char* pszItem, uint nFormat = CF_TEXT) const;
 	int       NumLinks() const;
+	CDDELink* GetLink(int nIndex) const;
 	int       GetAllLinks(CDDECltLinks& aoLinks) const;
 
 protected:
@@ -86,6 +87,11 @@ inline uint CDDECltConv::RefCount() const
 inline int CDDECltConv::NumLinks() const
 {
 	return m_aoLinks.Size();
+}
+
+inline CDDELink* CDDECltConv::GetLink(int nIndex) const
+{
+	return m_aoLinks[nIndex];
 }
 
 inline int CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks) const
