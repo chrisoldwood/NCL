@@ -213,6 +213,10 @@ SOURCE=.\DefDDEServerListener.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\IClientSocketListener.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\IDDEClientListener.hpp
 # End Source File
 # Begin Source File
@@ -226,6 +230,10 @@ SOURCE=.\IDDELinkData.hpp
 # Begin Source File
 
 SOURCE=.\IDDEServerListener.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IServerSocketListener.hpp
 # End Source File
 # Begin Source File
 

@@ -54,7 +54,8 @@
 
 // Socket Classes.
 #include "SocketException.hpp"
-#include "WinSock.hpp"
+#include "IClientSocketListener.hpp"
+#include "IServerSocketListener.hpp"
 #include "Socket.hpp"
 #include "TCPSocket.hpp"
 #include "TCPCltSocket.hpp"
@@ -62,5 +63,6 @@
 #include "UDPSocket.hpp"
 #include "UDPCltSocket.hpp"
 #include "UDPSvrSocket.hpp"
+#include "WinSock.hpp"
 
 #endif //NCL_HPP
