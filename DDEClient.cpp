@@ -194,14 +194,17 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 	// Last reference?
 	if (--pConv->m_nRefCount == 0)
 	{
+		// Unadvise all links.
+		pConv->DestroyAllLinks();
+
 		// Disconnect from service/topic.
 		::DdeDisconnect(pConv->m_hConv);
 
-		// Delete conversation.
-		delete pConv;
-
 		// Remove from collection.
 		m_aoConvs.Remove(m_aoConvs.Find(pConv));
+
+		// Delete conversation.
+		delete pConv;
 	}
 }
 
@@ -344,7 +347,7 @@ void CDDEClient::OnUnregister(const char* pszBaseName, const char* pszInstName)
 void CDDEClient::OnDisconnect(HCONV hConv)
 {
 	// Find the conversation from the handle.
-	CDDEConv* pConv = FindConversation(hConv);
+	CDDECltConv* pConv = FindConversation(hConv);
 
 	ASSERT(pConv != NULL);
 
