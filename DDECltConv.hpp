@@ -31,10 +31,17 @@ public:
 	uint RefCount() const;
 
 	//
-	// Request methods.
+	// Command methods.
 	//
 	CString  Request(const char* pszItem);
 	CDDEData Request(const char* pszItem, uint nFormat);
+
+	void Execute(const char* pszCommand);
+	void Execute(const CDDEData& oCommand);
+
+	void Poke(const char* pszItem, const char* pszValue);
+	void Poke(const char* pszItem, uint nFormat, const byte* pValue, uint nSize);
+	void Poke(const char* pszItem, uint nFormat, const CDDEData& oValue);
 
 	//
 	// Link methods.

@@ -120,6 +120,88 @@ CDDEData CDDECltConv::Request(const char* pszItem, uint nFormat)
 }
 
 /******************************************************************************
+** Methods:		Execute()
+**
+** Description:	Execute a command on the DDE server.
+**
+** Parameters:	Command		The command to execute.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDECltConv::Execute(const char* pszCommand)
+{
+	ASSERT(pszCommand != NULL);
+
+	// Execute it.
+	HDDEDATA hResult = ::DdeClientTransaction((byte*)pszCommand, strlen(pszCommand)+1, m_hConv, NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
+
+	// Execute failed?
+	if (hResult == NULL)
+		throw CDDEException(CDDEException::E_EXECUTE_FAILED, m_pInst->LastError());
+}
+
+void CDDECltConv::Execute(const CDDEData& oCommand)
+{
+	// Execute it.
+	HDDEDATA hResult = ::DdeClientTransaction((byte*)oCommand.Handle(), (DWORD)-1, m_hConv, NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
+
+	// Execute failed?
+	if (hResult == NULL)
+		throw CDDEException(CDDEException::E_EXECUTE_FAILED, m_pInst->LastError());
+}
+
+/******************************************************************************
+** Methods:		Poke()
+**
+** Description:	Poke a value into an item on the server.
+**
+** Parameters:	pszItem		The item to poke into.
+**				nFormat		The format of the data.
+**				Value		The value.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDECltConv::Poke(const char* pszItem, const char* pszValue)
+{
+	Poke(pszItem, CF_TEXT, (const byte*)pszValue, strlen(pszValue)+1);
+}
+
+void CDDECltConv::Poke(const char* pszItem, uint nFormat, const byte* pValue, uint nSize)
+{
+	ASSERT(pszItem != NULL);
+	ASSERT(pValue  != NULL);
+
+	CDDEString strItem(m_pInst, pszItem);
+
+	// Execute it.
+	HDDEDATA hResult = ::DdeClientTransaction((byte*)pValue, nSize, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
+
+	// Execute failed?
+	if (hResult == NULL)
+		throw CDDEException(CDDEException::E_POKE_FAILED, m_pInst->LastError());
+}
+
+void CDDECltConv::Poke(const char* pszItem, uint nFormat, const CDDEData& oValue)
+{
+	ASSERT(pszItem != NULL);
+
+	CDDEString strItem(m_pInst, pszItem);
+
+	// Execute it.
+	HDDEDATA hResult = ::DdeClientTransaction((byte*)oValue.Handle(), (DWORD)-1, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
+
+	// Execute failed?
+	if (hResult == NULL)
+		throw CDDEException(CDDEException::E_POKE_FAILED, m_pInst->LastError());
+}
+
+/******************************************************************************
 ** Method:		CreateLink()
 **
 ** Description:	Creates an advise loop for an item.
