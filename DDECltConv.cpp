@@ -143,16 +143,6 @@ void CDDECltConv::Execute(const char* pszCommand)
 		throw CDDEException(CDDEException::E_EXECUTE_FAILED, m_pInst->LastError());
 }
 
-void CDDECltConv::Execute(const CDDEData& oCommand)
-{
-	// Execute it.
-	HDDEDATA hResult = ::DdeClientTransaction((byte*)oCommand.Handle(), (DWORD)-1, m_hConv, NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
-
-	// Execute failed?
-	if (hResult == NULL)
-		throw CDDEException(CDDEException::E_EXECUTE_FAILED, m_pInst->LastError());
-}
-
 /******************************************************************************
 ** Methods:		Poke()
 **
@@ -172,31 +162,17 @@ void CDDECltConv::Poke(const char* pszItem, const char* pszValue)
 	Poke(pszItem, CF_TEXT, (const byte*)pszValue, strlen(pszValue)+1);
 }
 
-void CDDECltConv::Poke(const char* pszItem, uint nFormat, const byte* pValue, uint nSize)
+void CDDECltConv::Poke(const char* pszItem, uint nFormat, const void* pValue, uint nSize)
 {
 	ASSERT(pszItem != NULL);
 	ASSERT(pValue  != NULL);
 
 	CDDEString strItem(m_pInst, pszItem);
 
-	// Execute it.
+	// Do the poke.
 	HDDEDATA hResult = ::DdeClientTransaction((byte*)pValue, nSize, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
 
-	// Execute failed?
-	if (hResult == NULL)
-		throw CDDEException(CDDEException::E_POKE_FAILED, m_pInst->LastError());
-}
-
-void CDDECltConv::Poke(const char* pszItem, uint nFormat, const CDDEData& oValue)
-{
-	ASSERT(pszItem != NULL);
-
-	CDDEString strItem(m_pInst, pszItem);
-
-	// Execute it.
-	HDDEDATA hResult = ::DdeClientTransaction((byte*)oValue.Handle(), (DWORD)-1, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
-
-	// Execute failed?
+	// Poke failed?
 	if (hResult == NULL)
 		throw CDDEException(CDDEException::E_POKE_FAILED, m_pInst->LastError());
 }

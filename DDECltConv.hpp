@@ -37,11 +37,9 @@ public:
 	CDDEData Request(const char* pszItem, uint nFormat);
 
 	void Execute(const char* pszCommand);
-	void Execute(const CDDEData& oCommand);
 
 	void Poke(const char* pszItem, const char* pszValue);
-	void Poke(const char* pszItem, uint nFormat, const byte* pValue, uint nSize);
-	void Poke(const char* pszItem, uint nFormat, const CDDEData& oValue);
+	void Poke(const char* pszItem, uint nFormat, const void* pValue, uint nSize);
 
 	//
 	// Link methods.
