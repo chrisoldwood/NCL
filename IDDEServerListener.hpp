@@ -25,6 +25,9 @@ public:
 	//
 	// Methods.
 	//
+	virtual bool OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics) = 0;
+	virtual bool OnWildConnectService(const char* pszService, CStrArray& astrTopics) = 0;
+	virtual bool OnWildConnectTopic(const char* pszTopic, CStrArray& astrServices) = 0;
 	virtual bool OnConnect(const char* pszService, const char* pszTopic) = 0;
 	virtual void OnConnectConfirm(CDDESvrConv* pConv) = 0;
 	virtual void OnDisconnect(CDDESvrConv* pConv) = 0;
