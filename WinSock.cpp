@@ -33,8 +33,9 @@
 
 bool    CWinSock::g_bStarted = false;
 WSADATA CWinSock::g_oWSAData = { 0 };
-uint	CWinSock::g_nSockMsg = 0;
-HWND	CWinSock::g_hSockWnd = NULL;
+uint    CWinSock::g_nSockMsg = 0;
+HWND    CWinSock::g_hSockWnd = NULL;
+CWinSock::CSocketMap* CWinSock::g_pSockMap = NULL;
 
 /******************************************************************************
 ** Method:		Startup()
@@ -73,6 +74,9 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 
 	ASSERT(g_hSockWnd != NULL);
 
+	// Create the socket handle map.
+	g_pSockMap = new CSocketMap();
+
 	return ::WSAStartup(MAKEWORD(nMajorVer, nMinorVer), &g_oWSAData);
 }
 
@@ -90,6 +94,9 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 
 int CWinSock::Cleanup()
 {
+	// Destroy the socket handle map.
+	delete g_pSockMap;
+
 	// Destroy the socket window.
 	if (g_hSockWnd != NULL)
 		::DestroyWindow(g_hSockWnd);
@@ -193,17 +200,93 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 	// Is a socket message?
 	if (nMsg == g_nSockMsg)
 	{
-#ifdef _DEBUG
+		ASSERT(g_pSockMap != NULL);
+
+		// Extract message details.
 		SOCKET hSocket = wParam;
 		int    nEvent  = WSAGETSELECTEVENT(lParam);
 		int    nError  = WSAGETSELECTERROR(lParam);
 
-		TRACE3("Socket message: 0x%08X %u %u\n", hSocket, nEvent, nError);
-#endif
+//		TRACE3("Socket message: 0x%08X %u %u\n", hSocket, nEvent, nError);
+
+		CSocket* pSocket = NULL;
+
+		// Socket mapped?
+		if (g_pSockMap->Find(hSocket, pSocket))
+		{
+			ASSERT(pSocket != NULL);
+
+			// Forward event.
+			pSocket->OnAsyncSelect(nEvent, nError);
+		}
 
 		return 0;
 	}
 
 	// Do default processing.
 	return ::DefWindowProc(hWnd, nMsg, wParam, lParam);
+}
+
+/******************************************************************************
+** Method:		BeginAsyncSelect()
+**
+** Description:	Switch a socket to non-blocking mode and add it to the socket
+**				handle map.
+**
+** Parameters:	pSocket		The socket.
+**				lEventMask	The events to notify.
+**
+** Returns:		Nothing.
+**
+** Exceptions:	CSocketException.
+**
+*******************************************************************************
+*/
+
+void CWinSock::BeginAsyncSelect(CSocket* pSocket, long lEventMask)
+{
+	ASSERT(pSocket    != NULL);
+	ASSERT(g_pSockMap != NULL);
+
+	// Get the socket handle.
+	SOCKET hSocket = pSocket->Handle();
+
+	ASSERT(hSocket != INVALID_SOCKET);
+
+	// Add handle<->socket mapping.
+	if (!g_pSockMap->Exists(hSocket))
+		g_pSockMap->Add(hSocket, pSocket);
+
+	// Start events...
+	if (::WSAAsyncSelect(hSocket, g_hSockWnd, g_nSockMsg, lEventMask) == SOCKET_ERROR)
+		throw CSocketException(CSocketException::E_SELECT_FAILED, CWinSock::LastError());
+}
+
+/******************************************************************************
+** Method:		EndAsyncSelect()
+**
+** Description:	The socket window callback function.
+**
+** Parameters:	pSocket		The socket.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CWinSock::EndAsyncSelect(CSocket* pSocket)
+{
+	ASSERT(pSocket != NULL);
+
+	// Get the socket handle.
+	SOCKET hSocket = pSocket->Handle();
+
+	ASSERT(hSocket != INVALID_SOCKET);
+
+	// Stop events.
+	::WSAAsyncSelect(hSocket, g_hSockWnd, g_nSockMsg, 0);
+
+	// Remove handle<->socket mapping.
+	if (g_pSockMap->Exists(hSocket))
+		g_pSockMap->Remove(hSocket);
 }

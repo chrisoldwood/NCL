@@ -25,7 +25,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CTCPSvrSocket();
+	CTCPSvrSocket(Mode eMode = BLOCK);
 	virtual ~CTCPSvrSocket();
 	
 	//
@@ -41,10 +41,29 @@ public:
 	bool CanAccept() const;
 	CTCPCltSocket* Accept();
 
+	//
+	// Event listener methods.
+	//
+	void AddServerListener(IServerSocketListener* pListener);
+	void RemoveServerListener(IServerSocketListener* pListener);
+
 protected:
+	// Template shorthands.
+	typedef TPtrArray<IClientSocketListener> CCltListeners;
+	typedef TPtrArray<IServerSocketListener> CSvrListeners;
+
 	//
 	// Members.
 	//
+	CSvrListeners	m_aoSvrListeners;	// The list of event listeners.
+
+	//
+	// Async event methods.
+	//
+	virtual void OnAsyncSelect(int nEvent, int nError);
+	virtual void OnAcceptReady();
+	virtual void OnClosed(int nReason);
+	virtual void OnError(int nEvent, int nError);
 };
 
 /******************************************************************************

@@ -31,17 +31,21 @@ public:
 	static int     LastError();
 	static CString ErrorToSymbol(int nError);
 
-	static HWND SocketWindow();
-	static uint SocketWindowMsg();
+	static void BeginAsyncSelect(CSocket* pSocket, long lEventMask);
+	static void EndAsyncSelect(CSocket* pSocket);
 
 private:
+	// Template shorthands.
+	typedef TMap<SOCKET, CSocket*> CSocketMap;
+
 	//
 	// Class members.
 	//
-	static bool		g_bStarted;
-	static WSADATA	g_oWSAData;
-	static uint		g_nSockMsg;
-	static HWND		g_hSockWnd;
+	static bool			g_bStarted;
+	static WSADATA		g_oWSAData;
+	static uint			g_nSockMsg;
+	static HWND			g_hSockWnd;
+	static CSocketMap*	g_pSockMap;
 
 	// Socket window procedure.
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
@@ -57,16 +61,6 @@ private:
 inline int CWinSock::LastError()
 {
 	return ::WSAGetLastError();
-}
-
-inline HWND CWinSock::SocketWindow()
-{
-	return g_hSockWnd;
-}
-
-inline uint CWinSock::SocketWindowMsg()
-{
-	return g_nSockMsg;
 }
 
 #endif // WINSOCK_HPP

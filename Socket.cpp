@@ -32,8 +32,9 @@
 *******************************************************************************
 */
 
-CSocket::CSocket()
+CSocket::CSocket(Mode eMode)
 	: m_hSocket(INVALID_SOCKET)
+	, m_eMode(eMode)
 	, m_strHost("")
 	, m_nPort(0)
 {
@@ -72,7 +73,13 @@ void CSocket::Close()
 {
 	// Socket still open?
 	if (m_hSocket != INVALID_SOCKET)
+	{
+		// If async mode, end select.
+		if (m_eMode == ASYNC)
+			CWinSock::EndAsyncSelect(this);
+
 		closesocket(m_hSocket);
+	}
 
 	// Reset members.
 	m_hSocket = INVALID_SOCKET;
@@ -281,6 +288,10 @@ void CSocket::Connect(const char* pszHost, uint nPort)
 	// Connect to host.
 	if (connect(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_CONNECT_FAILED, CWinSock::LastError());
+
+	// If async mode, do select.
+	if (m_eMode == ASYNC)
+		CWinSock::BeginAsyncSelect(this, (FD_READ | FD_WRITE | FD_CLOSE));
 }
 
 /******************************************************************************
@@ -366,4 +377,156 @@ CString CSocket::ResolveStr(const char* pszHost)
 	memcpy(&addr, pHost->h_addr_list[0], pHost->h_length);
 
 	return inet_ntoa(addr);
+}
+
+/******************************************************************************
+** Method:		AddClientListener()
+**
+** Description:	Add a socket event listener.
+**
+** Parameters:	pListener	The listener.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::AddClientListener(IClientSocketListener* pListener)
+{
+	ASSERT(pListener != NULL);
+
+	m_aoCltListeners.Add(pListener);
+}
+
+/******************************************************************************
+** Method:		RemoveClientListener()
+**
+** Description:	Remove a socket event listener.
+**
+** Parameters:	pListener	The listener.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::RemoveClientListener(IClientSocketListener* pListener)
+{
+	ASSERT(pListener != NULL);
+
+	int i = m_aoCltListeners.Find(pListener);
+
+	if (i != -1)
+		m_aoCltListeners.Remove(i);
+}
+
+/******************************************************************************
+** Method:		OnAsyncSelect()
+**
+** Description:	Async socket event handler.
+**
+** Parameters:	nEvent		The event.
+**				nError		The error.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::OnAsyncSelect(int nEvent, int nError)
+{
+	// Error occured BUT not due to socket closure?
+	if ( (nError != 0) && ((nEvent & FD_CLOSE) == 0) )
+	{
+		OnError(nEvent, nError);
+		return;
+	}
+
+	// Socket closed?
+	if (nEvent & FD_CLOSE)
+	{
+		OnClosed(nError);
+		return;
+	}
+
+	// Read/Write now available?
+	if (nEvent & FD_READ)
+		OnReadReady();
+
+	if (nEvent & FD_WRITE)
+		OnWriteReady();
+}
+
+/******************************************************************************
+** Method:		OnReadReady()
+**
+** Description:	The socket has data available to read.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::OnReadReady()
+{
+	// Notify listeners.
+	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
+		m_aoCltListeners[i]->OnReadReady(this);
+}
+
+/******************************************************************************
+** Method:		OnWriteReady()
+**
+** Description:	The socket has space available to write.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::OnWriteReady()
+{
+	// Notify listeners.
+	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
+		m_aoCltListeners[i]->OnWriteReady(this);
+}
+
+/******************************************************************************
+** Method:		OnClosed()
+**
+** Description:	The socket was closed.
+**
+** Parameters:	nReason		The error code.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::OnClosed(int nReason)
+{
+	// Notify listeners.
+	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
+		m_aoCltListeners[i]->OnClosed(this, nReason);
+}
+
+/******************************************************************************
+** Method:		OnError()
+**
+** Description:	An async error occurred for an event.
+**
+** Parameters:	nEvent		The event.
+**				nError		The error.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSocket::OnError(int /*nEvent*/, int /*nError*/)
+{
 }

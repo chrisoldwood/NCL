@@ -50,21 +50,38 @@ public:
 	//
 	// Class methods.
 	//
-
 	static bool    IsAddress(const char* pszHost);
 	static in_addr Resolve(const char* pszHost);
 	static CString ResolveStr(const char* pszHost);
 
+	// Socket modes.
+	enum Mode
+	{
+		BLOCK,		// BSD style blocking mode.
+		ASYNC,		// Windows style message mode.
+	};
+
+	//
+	// Event listener methods.
+	//
+	void AddClientListener(IClientSocketListener* pListener);
+	void RemoveClientListener(IClientSocketListener* pListener);
+
 protected:
+	// Template shorthands.
+	typedef TPtrArray<IClientSocketListener> CCltListeners;
+
 	//
 	// Members.
 	//
-	SOCKET	m_hSocket;		// Socket handle.
-	CString	m_strHost;		// Host, If connected.
-	uint	m_nPort;		// Port, If connected.
+	SOCKET			m_hSocket;			// Socket handle.
+	Mode			m_eMode;			// 'Select' mode.
+	CString			m_strHost;			// Host, If connected.
+	uint			m_nPort;			// Port, If connected.
+	CCltListeners	m_aoCltListeners;	// The list of event listeners.
 
 	// Protect creation etc.
-	CSocket();
+	CSocket(Mode eMode);
 	CSocket(const CSocket&);
 	void operator=(const CSocket&);
 
@@ -73,6 +90,18 @@ protected:
 	//
 	void Create(int nAF, int nType, int nProtocol);
 	void Connect(const char* pszHost, uint nPort);
+
+	//
+	// Async event methods.
+	//
+	virtual void OnAsyncSelect(int nEvent, int nError);
+	virtual void OnReadReady();
+	virtual void OnWriteReady();
+	virtual void OnClosed(int nReason);
+	virtual void OnError(int nEvent, int nError);
+
+	// Friends.
+	friend class CWinSock;
 };
 
 /******************************************************************************
