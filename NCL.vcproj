@@ -215,6 +215,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DDEInst.cpp">
+			</File>
+			<File
 				RelativePath="DDEServer.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
