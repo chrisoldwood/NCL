@@ -25,6 +25,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
+	CDDEData(CDDEInst* pInst);
 	CDDEData(CDDEInst* pInst, HDDEDATA hData, bool bOwn = true);
 	CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat = CF_TEXT, uint nFlags = 0, bool bOwn = false);
 	CDDEData(const CDDEData& oData);
@@ -40,13 +41,15 @@ public:
 	// Accessors.
 	//
 	uint    Size() const;
-	uint    GetData(byte* pBuffer, uint nSize, uint nOffset = 0) const;
+	uint    GetData(void* pBuffer, uint nSize, uint nOffset = 0) const;
+	CBuffer GetBuffer() const;
 	CString GetString() const;
 
 	//
 	// Mutators.
 	//
-	void SetData(byte* pBuffer, uint nSize, uint nOffset = 0);
+	void SetData(const void* pBuffer, uint nSize, uint nOffset = 0);
+	void SetBuffer(const CBuffer& oBuffer);
 	void SetString(const char* pszString);
 
 protected:
@@ -108,6 +111,11 @@ inline CDDEData::CHandle::~CHandle()
 		::DdeFreeDataHandle(m_hData);
 }
 
+inline CDDEData::CDDEData(CDDEInst* pInst)
+	: m_pHandle(new CHandle(pInst, NULL, false))
+{
+}
+
 inline CDDEData::CDDEData(CDDEInst* pInst, HDDEDATA hData, bool bOwn)
 	: m_pHandle(new CHandle(pInst, hData, bOwn))
 {
@@ -158,12 +166,26 @@ inline CDDEData& CDDEData::operator=(const CDDEData& oData)
 
 inline uint CDDEData::Size() const
 {
+	if (m_pHandle->m_hData == NULL)
+		return 0;
+
 	return ::DdeGetData(m_pHandle->m_hData, NULL, 0, 0);
 }
 
-inline uint CDDEData::GetData(byte* pBuffer, uint nSize, uint nOffset) const
+inline uint CDDEData::GetData(void* pBuffer, uint nSize, uint nOffset) const
 {
-	return ::DdeGetData(m_pHandle->m_hData, pBuffer, nSize, nOffset);
+	return ::DdeGetData(m_pHandle->m_hData, (byte*)pBuffer, nSize, nOffset);
+}
+
+inline CBuffer CDDEData::GetBuffer() const
+{
+	uint nSize = Size();
+
+	CBuffer oBuffer(nSize);
+
+	GetData(oBuffer.Buffer(), nSize, 0);
+
+	return oBuffer;
 }
 
 inline CString CDDEData::GetString() const
@@ -182,9 +204,9 @@ inline CString CDDEData::GetString() const
 	return CString(psz);
 }
 
-inline void CDDEData::SetData(byte* pBuffer, uint nSize, uint nOffset)
+inline void CDDEData::SetData(const void* pBuffer, uint nSize, uint nOffset)
 {
-	HDDEDATA hData = ::DdeAddData(m_pHandle->m_hData, pBuffer, nSize, nOffset);
+	HDDEDATA hData = ::DdeAddData(m_pHandle->m_hData, (byte*)pBuffer, nSize, nOffset);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, m_pHandle->m_pInst->LastError());
@@ -192,9 +214,14 @@ inline void CDDEData::SetData(byte* pBuffer, uint nSize, uint nOffset)
 	m_pHandle->m_hData = hData;
 }
 
+inline void CDDEData::SetBuffer(const CBuffer& oBuffer)
+{
+	SetData(oBuffer.Buffer(), oBuffer.Size());
+}
+
 inline void CDDEData::SetString(const char* pszString)
 {
-	SetData((byte*)pszString, strlen(pszString)+1);
+	SetData(pszString, strlen(pszString)+1);
 }
 
 #endif // DDEDATA_HPP
