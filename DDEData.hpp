@@ -41,10 +41,11 @@ public:
 	//
 	// Accessors.
 	//
-	uint    Size() const;
-	uint    GetData(void* pBuffer, uint nSize, uint nOffset = 0) const;
-	CBuffer GetBuffer() const;
-	CString GetString() const;
+	HDDEDATA Handle() const;
+	uint     Size() const;
+	uint     GetData(void* pBuffer, uint nSize, uint nOffset = 0) const;
+	CBuffer  GetBuffer() const;
+	CString  GetString() const;
 
 	//
 	// Mutators.
@@ -180,6 +181,11 @@ inline CDDEData& CDDEData::operator=(const CDDEData& oData)
 	++(m_pHandle->m_nRefCount);
 
 	return *this;
+}
+
+inline HDDEDATA CDDEData::Handle() const
+{
+	return m_pHandle->m_hData;
 }
 
 inline uint CDDEData::Size() const
