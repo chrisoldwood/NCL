@@ -28,7 +28,8 @@ public:
 	CDDEData(CDDEInst* pInst);
 	CDDEData(CDDEInst* pInst, HDDEDATA hData, bool bOwn = true);
 	CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat = CF_TEXT, uint nFlags = 0, bool bOwn = false);
-	CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset = 0, bool bOwn = false);
+	CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset = 0, uint nFormat = CF_TEXT, bool bOwn = false);
+	CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat = CF_TEXT, bool bOwn = false);
 	CDDEData(const CDDEData& oData);
 	~CDDEData();
 
@@ -140,10 +141,22 @@ inline CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, uint nFlags,
 	m_pHandle = new CHandle(pInst, hData, bOwn);
 }
 
-inline CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset, bool bOwn)
+inline CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset, uint nFormat, bool bOwn)
 {
 	// Allocate data handle.
-	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), (byte*)pBuffer, nSize, nOffset, NULL, 0, 0);
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), (byte*)pBuffer, nSize, nOffset, NULL, nFormat, 0);
+
+	if (hData == NULL)
+		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
+
+	// Attach handle.
+	m_pHandle = new CHandle(pInst, hData, bOwn);
+}
+
+inline CDDEData::CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat, bool bOwn)
+{
+	// Allocate data handle.
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), (byte*)oBuffer.Buffer(), oBuffer.Size(), 0, NULL, nFormat, 0);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
@@ -245,6 +258,7 @@ inline void CDDEData::SetBuffer(const CBuffer& oBuffer)
 
 inline void CDDEData::SetString(const char* pszString)
 {
+	// NB: Must include null terminator.
 	SetData(pszString, strlen(pszString)+1);
 }
 
