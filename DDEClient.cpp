@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Class members.
@@ -194,9 +199,6 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 	// Last reference?
 	if (--pConv->m_nRefCount == 0)
 	{
-		// Unadvise all links.
-		pConv->DestroyAllLinks();
-
 		// Disconnect from service/topic.
 		::DdeDisconnect(pConv->m_hConv);
 
@@ -222,7 +224,7 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 *******************************************************************************
 */
 
-CDDECltConv* CDDEClient::FindConversation(const char* pszService, const char* pszTopic)
+CDDECltConv* CDDEClient::FindConversation(const char* pszService, const char* pszTopic) const
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
@@ -239,7 +241,7 @@ CDDECltConv* CDDEClient::FindConversation(const char* pszService, const char* ps
 	return NULL;
 }
 
-CDDECltConv* CDDEClient::FindConversation(HCONV hConv)
+CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 {
 	// Search the conversation list.
 	for (int i = 0; i < m_aoConvs.Size(); ++i)

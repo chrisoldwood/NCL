@@ -12,6 +12,9 @@
 #ifndef DDECLIENT_HPP
 #define DDECLIENT_HPP
 
+// Template shorthands.
+typedef TPtrArray<CDDECltConv> CDDECltConvs;
+
 /******************************************************************************
 ** 
 ** This class provides DDE Client services.
@@ -44,8 +47,9 @@ public:
 	//
 	CDDECltConv* CreateConversation(const char* pszService, const char* pszTopic);
 	void         DestroyConversation(CDDECltConv* pConv);
-	CDDECltConv* FindConversation(const char* pszService, const char* pszTopic);
-	CDDECltConv* FindConversation(HCONV hConv);
+	CDDECltConv* FindConversation(const char* pszService, const char* pszTopic) const;
+	CDDECltConv* FindConversation(HCONV hConv) const;
+	int          GetAllConversations(CDDECltConvs& aoConvs) const;
 
 	//
 	// Event listener methods.
@@ -55,14 +59,13 @@ public:
 
 protected:
 	// Template shorthands.
-	typedef TPtrArray<CDDECltConv> CConvs;
 	typedef TPtrArray<IDDEClientListener> CListeners;
 
 	//
 	// Members.
 	//
-	CConvs		m_aoConvs;		// The list of conversations.
-	CListeners	m_aoListeners;	// The list of event listeners.
+	CDDECltConvs	m_aoConvs;		// The list of conversations.
+	CListeners		m_aoListeners;	// The list of event listeners.
 
 	//
 	// Constructors/Destructor.
@@ -91,5 +94,12 @@ protected:
 **
 *******************************************************************************
 */
+
+inline int CDDEClient::GetAllConversations(CDDECltConvs& aoConvs) const
+{
+	aoConvs.ShallowCopy(m_aoConvs);
+
+	return aoConvs.Size();
+}
 
 #endif // DDECLIENT_HPP
