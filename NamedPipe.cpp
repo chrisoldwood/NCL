@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 ** Method:		Constructor.
 **
@@ -117,6 +122,8 @@ uint CNamedPipe::Read(void* pBuffer, uint nBufSize)
 	if (!::ReadFile(m_hPipe, pBuffer, nBufSize, &dwRead, NULL))
 		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
 
+	ASSERT(dwRead == nBufSize);
+
 	return dwRead;
 }
 
@@ -142,6 +149,8 @@ uint CNamedPipe::Write(const void* pBuffer, uint nBufSize)
 	// Query the bytes available.
 	if (!::WriteFile(m_hPipe, pBuffer, nBufSize, &dwWritten, NULL))
 		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
+
+	ASSERT(dwWritten == nBufSize);
 
 	return dwWritten;
 }
