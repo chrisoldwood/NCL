@@ -32,7 +32,8 @@ public:
 	// Methods.
 	//
 	void Open(const char* pszName);
-	void Close();
+
+	virtual void Close();
 
 protected:
 	//
@@ -44,7 +45,6 @@ protected:
 	//
 	static const DWORD DEF_OPEN_MODE;
 	static const DWORD DEF_PIPE_MODE;
-	static const DWORD DEF_TIMEOUT;
 	static const DWORD DEF_INTERVAL;
 };
 

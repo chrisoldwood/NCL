@@ -24,7 +24,6 @@
 
 const DWORD CClientPipe::DEF_OPEN_MODE = /*FILE_ATTRIBUTE_NORMAL |*/ FILE_FLAG_OVERLAPPED;
 const DWORD CClientPipe::DEF_PIPE_MODE = PIPE_READMODE_MESSAGE | PIPE_WAIT;
-const DWORD CClientPipe::DEF_TIMEOUT   = 30000;
 const DWORD CClientPipe::DEF_INTERVAL  = 1000;
 
 /******************************************************************************
@@ -77,7 +76,7 @@ CClientPipe::~CClientPipe()
 void CClientPipe::Open(const char* pszName)
 {
 	// Calculate max wait time.
-	DWORD dwMaxTime = ::GetTickCount() + DEF_TIMEOUT;
+	DWORD dwMaxTime = ::GetTickCount() + m_dwTimeOut;
 
 	while (::GetTickCount() < dwMaxTime)
 	{
@@ -116,12 +115,5 @@ void CClientPipe::Open(const char* pszName)
 
 void CClientPipe::Close()
 {
-	// Close, if handle was allocated.
-	if (m_hPipe != INVALID_HANDLE_VALUE)
-	{
-		::CloseHandle(m_hPipe);
-	}
-
-	// Reset members.
-	m_hPipe = INVALID_HANDLE_VALUE;
+	CNamedPipe::Close();
 }

@@ -33,7 +33,8 @@ public:
 	//
 	void Create(const char* pszName);
 	bool Accept();
-	void Close();
+
+	virtual void Close();
 
 protected:
 	//
@@ -46,7 +47,6 @@ protected:
 	static const DWORD DEF_OPEN_MODE;
 	static const DWORD DEF_PIPE_MODE;
 	static const DWORD DEF_BUF_SIZE;
-	static const DWORD DEF_TIMEOUT;
 };
 
 /******************************************************************************

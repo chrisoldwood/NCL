@@ -25,7 +25,6 @@
 const DWORD CServerPipe::DEF_OPEN_MODE = PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED;
 const DWORD CServerPipe::DEF_PIPE_MODE = PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT;
 const DWORD CServerPipe::DEF_BUF_SIZE  = 4096;
-const DWORD CServerPipe::DEF_TIMEOUT   = 30000;
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -79,8 +78,11 @@ void CServerPipe::Create(const char* pszName)
 	SECURITY_DESCRIPTOR* pSecDescriptor = (SECURITY_DESCRIPTOR*) alloca(SECURITY_DESCRIPTOR_MIN_LENGTH);
 
 	// Create a security descriptor to allow everyone access.
-	::InitializeSecurityDescriptor(pSecDescriptor, SECURITY_DESCRIPTOR_REVISION);
-	::SetSecurityDescriptorDacl(pSecDescriptor, TRUE, NULL, FALSE);
+	if (::InitializeSecurityDescriptor(pSecDescriptor, SECURITY_DESCRIPTOR_REVISION) == 0)
+		throw CPipeException(CPipeException::E_CREATE_FAILED, ::GetLastError());
+
+	if (::SetSecurityDescriptorDacl(pSecDescriptor, TRUE, NULL, FALSE) == 0)
+		throw CPipeException(CPipeException::E_CREATE_FAILED, ::GetLastError());
 
 	SECURITY_ATTRIBUTES oSecAttributes = { 0 };
 
@@ -95,7 +97,7 @@ void CServerPipe::Create(const char* pszName)
 	// Attempt to create the pipe.
 	m_hPipe = ::CreateNamedPipe(pszName, DEF_OPEN_MODE, DEF_PIPE_MODE,
 									PIPE_UNLIMITED_INSTANCES, DEF_BUF_SIZE,
-									DEF_BUF_SIZE, DEF_TIMEOUT, &oSecAttributes);
+									DEF_BUF_SIZE, m_dwTimeOut, &oSecAttributes);
 
 	// Create failed?
 	if (m_hPipe == INVALID_HANDLE_VALUE)
@@ -164,13 +166,8 @@ bool CServerPipe::Accept()
 
 void CServerPipe::Close()
 {
-	// Close, if handle was allocated.
 	if (m_hPipe != INVALID_HANDLE_VALUE)
-	{
 		::DisconnectNamedPipe(m_hPipe);
-		::CloseHandle(m_hPipe);
-	}
 
-	// Reset members.
-	m_hPipe = INVALID_HANDLE_VALUE;
+	CNamedPipe::Close();
 }
