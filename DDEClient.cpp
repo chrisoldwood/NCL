@@ -151,6 +151,7 @@ CDDECltConv* CDDEClient::CreateConversation(const char* pszService, const char* 
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
+	ASSERT(m_dwInst   != NULL);
 
 	// Already connected?
 	CDDECltConv* pConv = FindConversation(pszService, pszTopic);
@@ -228,6 +229,7 @@ CDDECltConv* CDDEClient::FindConversation(const char* pszService, const char* ps
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
+	ASSERT(m_dwInst   != NULL);
 
 	// Search the conversation list.
 	for (int i = 0; i < m_aoConvs.Size(); ++i)
