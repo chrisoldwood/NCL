@@ -64,6 +64,7 @@ void CTCPCltSocket::Attach(SOCKET hSocket, Mode eMode)
 {
 	ASSERT(hSocket   != INVALID_SOCKET);
 	ASSERT(m_hSocket == INVALID_SOCKET);
+	ASSERT(m_eMode   == eMode);
 
 	m_hSocket = hSocket;
 	m_eMode   = eMode;
