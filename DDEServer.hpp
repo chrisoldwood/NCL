@@ -78,6 +78,7 @@ protected:
 	void OnDisconnect(HCONV hConv);
 	bool OnRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData);
 	bool OnAdviseStart(HCONV hConv, const char* pszItem, uint nFormat);
+	bool OnAdviseRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData);
 	void OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat);
 
 	// The DDE Callback function.

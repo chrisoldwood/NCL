@@ -352,7 +352,7 @@ void CDDEServer::OnDisconnect(HCONV hConv)
 **				nFormat		The data format.
 **				oData		The data to return.
 **
-** Returns:		The data or NULL.
+** Returns:		true or false.
 **
 *******************************************************************************
 */
@@ -360,7 +360,7 @@ void CDDEServer::OnDisconnect(HCONV hConv)
 bool CDDEServer::OnRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData)
 {
 	// Find the conversation from the handle.
-	CDDEConv* pConv = FindConversation(hConv);
+	CDDESvrConv* pConv = FindConversation(hConv);
 
 	ASSERT(pConv != NULL);
 
@@ -422,6 +422,43 @@ bool CDDEServer::OnAdviseStart(HCONV hConv, const char* pszItem, uint nFormat)
 }
 
 /******************************************************************************
+** Method:		OnAdviseRequest()
+**
+** Description:	DDEML requesting data for a link which has been updated.
+**
+** Parameters:	hConv		The conversation handle.
+**				pszItem		The item being requested.
+**				nFormat		The data format.
+**				oData		The data to return.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CDDEServer::OnAdviseRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData)
+{
+	// Find the conversation from the handle.
+	CDDESvrConv* pConv = FindConversation(hConv);
+
+	ASSERT(pConv != NULL);
+
+	// Find the conversations link.
+	CDDELink* pLink = pConv->FindLink(pszItem, nFormat);
+
+	ASSERT(pLink != NULL);
+
+	// Notify listeners.
+	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	{
+		if (m_aoListeners[i]->OnAdviseRequest(pConv, pLink, oData))
+			return true;
+	}
+
+	return false;
+}
+
+/******************************************************************************
 ** Method:		OnAdviseStop()
 **
 ** Description:	Advise terminated on an item.
@@ -442,7 +479,7 @@ void CDDEServer::OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat)
 
 	ASSERT(pConv != NULL);
 
-	// Find the conversations link .
+	// Find the conversations link.
 	CDDELink* pLink = pConv->FindLink(pszItem, nFormat);
 
 	ASSERT(pLink != NULL);
@@ -536,7 +573,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 
 			hResult = oData;
 
-			if (!g_pDDEServer->OnRequest(hConv, strItem, uFormat, oData))
+			if (!g_pDDEServer->OnAdviseRequest(hConv, strItem, uFormat, oData))
 			{
 				::DdeFreeDataHandle(oData);
 				hResult = NULL;
