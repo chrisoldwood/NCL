@@ -57,6 +57,12 @@ public:
 	void AddListener(IDDEClientListener* pListener);
 	void RemoveListener(IDDEClientListener* pListener);
 
+	//
+	// Server query methods.
+	//
+	void QueryServers(CStrArray& astrServers) const;
+	void QueryServerTopics(const char* pszServer, CStrArray& astrTopics) const;
+
 protected:
 	// Template shorthands.
 	typedef TPtrArray<IDDEClientListener> CListeners;

@@ -396,6 +396,129 @@ void CDDEClient::OnAdvise(HCONV hConv, const char* /*pszTopic*/, const char* psz
 }
 
 /******************************************************************************
+** Method:		QueryServers()
+**
+** Description:	Find all available DDE servers.
+**
+** Parameters:	astrServers		The list of returned server names.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDEClient::QueryServers(CStrArray& astrServers) const
+{
+	// Query all servers.
+	HCONVLIST hList = ::DdeConnectList(m_dwInst, NULL, NULL, NULL, NULL);
+
+	// Failed?
+	if (hList == NULL)
+		throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+
+	HCONV hConv = NULL;
+
+	// For all servers...
+	while ((hConv = ::DdeQueryNextServer(hList, hConv)) != NULL)
+	{
+		CONVINFO oConvInfo = { sizeof(oConvInfo), 0 };
+
+		// Query server details.
+		if (!::DdeQueryConvInfo(hConv, QID_SYNC, &oConvInfo))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		char szServer[256];
+
+		// Get the server name.
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, sizeof(szServer), CP_WINANSI))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		// Add, if not a duplicate.
+		if (astrServers.Find(szServer, true) == -1)
+			astrServers.Add(szServer);
+	}
+
+	// Free connection list.
+	::DdeDisconnectList(hList);
+}
+
+/******************************************************************************
+** Method:		QueryServerTopics()
+**
+** Description:	Find all topics available a DDE server.
+**
+** Parameters:	strServer		The DDE server to query.
+**				astrTopics		The list of returned topics names.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDEClient::QueryServerTopics(const char* pszServer, CStrArray& astrTopics) const
+{
+	ASSERT(pszServer != NULL);
+
+	CDDEString strServer(g_pDDEClient, pszServer);
+
+	// Query all servers.
+	HCONVLIST hList = ::DdeConnectList(m_dwInst, strServer, NULL, NULL, NULL);
+
+	// Failed?
+	if (hList == NULL)
+		throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+
+	HCONV hConv = NULL;
+
+	// For all servers...
+	while ((hConv = ::DdeQueryNextServer(hList, hConv)) != NULL)
+	{
+		CONVINFO oConvInfo = { sizeof(oConvInfo), 0 };
+
+		// Query server details.
+		if (!::DdeQueryConvInfo(hConv, QID_SYNC, &oConvInfo))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		char szServer[256];
+
+		// Get the server name.
+		// NB: Some servers will return all service names regardless.
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, sizeof(szServer), CP_WINANSI))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		// Not the server we're after?
+		if (stricmp(szServer, pszServer) != 0)
+			continue;
+
+		char szTopic[256];
+
+		// Get the topic name.
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszTopic, szTopic, sizeof(szTopic), CP_WINANSI))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		astrTopics.Add(szTopic);
+	}
+
+	// Free connection list.
+	::DdeDisconnectList(hList);
+}
+
+/******************************************************************************
 ** Method:		DDECallbackProc()
 **
 ** Description:	The callback function used by the DDEML library.
