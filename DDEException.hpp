@@ -35,6 +35,8 @@ public:
 		E_LINK_FAILED		= 15,	// Failed to create advise loop.
 		E_ALLOC_FAILED		= 16,	// Failed to allocate data handle.
 		E_QUERY_FAILED		= 17,	// Failed to query DDE servers.
+		E_EXECUTE_FAILED	= 18,	// Failed to execute a command.
+		E_POKE_FAILED		= 19,	// Failed to poke a value.
 	};
 
 	//

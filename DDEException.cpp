@@ -66,6 +66,14 @@ CDDEException::CDDEException(int eErrCode, uint nDDECode)
 			m_strErrorText.Format("Failed to query DDE servers: %s", strErrDef);
 			break;
 
+		case E_EXECUTE_FAILED:
+			m_strErrorText.Format("Failed to execute a DDE command: %s", strErrDef);
+			break;
+
+		case E_POKE_FAILED:
+			m_strErrorText.Format("Failed to poke an item: %s", strErrDef);
+			break;
+
 		// Shouldn't happen!
 		default:
 			ASSERT_FALSE();
