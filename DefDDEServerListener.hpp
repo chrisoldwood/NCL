@@ -28,10 +28,11 @@ public:
 	virtual bool OnConnect(const char* pszService, const char* pszTopic);
 	virtual void OnConnectConfirm(CDDESvrConv* pConv);
 	virtual void OnDisconnect(CDDESvrConv* pConv);
-	virtual bool OnRequest(CDDEConv* pConv, const char* pszItem, uint nFormat, CDDEData& oData);
-	virtual bool OnAdviseStart(CDDEConv* pConv, const char* pszItem, uint nFormat);
-	virtual void OnAdviseConfirm(CDDEConv* pConv, CDDELink* pLink);
-	virtual void OnAdviseStop(CDDEConv* pConv, CDDELink* pLink);
+	virtual bool OnRequest(CDDESvrConv* pConv, const char* pszItem, uint nFormat, CDDEData& oData);
+	virtual bool OnAdviseStart(CDDESvrConv* pConv, const char* pszItem, uint nFormat);
+	virtual void OnAdviseConfirm(CDDESvrConv* pConv, CDDELink* pLink);
+	virtual bool OnAdviseRequest(CDDESvrConv* pConv, CDDELink* pLink, CDDEData& oData);
+	virtual void OnAdviseStop(CDDESvrConv* pConv, CDDELink* pLink);
 };
 
 /******************************************************************************
@@ -54,21 +55,26 @@ inline void CDefDDEServerListener::OnDisconnect(CDDESvrConv* pConv)
 {
 }
 
-inline bool CDefDDEServerListener::OnRequest(CDDEConv* pConv, const char* pszItem, uint nFormat, CDDEData& oData)
+inline bool CDefDDEServerListener::OnRequest(CDDESvrConv* pConv, const char* pszItem, uint nFormat, CDDEData& oData)
 {
 	return false;
 }
 
-inline bool CDefDDEServerListener::OnAdviseStart(CDDEConv* pConv, const char* pszItem, uint nFormat)
+inline bool CDefDDEServerListener::OnAdviseStart(CDDESvrConv* pConv, const char* pszItem, uint nFormat)
 {
 	return false;
 }
 
-inline void CDefDDEServerListener::OnAdviseConfirm(CDDEConv* pConv, CDDELink* pLink)
+inline void CDefDDEServerListener::OnAdviseConfirm(CDDESvrConv* pConv, CDDELink* pLink)
 {
 }
 
-inline void CDefDDEServerListener::OnAdviseStop(CDDEConv* pConv, CDDELink* pLink)
+inline bool CDefDDEServerListener::OnAdviseRequest(CDDESvrConv* pConv, CDDELink* pLink, CDDEData& oData)
+{
+	return OnRequest(pConv, pLink->Item(), pLink->Format(), oData);
+}
+
+inline void CDefDDEServerListener::OnAdviseStop(CDDESvrConv* pConv, CDDELink* pLink)
 {
 }
 
