@@ -40,6 +40,7 @@ public:
 		E_QUERY_FAILED   = 20,	// Failed to query socket info.
 		E_DISCONNECTED   = 21,	// Connection was closed.
 		E_BAD_PROTOCOL	 = 22,	// Incorrect protocol version.
+		E_WAIT_FAILED    = 23,	// Failed to wait for response.
 	};
 
 	//

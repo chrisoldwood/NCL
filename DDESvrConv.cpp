@@ -146,7 +146,7 @@ CDDELink* CDDESvrConv::FindLink(const char* pszItem, uint nFormat) const
 **
 ** Parameters:	pLink	The updated link.
 **
-** Returns:		Nothing.
+** Returns:		true or false.
 **
 *******************************************************************************
 */

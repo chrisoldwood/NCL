@@ -115,6 +115,10 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 			m_strErrorText.Format("Connection closed: %s", strSymbol);
 			break;
 
+		case E_WAIT_FAILED:
+			m_strErrorText.Format("Failed waiting for response: %s", strSymbol);
+			break;
+
 		// Shouldn't happen!
 		default:
 			ASSERT_FALSE();
