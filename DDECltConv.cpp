@@ -55,8 +55,7 @@ CDDECltConv::~CDDECltConv()
 {
 	ASSERT(m_nRefCount == 0);
 
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
-		delete m_aoLinks[i];
+	DestroyAllLinks();
 }
 
 /******************************************************************************
@@ -186,11 +185,29 @@ void CDDECltConv::DestroyLink(CDDELink* pLink)
 }
 
 /******************************************************************************
+** Method:		DestroyAllLinks()
+**
+** Description:	Ends an advise loop for all items.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDECltConv::DestroyAllLinks()
+{
+	while (m_aoLinks.Size() > 0)
+		DestroyLink(m_aoLinks[0]);
+}
+
+/******************************************************************************
 ** Method:		FindLink()
 **
 ** Description:	Finds an existing link.
 **
-** Parameters:	pszItem		The item to link to..
+** Parameters:	pszItem		The item to link to.
 **				nFormat		The item data format.
 **
 ** Returns:		The link or NULL if not found.
@@ -212,4 +229,24 @@ CDDELink* CDDECltConv::FindLink(const char* pszItem, uint nFormat)
 	}
 
 	return NULL;
+}
+
+/******************************************************************************
+** Method:		GetAllLinks()
+**
+** Description:	Gets the collection of links.
+**
+** Parameters:	aoLinks		The return array for the collection.
+**
+** Returns:		The number of links.
+**
+*******************************************************************************
+*/
+
+uint CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks)
+{
+	for (int i = 0; i < m_aoLinks.Size(); ++i)
+		aoLinks.Add(m_aoLinks[i]);
+
+	return aoLinks.Size();
 }
