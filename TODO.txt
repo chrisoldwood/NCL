@@ -1,1 +1,3 @@
 - Faster lookup of conversations and links.
+
+- WinInet classes.
