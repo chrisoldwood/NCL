@@ -730,7 +730,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					aoPairs[nEntries-1].hszTopic = NULL;
 
 					// Create result handle from temporary buffer.
-					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false);
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false).Handle();
 				}
 			}
 			// Querying all topics supported by a specific server?
@@ -763,7 +763,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					aoPairs[nEntries-1].hszTopic = NULL;
 
 					// Create result handle from temporary buffer.
-					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false);
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false).Handle();
 				}
 			}
 			// Querying all servers supporting a specific topic?
@@ -796,7 +796,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					aoPairs[nEntries-1].hszTopic = NULL;
 
 					// Create result handle from temporary buffer.
-					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false);
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false).Handle();
 				}
 			}
 		}
@@ -833,15 +833,12 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		case XTYP_REQUEST:
 		{
 			CDDEString strItem(g_pDDEServer, hsz2);
-			CDDEData   oData(g_pDDEServer, hsz2, uFormat);
+			CDDEData   oData(g_pDDEServer, hsz2, uFormat, false);
 
-			hResult = oData;
-
-			if (!g_pDDEServer->OnRequest(hConv, strItem, uFormat, oData))
-			{
-				::DdeFreeDataHandle(oData);
-				hResult = NULL;
-			}
+			if (g_pDDEServer->OnRequest(hConv, strItem, uFormat, oData))
+				hResult = oData.Handle();
+			else
+				oData.Free();
 		}
 		break;
 
@@ -858,15 +855,12 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		case XTYP_ADVREQ:
 		{
 			CDDEString strItem(g_pDDEServer, hsz2);
-			CDDEData   oData(g_pDDEServer, hsz2, uFormat);
+			CDDEData   oData(g_pDDEServer, hsz2, uFormat, false);
 
-			hResult = oData;
-
-			if (!g_pDDEServer->OnAdviseRequest(hConv, strItem, uFormat, oData))
-			{
-				::DdeFreeDataHandle(oData);
-				hResult = NULL;
-			}
+			if (g_pDDEServer->OnAdviseRequest(hConv, strItem, uFormat, oData))
+				hResult = oData.Handle();
+			else
+				oData.Free();
 		}
 		break;
 
@@ -882,7 +876,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		// Execute command?
 		case XTYP_EXECUTE:
 		{
-			CDDEData oData(g_pDDEServer, hData, true);
+			CDDEData oData(g_pDDEServer, hData, CF_TEXT, true);
 
 			hResult = DDE_FNOTPROCESSED;
 
@@ -895,7 +889,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		case XTYP_POKE:
 		{
 			CDDEString strItem(g_pDDEServer, hsz2);
-			CDDEData   oData(g_pDDEServer, hData, true);
+			CDDEData   oData(g_pDDEServer, hData, uFormat, false);
 
 			hResult = DDE_FNOTPROCESSED;
 
