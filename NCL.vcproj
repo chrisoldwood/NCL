@@ -218,6 +218,9 @@
 				RelativePath=".\DDEInst.cpp">
 			</File>
 			<File
+				RelativePath=".\DDELink.cpp">
+			</File>
+			<File
 				RelativePath="DDEServer.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
