@@ -22,8 +22,8 @@
 *******************************************************************************
 */
 
-const DWORD CClientPipe::DEF_OPEN_MODE = FILE_ATTRIBUTE_NORMAL /*| FILE_FLAG_WRITE_THROUGH*/;
-const DWORD CClientPipe::DEF_PIPE_MODE = PIPE_READMODE_BYTE | PIPE_NOWAIT;
+const DWORD CClientPipe::DEF_OPEN_MODE = /*FILE_ATTRIBUTE_NORMAL |*/ FILE_FLAG_OVERLAPPED;
+const DWORD CClientPipe::DEF_PIPE_MODE = PIPE_READMODE_MESSAGE | PIPE_WAIT;
 const DWORD CClientPipe::DEF_TIMEOUT   = 30000;
 const DWORD CClientPipe::DEF_INTERVAL  = 1000;
 

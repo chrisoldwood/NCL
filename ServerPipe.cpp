@@ -22,8 +22,8 @@
 *******************************************************************************
 */
 
-const DWORD CServerPipe::DEF_OPEN_MODE = PIPE_ACCESS_DUPLEX /*| FILE_FLAG_WRITE_THROUGH*/;
-const DWORD CServerPipe::DEF_PIPE_MODE = PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_NOWAIT;
+const DWORD CServerPipe::DEF_OPEN_MODE = PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED;
+const DWORD CServerPipe::DEF_PIPE_MODE = PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT;
 const DWORD CServerPipe::DEF_BUF_SIZE  = 4096;
 const DWORD CServerPipe::DEF_TIMEOUT   = 30000;
 
@@ -107,6 +107,17 @@ void CServerPipe::Create(const char* pszName)
 		Close();
 		throw CPipeException(CPipeException::E_CREATE_FAILED, ERROR_ALREADY_EXISTS);
 	}
+
+	// Connection waiting?
+	BOOL bResult = ::ConnectNamedPipe(m_hPipe, &m_oReadIO);
+
+	// Connection already established?
+	if ( (bResult == FALSE) && (::GetLastError() == ERROR_PIPE_CONNECTED) )
+		bResult = TRUE;
+
+	// Error occurred?
+	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_PENDING) )
+		throw CPipeException(CPipeException::E_ACCEPT_FAILED, ::GetLastError());
 }
 
 /******************************************************************************
@@ -127,19 +138,16 @@ bool CServerPipe::Accept()
 {
 	ASSERT(m_hPipe != INVALID_HANDLE_VALUE);
 
-	// Connection waiting?
-	// NB: Non-blocking by default.
-	BOOL bOK = ::ConnectNamedPipe(m_hPipe, NULL);
+	DWORD dwRead;
 
-	// Connection already established?
-	if ( (bOK == FALSE) && (::GetLastError() == ERROR_PIPE_CONNECTED) )
-		bOK = TRUE;
+	// Connection accepted?
+	BOOL bResult = ::GetOverlappedResult(m_hPipe, &m_oReadIO, &dwRead, FALSE);
 
 	// Error occurred?
-	if ( (bOK == FALSE) && (::GetLastError() != ERROR_PIPE_LISTENING) )
+	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_INCOMPLETE) )
 		throw CPipeException(CPipeException::E_ACCEPT_FAILED, ::GetLastError());
 
-	return bOK;
+	return bResult;
 }
 
 /******************************************************************************

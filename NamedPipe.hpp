@@ -34,17 +34,23 @@ public:
 	uint Available();
 	uint Peek(void* pBuffer, uint nBufSize);
 	uint Peek(CBuffer& oBuffer, uint nBufSize);
-	uint Read(void* pBuffer, uint nBufSize);
-	uint Read(CBuffer& oBuffer);
-	uint Write(const void* pBuffer, uint nBufSize);
-	uint Write(const CBuffer& oBuffer);
+	void Read(void* pBuffer, uint nBufSize);
+	void Read(CBuffer& oBuffer);
+	void Write(const void* pBuffer, uint nBufSize);
+	void Write(const CBuffer& oBuffer);
 
 protected:
 	//
 	// Members.
 	//
-	HANDLE	m_hPipe;		// The pipe handle.
-	CString	m_strName;		// The pipe name.
+	HANDLE		m_hPipe;		// The pipe handle.
+	CString		m_strName;		// The pipe name.
+	CEvent		m_oReadEvent;	// Read Overlapped I/O event.
+	OVERLAPPED	m_oReadIO;		// Read Overlapped I/O data.
+	CEvent		m_oWriteEvent;	// Write Overlapped I/O event.
+	OVERLAPPED	m_oWriteIO;		// Write Overlapped I/O data.
+	bool		m_bPrevWrite;	// Write outstanding?
+	uint		m_nPrevBytes;	// Previous write size.
 
 	//
 	// Constructors/Destructor.
@@ -77,14 +83,14 @@ inline uint CNamedPipe::Peek(CBuffer& oBuffer, uint nBufSize)
 	return Peek(oBuffer.Buffer(), nBufSize);
 }
 
-inline uint CNamedPipe::Read(CBuffer& oBuffer)
+inline void CNamedPipe::Read(CBuffer& oBuffer)
 {
-	return Read(oBuffer.Buffer(), oBuffer.Size());
+	Read(oBuffer.Buffer(), oBuffer.Size());
 }
 
-inline uint CNamedPipe::Write(const CBuffer& oBuffer)
+inline void CNamedPipe::Write(const CBuffer& oBuffer)
 {
-	return Write(oBuffer.Buffer(), oBuffer.Size());
+	Write(oBuffer.Buffer(), oBuffer.Size());
 }
 
 #endif // NAMEDPIPE_HPP

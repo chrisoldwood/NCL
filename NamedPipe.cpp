@@ -29,7 +29,18 @@
 
 CNamedPipe::CNamedPipe()
 	: m_hPipe(INVALID_HANDLE_VALUE)
+	, m_oReadEvent(true, true)
+	, m_oWriteEvent(true, true)
+	, m_bPrevWrite(false)
+	, m_nPrevBytes(0)
 {
+	// Clear Overlapped I/O structs.
+	memset(&m_oReadIO,  0, sizeof(m_oReadIO));
+	memset(&m_oWriteIO, 0, sizeof(m_oWriteIO));
+
+	// Attach event handles Overlapped I/O structs.
+	m_oReadIO.hEvent  = m_oReadEvent.Handle();
+	m_oWriteIO.hEvent = m_oWriteEvent.Handle();
 }
 
 /******************************************************************************
@@ -107,24 +118,32 @@ uint CNamedPipe::Peek(void* pBuffer, uint nBufSize)
 ** Parameters:	pBuffer		The buffer to store the data.
 **				nBufSize	The number of bytes to read.
 **
-** Returns:		The number of bytes read.
+** Returns:		Nothing.
 **
 ** Exceptions:	CPipeException.
 **
 *******************************************************************************
 */
 
-uint CNamedPipe::Read(void* pBuffer, uint nBufSize)
+void CNamedPipe::Read(void* pBuffer, uint nBufSize)
 {
 	DWORD dwRead;
 
-	// Query the bytes available.
-	if (!::ReadFile(m_hPipe, pBuffer, nBufSize, &dwRead, NULL))
+	// Start the read.
+	BOOL bResult = ::ReadFile(m_hPipe, pBuffer, nBufSize, &dwRead, &m_oReadIO);
+
+	// Read failed?
+	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_PENDING) )
+		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
+
+	// Wait for I/O to finish.
+	bResult = ::GetOverlappedResult(m_hPipe, &m_oReadIO, &dwRead, TRUE);
+
+	// Read failed?
+	if (bResult == FALSE)
 		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
 
 	ASSERT(dwRead == nBufSize);
-
-	return dwRead;
 }
 
 /******************************************************************************
@@ -135,22 +154,36 @@ uint CNamedPipe::Read(void* pBuffer, uint nBufSize)
 ** Parameters:	pBuffer		The buffer to store the data.
 **				nBufSize	The number of bytes to write.
 **
-** Returns:		The number of bytes written.
+** Returns:		Nothing.
 **
 ** Exceptions:	CPipeException.
 **
 *******************************************************************************
 */
 
-uint CNamedPipe::Write(const void* pBuffer, uint nBufSize)
+void CNamedPipe::Write(const void* pBuffer, uint nBufSize)
 {
 	DWORD dwWritten;
 
-	// Query the bytes available.
-	if (!::WriteFile(m_hPipe, pBuffer, nBufSize, &dwWritten, NULL))
-		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
+	if (m_bPrevWrite)
+	{
+		// Wait for previous write to finish.
+		BOOL bResult = ::GetOverlappedResult(m_hPipe, &m_oWriteIO, &dwWritten, TRUE);
 
-	ASSERT(dwWritten == nBufSize);
+		// Write failed?
+		if (bResult == FALSE)
+			throw CPipeException(CPipeException::E_WRITE_FAILED, ::GetLastError());
 
-	return dwWritten;
+		ASSERT(dwWritten == m_nPrevBytes);
+	}
+
+	// Start the write.
+	BOOL bResult = ::WriteFile(m_hPipe, pBuffer, nBufSize, &dwWritten, &m_oWriteIO);
+
+	// Write failed?
+	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_PENDING) )
+		throw CPipeException(CPipeException::E_WRITE_FAILED, ::GetLastError());
+
+	m_bPrevWrite = true;
+	m_nPrevBytes = nBufSize;
 }
