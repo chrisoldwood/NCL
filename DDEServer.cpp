@@ -533,7 +533,7 @@ void CDDEServer::OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat)
 *******************************************************************************
 */
 
-HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD dwData1, DWORD dwData2)
+HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA /*hData*/, DWORD /*dwData1*/, DWORD /*dwData2*/)
 {
 	ASSERT(g_pDDEServer != NULL);
 
@@ -623,7 +623,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		default:
 		{
 			TRACE1("DDECallbackProc(0x%08X)\n", uType);
-			ASSERT(false);
+			ASSERT_FALSE();
 		}
 		break;
 	}

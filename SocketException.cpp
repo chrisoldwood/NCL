@@ -88,7 +88,7 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 
 		// Shouldn't happen!
 		default:
-			ASSERT(false);
+			ASSERT_FALSE();
 			break;
 	}
 }

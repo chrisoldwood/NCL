@@ -61,7 +61,7 @@ CPipeException::CPipeException(int eErrCode, HRESULT hResult)
 
 		// Shouldn't happen!
 		default:
-			ASSERT(false);
+			ASSERT_FALSE();
 			break;
 	}
 }

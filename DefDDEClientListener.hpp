@@ -38,19 +38,19 @@ public:
 *******************************************************************************
 */
 
-inline void CDefDDEClientListener::OnRegister(const char* pszBaseName, const char* pszInstName)
+inline void CDefDDEClientListener::OnRegister(const char* /*pszBaseName*/, const char* /*pszInstName*/)
 {
 }
 
-inline void CDefDDEClientListener::OnUnregister(const char* pszBaseName, const char* pszInstName)
+inline void CDefDDEClientListener::OnUnregister(const char* /*pszBaseName*/, const char* /*pszInstName*/)
 {
 }
 
-inline void CDefDDEClientListener::OnDisconnect(CDDECltConv* pConv)
+inline void CDefDDEClientListener::OnDisconnect(CDDECltConv* /*pConv*/)
 {
 }
 
-inline void CDefDDEClientListener::OnAdvise(CDDELink* pLink, const CDDEData* pData)
+inline void CDefDDEClientListener::OnAdvise(CDDELink* /*pLink*/, const CDDEData* /*pData*/)
 {
 }
 

@@ -61,7 +61,7 @@ CDDEException::CDDEException(int eErrCode, uint nDDECode)
 
 		// Shouldn't happen!
 		default:
-			ASSERT(false);
+			ASSERT_FALSE();
 			break;
 	}
 }
