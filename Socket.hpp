@@ -22,6 +22,7 @@
 class CSocket
 {
 public:
+	virtual void Close();
 	virtual ~CSocket();
 
 	//
@@ -29,11 +30,27 @@ public:
 	//
 	SOCKET Handle() const;
 	bool   IsOpen() const;
-	
+
 	//
 	// Methods.
 	//
-	virtual void Close();
+	int Send(const void* pBuffer, int nBufSize);
+	int Send(const CBuffer& oBuffer);
+	int Send(const char* pszString);
+
+	int Recv(void* pBuffer, int nBufSize);
+	int Recv(CBuffer& oBuffer);
+
+	int Available();
+	int Peek(void* pBuffer, uint nBufSize);
+
+	//
+	// Class methods.
+	//
+
+	static bool    IsAddress(const char* pszHost);
+	static in_addr Resolve(const char* pszHost);
+	static CString ResolveStr(const char* pszHost);
 
 protected:
 	//
@@ -47,9 +64,16 @@ protected:
 	void operator=(const CSocket&);
 
 	//
+	// Template methods.
+	//
+	virtual int Type()     const = 0;
+	virtual int Protocol() const = 0;
+
+	//
 	// Internal methods.
 	//
 	void Create(int nAF, int nType, int nProtocol);
+	void Connect(const char* pszHost, uint nPort);
 };
 
 /******************************************************************************
@@ -67,6 +91,21 @@ inline SOCKET CSocket::Handle() const
 inline bool CSocket::IsOpen() const
 {
 	return (m_hSocket != INVALID_SOCKET);
+}
+
+inline int CSocket::Send(const CBuffer& oBuffer)
+{
+	return Send(oBuffer.Buffer(), oBuffer.Size());
+}
+
+inline int CSocket::Send(const char* pszString)
+{
+	return Send(pszString, strlen(pszString));
+}
+
+inline int CSocket::Recv(CBuffer& oBuffer)
+{
+	return Recv(oBuffer.Buffer(), oBuffer.Size());
 }
 
 #endif // SOCKET_HPP
