@@ -41,10 +41,8 @@ CDDESvrConv::CDDESvrConv(CDDEInst* pInst, HCONV hConv, const char* pszService, c
 
 CDDESvrConv::~CDDESvrConv()
 {
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
-		delete m_aoLinks[i];
+	DestroyAllLinks();
 }
-
 
 /******************************************************************************
 ** Method:		CreateLink()
@@ -87,11 +85,31 @@ void CDDESvrConv::DestroyLink(CDDELink* pLink)
 }
 
 /******************************************************************************
+** Method:		DestroyAllLinks()
+**
+** Description:	Destroys all links.
+**
+** Parameters:	pLink		The link to destroy.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDESvrConv::DestroyAllLinks()
+{
+	for (int i = 0; i < m_aoLinks.Size(); ++i)
+		delete m_aoLinks[i];
+
+	m_aoLinks.RemoveAll();
+}
+
+/******************************************************************************
 ** Method:		FindLink()
 **
 ** Description:	Finds an existing link.
 **
-** Parameters:	pszItem		The item to link to..
+** Parameters:	pszItem		The item to link to.
 **				nFormat		The item data format.
 **
 ** Returns:		The link or NULL if not found.
@@ -113,4 +131,45 @@ CDDELink* CDDESvrConv::FindLink(const char* pszItem, uint nFormat)
 	}
 
 	return NULL;
+}
+
+/******************************************************************************
+** Method:		GetAllLinks()
+**
+** Description:	Gets the collection of links.
+**
+** Parameters:	aoLinks		The return array for the collection.
+**
+** Returns:		The number of links.
+**
+*******************************************************************************
+*/
+
+uint CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks)
+{
+	for (int i = 0; i < m_aoLinks.Size(); ++i)
+		aoLinks.Add(m_aoLinks[i]);
+
+	return aoLinks.Size();
+}
+
+/******************************************************************************
+** Method:		PostLinkUpdate()
+**
+** Description:	Posts an update message to inform DDE clients that the link
+**				has been updated.
+**
+** Parameters:	pLink	The updated link.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+bool CDDESvrConv::PostLinkUpdate(const CDDELink* pLink)
+{
+	CDDEString strTopic(m_pInst, m_strTopic);
+	CDDEString strItem(m_pInst, pLink->Item());
+
+	return (::DdePostAdvise(m_pInst->Handle(), strTopic, strItem) > 0);
 }

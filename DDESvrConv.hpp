@@ -12,6 +12,9 @@
 #ifndef DDESVRCONV_HPP
 #define DDESVRCONV_HPP
 
+// Template shorthands.
+typedef TPtrArray<CDDELink> CDDESvrLinks;
+
 /******************************************************************************
 ** 
 ** The type on conversation used by a DDE Server.
@@ -26,15 +29,14 @@ public:
 	// Link methods.
 	//
 	CDDELink* FindLink(const char* pszItem, uint nFormat);
+	uint      GetAllLinks(CDDESvrLinks& aoLinks);
+	bool      PostLinkUpdate(const CDDELink* pLink);
 
 protected:
-	// Template shorthands.
-	typedef TPtrArray<CDDELink> CLinks;
-
 	//
 	// Members.
 	//
-	CLinks		m_aoLinks;		// The list of links.
+	CDDESvrLinks	m_aoLinks;		// The list of links.
 
 	//
 	// Constructors/Destructor.
@@ -49,6 +51,7 @@ protected:
 	//
 	CDDELink* CreateLink(const char* pszItem, uint nFormat);
 	void      DestroyLink(CDDELink* pLink);
+	void      DestroyAllLinks();
 
 	// Friends.
 	friend class CDDEServer;
