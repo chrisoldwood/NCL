@@ -162,6 +162,10 @@ void CNamedPipe::Read(void* pBuffer, uint nBufSize)
 
 		::CancelIo(m_hPipe);
 
+		// Remap error code if it timed-out.
+		if (dwResult == ERROR_IO_INCOMPLETE)
+			dwResult = WAIT_TIMEOUT;
+
 		throw CPipeException(CPipeException::E_READ_FAILED, dwResult);
 	}
 
@@ -203,6 +207,10 @@ void CNamedPipe::Write(const void* pBuffer, uint nBufSize)
 			DWORD dwResult = ::GetLastError();
 
 			::CancelIo(m_hPipe);
+
+			// Remap error code if it timed-out.
+			if (dwResult == ERROR_IO_INCOMPLETE)
+				dwResult = WAIT_TIMEOUT;
 
 			throw CPipeException(CPipeException::E_WRITE_FAILED, dwResult);
 		}
