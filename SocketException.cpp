@@ -42,12 +42,24 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 			m_strErrorText.Format("Failed to create socket: %s", strSymbol);
 			break;
 
+		case E_RESOLVE_FAILED:
+			m_strErrorText.Format("Failed to resolve hostname: %s", strSymbol);
+			break;
+
 		case E_CONNECT_FAILED:
 			m_strErrorText.Format("Failed to connect to host: %s", strSymbol);
 			break;
 
-		case E_RESOLVE_FAILED:
-			m_strErrorText.Format("Failed to resolve hostname: %s", strSymbol);
+		case E_BIND_FAILED:
+			m_strErrorText.Format("Failed to bind socket: %s", strSymbol);
+			break;
+
+		case E_LISTEN_FAILED:
+			m_strErrorText.Format("Failed to listen on socket: %s", strSymbol);
+			break;
+
+		case E_ACCEPT_FAILED:
+			m_strErrorText.Format("Failed to accept client connection: %s", strSymbol);
 			break;
 
 		case E_SEND_FAILED:
@@ -60,6 +72,18 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 
 		case E_PEEK_FAILED:
 			m_strErrorText.Format("Failed to peek incoming data: %s", strSymbol);
+			break;
+
+		case E_SELECT_FAILED:
+			m_strErrorText.Format("Failed to query socket state: %s", strSymbol);
+			break;
+
+		case E_QUERY_FAILED:
+			m_strErrorText.Format("Failed to query socket info: %s", strSymbol);
+			break;
+
+		case E_DISCONNECTED:
+			m_strErrorText.Format("Connection closed: %s", strSymbol);
 			break;
 
 		// Shouldn't happen!

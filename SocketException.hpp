@@ -28,11 +28,17 @@ public:
 	enum ErrCode
 	{
 		E_CREATE_FAILED  = 10,	// Failed to create socket.
-		E_CONNECT_FAILED = 11,	// Failed to connect to host.
-		E_RESOLVE_FAILED = 12,	// Failed to resolve host name.
-		E_SEND_FAILED    = 13,  // Failed to send data.
-		E_RECV_FAILED    = 14,	// Failed to recieve data.
-		E_PEEK_FAILED    = 15,	// Failed to peek at incoming data.
+		E_RESOLVE_FAILED = 11,	// Failed to resolve host name.
+		E_CONNECT_FAILED = 12,	// Failed to connect client to host.
+		E_BIND_FAILED    = 13,	// Failed to bind server socket.
+		E_LISTEN_FAILED  = 14,	// Failed to listen on server socket.
+		E_ACCEPT_FAILED  = 15,	// Failed to accept client connection.
+		E_SEND_FAILED    = 16,  // Failed to send data.
+		E_RECV_FAILED    = 17,	// Failed to recieve data.
+		E_PEEK_FAILED    = 18,	// Failed to peek at incoming data.
+		E_SELECT_FAILED  = 19,	// Failed to query socket state.
+		E_QUERY_FAILED   = 20,	// Failed to query socket info.
+		E_DISCONNECTED   = 21,	// Connection was closed.
 	};
 
 	//
