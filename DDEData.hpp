@@ -93,6 +93,11 @@ public:
 *******************************************************************************
 */
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 inline CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, bool bOwn)
 	: m_nRefCount(1)
 	, m_pInst(pInst)
@@ -223,5 +228,9 @@ inline void CDDEData::SetString(const char* pszString)
 {
 	SetData(pszString, strlen(pszString)+1);
 }
+
+#ifdef _DEBUG
+#undef new
+#endif
 
 #endif // DDEDATA_HPP
