@@ -9,7 +9,6 @@
 */
 
 #include "ncl.hpp"
-#include <limits.h>
 
 #ifdef _DEBUG
 // For memory leak detection.
@@ -49,131 +48,51 @@ CTCPSocket::~CTCPSocket()
 }
 
 /******************************************************************************
-** Method:		Connect()
+** Methods:		Type() & Protocol()
 **
-** Description:	Open a connection.
+** Description:	Template methods to get the socket type and protocol.
 **
-** Parameters:	pszHost		The host name.
-**				nPort		The port number.
+** Parameters:	None.
 **
-** Returns:		Nothing.
-**
-** Exceptions:	CSocketException.
+** Returns:		SOCK_* & IPPROTO_*.
 **
 *******************************************************************************
 */
 
-void CTCPSocket::Connect(const char* pszHost, uint nPort)
+int CTCPSocket::Type() const
 {
-	ASSERT(m_hSocket == INVALID_SOCKET);
-	ASSERT(pszHost   != NULL);
-	ASSERT(nPort     <= USHRT_MAX);
+	return SOCK_STREAM;
+}
 
-	sockaddr_in	addr = { 0 };
-
-	addr.sin_family      = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(pszHost);
-	addr.sin_port        = htons((ushort)nPort);
-
-	// Host name isn't an IP Address?
-	if (addr.sin_addr.s_addr == INADDR_NONE)
-	{
-		// Resolve host name.
-		hostent* pHost = gethostbyname(pszHost);
-
-		if (pHost == NULL)
-			throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
-
-		memcpy(&addr.sin_addr, pHost->h_addr_list[0], pHost->h_length);
-	}
-
-	// Create the socket.
-	Create(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-	// Connect to host.
-	if (connect(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_CONNECT_FAILED, CWinSock::LastError());
+int CTCPSocket::Protocol() const
+{
+	return IPPROTO_TCP;
 }
 
 /******************************************************************************
-** Method:		Send()
+** Method:		PeerAddress()
 **
-** Description:	Send the data.
+** Description:	Gets the IP address of the peer.
 **
-** Parameters:	pBuffer		The buffer to send.
-**				nBufSize	The buffer size.
+** Parameters:	None.
 **
-** Returns:		The number of bytes sent.
-**
-** Exceptions:	CSocketException.
-**
-*******************************************************************************
-*/
-
-int CTCPSocket::Send(const void* pBuffer, int nBufSize)
-{
-	ASSERT(m_hSocket != INVALID_SOCKET);
-
-	int nResult = send(m_hSocket, (const char*)pBuffer, nBufSize, 0);
-
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_SEND_FAILED, CWinSock::LastError());
-
-	ASSERT(nResult == nBufSize);
-
-	return nResult;
-}
-
-/******************************************************************************
-** Method:		Recv()
-**
-** Description:	Read the incoming data.
-**
-** Parameters:	pBuffer		The buffer to write to.
-**				nBufSize	The buffer size.
-**
-** Returns:		The number of bytes read.
+** Returns:		The address in numeric form.
 **
 ** Exceptions:	CSocketException.
 **
 *******************************************************************************
 */
 
-int CTCPSocket::Recv(void* pBuffer, int nBufSize)
+CString CTCPSocket::PeerAddress() const
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
-	int nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, 0);
+	sockaddr_in  addr      = { 0 };;
+	int          nAddrSize = sizeof(addr);
 
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());
+	// Get the peer host address and port number.
+	if (getpeername(m_hSocket, (sockaddr*)&addr, &nAddrSize) == SOCKET_ERROR)
+		throw CSocketException(CSocketException::E_QUERY_FAILED, CWinSock::LastError());
 
-	return nResult;
-}
-
-/******************************************************************************
-** Method:		Peek()
-**
-** Description:	Peek at the incoming data.
-**
-** Parameters:	pBuffer		The buffer to write to.
-**				nBufSize	The buffer size.
-**
-** Returns:		The number of bytes left to read.
-**
-** Exceptions:	CSocketException.
-**
-*******************************************************************************
-*/
-
-int CTCPSocket::Peek(void* pBuffer, uint nBufSize)
-{
-	ASSERT(m_hSocket != INVALID_SOCKET);
-
-	int nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, MSG_PEEK);
-
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
-
-	return nResult;
+	return inet_ntoa(addr.sin_addr);
 }

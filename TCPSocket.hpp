@@ -22,31 +22,28 @@
 class CTCPSocket : public CSocket
 {
 public:
-	//
-	// Constructors/Destructor.
-	//
-	CTCPSocket();
 	virtual ~CTCPSocket();
-	
+
 	//
-	// Methods.
+	// Properties.
 	//
-	void Connect(const char* pszHost, uint nPort);
-
-	int Send(const void* pBuffer, int nBufSize);
-	int Send(const CBuffer& oBuffer);
-	int Send(const char* pszString);
-
-	int Recv(void* pBuffer, int nBufSize);
-	int Recv(CBuffer& oBuffer);
-
-	int Available();
-	int Peek(void* pBuffer, uint nBufSize);
+	CString PeerAddress() const;
 
 protected:
 	//
 	// Members.
 	//
+
+	// Protect creation etc.
+	CTCPSocket();
+	CTCPSocket(const CTCPSocket&);
+	void operator=(const CTCPSocket&);
+
+	//
+	// Template methods.
+	//
+	virtual int Type()     const;
+	virtual int Protocol() const;
 };
 
 /******************************************************************************
@@ -55,34 +52,5 @@ protected:
 **
 *******************************************************************************
 */
-
-inline int CTCPSocket::Send(const CBuffer& oBuffer)
-{
-	return Send(oBuffer.Buffer(), oBuffer.Size());
-}
-
-inline int CTCPSocket::Send(const char* pszString)
-{
-	return Send(pszString, strlen(pszString));
-}
-
-inline int CTCPSocket::Recv(CBuffer& oBuffer)
-{
-	return Recv(oBuffer.Buffer(), oBuffer.Size());
-}
-
-inline int CTCPSocket::Available()
-{
-	ASSERT(m_hSocket != INVALID_SOCKET);
-
-	ulong lAvailable = 0;
-
-	int nResult = ::ioctlsocket(m_hSocket, FIONREAD, &lAvailable);
-
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
-
-	return lAvailable;
-}
 
 #endif // TCPSOCKET_HPP
