@@ -575,7 +575,7 @@ HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 
 			if (hData != NULL)
 			{
-				CDDEData oData(g_pDDEClient, hData);
+				CDDEData oData(g_pDDEClient, hData, uFormat, false);
 
 				g_pDDEClient->OnAdvise(hConv, strTopic, strItem, uFormat, &oData);
 			}

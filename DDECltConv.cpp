@@ -116,7 +116,7 @@ CDDEData CDDECltConv::Request(const char* pszItem, uint nFormat)
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_REQUEST_FAILED, m_pInst->LastError());
 		
-	return CDDEData(m_pInst, hData);
+	return CDDEData(m_pInst, hData, nFormat, true);
 }
 
 /******************************************************************************
