@@ -39,6 +39,8 @@ public:
 	void Write(const void* pBuffer, uint nBufSize);
 	void Write(const CBuffer& oBuffer);
 
+	virtual void Close();
+
 protected:
 	//
 	// Members.
@@ -51,6 +53,12 @@ protected:
 	OVERLAPPED	m_oWriteIO;		// Write Overlapped I/O data.
 	bool		m_bPrevWrite;	// Write outstanding?
 	uint		m_nPrevBytes;	// Previous write size.
+	DWORD		m_dwTimeOut;	// Connect/Read/Write timeout.
+
+	//
+	// Constants.
+	//
+	static const DWORD DEF_TIMEOUT;
 
 	//
 	// Constructors/Destructor.

@@ -16,6 +16,15 @@
 #endif
 
 /******************************************************************************
+**
+** Constants.
+**
+*******************************************************************************
+*/
+
+const DWORD CNamedPipe::DEF_TIMEOUT = 30000;
+
+/******************************************************************************
 ** Method:		Constructor.
 **
 ** Description:	.
@@ -33,12 +42,13 @@ CNamedPipe::CNamedPipe()
 	, m_oWriteEvent(true, true)
 	, m_bPrevWrite(false)
 	, m_nPrevBytes(0)
+	, m_dwTimeOut(DEF_TIMEOUT)
 {
 	// Clear Overlapped I/O structs.
 	memset(&m_oReadIO,  0, sizeof(m_oReadIO));
 	memset(&m_oWriteIO, 0, sizeof(m_oWriteIO));
 
-	// Attach event handles Overlapped I/O structs.
+	// Attach event handles to Overlapped I/O structs.
 	m_oReadIO.hEvent  = m_oReadEvent.Handle();
 	m_oWriteIO.hEvent = m_oWriteEvent.Handle();
 }
@@ -57,6 +67,7 @@ CNamedPipe::CNamedPipe()
 
 CNamedPipe::~CNamedPipe()
 {
+	ASSERT(m_hPipe == INVALID_HANDLE_VALUE);
 }
 
 /******************************************************************************
@@ -127,6 +138,9 @@ uint CNamedPipe::Peek(void* pBuffer, uint nBufSize)
 
 void CNamedPipe::Read(void* pBuffer, uint nBufSize)
 {
+	ASSERT(pBuffer  != NULL);
+	ASSERT(nBufSize != 0 );
+
 	DWORD dwRead;
 
 	// Start the read.
@@ -136,12 +150,20 @@ void CNamedPipe::Read(void* pBuffer, uint nBufSize)
 	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_PENDING) )
 		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
 
-	// Wait for I/O to finish.
-	bResult = ::GetOverlappedResult(m_hPipe, &m_oReadIO, &dwRead, TRUE);
+	// Wait for I/O to finish OR time out.
+	m_oReadEvent.Wait(m_dwTimeOut);
+
+	bResult = ::GetOverlappedResult(m_hPipe, &m_oReadIO, &dwRead, FALSE);
 
 	// Read failed?
 	if (bResult == FALSE)
-		throw CPipeException(CPipeException::E_READ_FAILED, ::GetLastError());
+	{
+		DWORD dwResult = ::GetLastError();
+
+		::CancelIo(m_hPipe);
+
+		throw CPipeException(CPipeException::E_READ_FAILED, dwResult);
+	}
 
 	ASSERT(dwRead == nBufSize);
 }
@@ -163,16 +185,27 @@ void CNamedPipe::Read(void* pBuffer, uint nBufSize)
 
 void CNamedPipe::Write(const void* pBuffer, uint nBufSize)
 {
+	ASSERT(pBuffer  != NULL);
+	ASSERT(nBufSize != 0 );
+
 	DWORD dwWritten;
 
 	if (m_bPrevWrite)
 	{
-		// Wait for previous write to finish.
-		BOOL bResult = ::GetOverlappedResult(m_hPipe, &m_oWriteIO, &dwWritten, TRUE);
+		// Wait for I/O to finish OR time out.
+		m_oWriteEvent.Wait(m_dwTimeOut);
+
+		BOOL bResult = ::GetOverlappedResult(m_hPipe, &m_oWriteIO, &dwWritten, FALSE);
 
 		// Write failed?
 		if (bResult == FALSE)
-			throw CPipeException(CPipeException::E_WRITE_FAILED, ::GetLastError());
+		{
+			DWORD dwResult = ::GetLastError();
+
+			::CancelIo(m_hPipe);
+
+			throw CPipeException(CPipeException::E_WRITE_FAILED, dwResult);
+		}
 
 		ASSERT(dwWritten == m_nPrevBytes);
 	}
@@ -186,4 +219,32 @@ void CNamedPipe::Write(const void* pBuffer, uint nBufSize)
 
 	m_bPrevWrite = true;
 	m_nPrevBytes = nBufSize;
+}
+
+/******************************************************************************
+** Method:		Close()
+**
+** Description:	Close the named pipe.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CNamedPipe::Close()
+{
+	// Not already closed?.
+	if (m_hPipe != INVALID_HANDLE_VALUE)
+		::CloseHandle(m_hPipe);
+
+	// Reset members.
+	m_hPipe      = INVALID_HANDLE_VALUE;
+	m_bPrevWrite = false;
+	m_nPrevBytes = 0;
+
+	// Reset events to signalled.
+	m_oReadEvent.Signal();
+	m_oWriteEvent.Signal();
 }
