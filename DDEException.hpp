@@ -34,6 +34,7 @@ public:
 		E_REQUEST_FAILED	= 14,	// Failed to request an item.
 		E_LINK_FAILED		= 15,	// Failed to create advise loop.
 		E_ALLOC_FAILED		= 16,	// Failed to allocate data handle.
+		E_QUERY_FAILED		= 17,	// Failed to query DDE servers.
 	};
 
 	//
