@@ -33,6 +33,22 @@ CTCPCltSocket::CTCPCltSocket(Mode eMode)
 }
 
 /******************************************************************************
+** Method:		Destructor.
+**
+** Description:	.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+CTCPCltSocket::~CTCPCltSocket()
+{
+}
+
+/******************************************************************************
 ** Method:		Constructor.
 **
 ** Description:	.
@@ -44,12 +60,13 @@ CTCPCltSocket::CTCPCltSocket(Mode eMode)
 *******************************************************************************
 */
 
-CTCPCltSocket::CTCPCltSocket(SOCKET hSocket, Mode eMode)
-	: CTCPSocket(eMode)
+void CTCPCltSocket::Attach(SOCKET hSocket, Mode eMode)
 {
-	ASSERT(hSocket != INVALID_SOCKET);
+	ASSERT(hSocket   != INVALID_SOCKET);
+	ASSERT(m_hSocket == INVALID_SOCKET);
 
 	m_hSocket = hSocket;
+	m_eMode   = eMode;
 
 	sockaddr_in  addr      = { 0 };;
 	int          nAddrSize = sizeof(addr);
@@ -64,20 +81,4 @@ CTCPCltSocket::CTCPCltSocket(SOCKET hSocket, Mode eMode)
 	// If async mode, do select.
 	if (m_eMode == ASYNC)
 		CWinSock::BeginAsyncSelect(this, (FD_READ | FD_WRITE | FD_CLOSE));
-}
-
-/******************************************************************************
-** Method:		Destructor.
-**
-** Description:	.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
-
-CTCPCltSocket::~CTCPCltSocket()
-{
 }

@@ -45,7 +45,7 @@ protected:
 	//
 
 	// For use by CTCPSvrSocket.
-	CTCPCltSocket(SOCKET hSocket, Mode eMode);
+	void Attach(SOCKET hSocket, Mode eMode);
 
 	// Friends.
 	friend class CTCPSvrSocket;
