@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Class members.
@@ -176,6 +181,30 @@ void CDDEServer::Unregister(const char* pszService)
 }
 
 /******************************************************************************
+** Method:		DestroyConversation()
+**
+** Description:	Disconnects a conversation.
+**
+** Parameters:	pConv	The conversation.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDDEServer::DestroyConversation(CDDESvrConv* pConv)
+{
+	// Disconnect from service/topic.
+	::DdeDisconnect(pConv->m_hConv);
+
+	// Remove from collection.
+	m_aoConvs.Remove(m_aoConvs.Find(pConv));
+
+	// Delete conversation.
+	delete pConv;
+}
+
+/******************************************************************************
 ** Method:		FindConversation()
 **
 ** Description:	Find an existing conversation.
@@ -189,7 +218,7 @@ void CDDEServer::Unregister(const char* pszService)
 *******************************************************************************
 */
 
-CDDESvrConv* CDDEServer::FindConversation(const char* pszService, const char* pszTopic)
+CDDESvrConv* CDDEServer::FindConversation(const char* pszService, const char* pszTopic) const
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
@@ -206,7 +235,7 @@ CDDESvrConv* CDDEServer::FindConversation(const char* pszService, const char* ps
 	return NULL;
 }
 
-CDDESvrConv* CDDEServer::FindConversation(HCONV hConv)
+CDDESvrConv* CDDEServer::FindConversation(HCONV hConv) const
 {
 	// Search the conversation list.
 	for (int i = 0; i < m_aoConvs.Size(); ++i)

@@ -12,6 +12,9 @@
 #ifndef DDESERVER_HPP
 #define DDESERVER_HPP
 
+// Template shorthands.
+typedef TPtrArray<CDDESvrConv> CDDESvrConvs;
+
 /******************************************************************************
 ** 
 ** This class provides DDE Server services.
@@ -44,8 +47,10 @@ public:
 	//
 	// Conversation methods.
 	//
-	CDDESvrConv* FindConversation(const char* pszService, const char* pszTopic);
-	CDDESvrConv* FindConversation(HCONV hConv);
+	void         DestroyConversation(CDDESvrConv* pConv);
+	CDDESvrConv* FindConversation(const char* pszService, const char* pszTopic) const;
+	CDDESvrConv* FindConversation(HCONV hConv) const;
+	int          GetAllConversations(CDDESvrConvs& aoConvs) const;
 
 	//
 	// Event listener methods.
@@ -55,14 +60,13 @@ public:
 
 protected:
 	// Template shorthands.
-	typedef TPtrArray<CDDESvrConv> CConvs;
 	typedef TPtrArray<IDDEServerListener> CListeners;
 
 	//
 	// Members.
 	//
-	CConvs		m_aoConvs;		// The list of conversations.
-	CListeners	m_aoListeners;	// The list of event listeners.
+	CDDESvrConvs	m_aoConvs;		// The list of conversations.
+	CListeners		m_aoListeners;	// The list of event listeners.
 
 	//
 	// Constructors/Destructor.
@@ -94,5 +98,12 @@ protected:
 **
 *******************************************************************************
 */
+
+inline int CDDEServer::GetAllConversations(CDDESvrConvs& aoConvs) const
+{
+	aoConvs.ShallowCopy(m_aoConvs);
+
+	return aoConvs.Size();
+}
 
 #endif // DDESERVER_HPP
