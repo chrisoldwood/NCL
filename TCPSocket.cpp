@@ -148,8 +148,6 @@ int CTCPSocket::Recv(void* pBuffer, int nBufSize)
 	if (nResult == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());
 
-	ASSERT(nResult == nBufSize);
-
 	return nResult;
 }
 
