@@ -30,6 +30,7 @@ public:
 	//
 	CDDELink* FindLink(const char* pszItem, uint nFormat) const;
 	int       NumLinks() const;
+	CDDELink* GetLink(int nIndex) const;
 	int       GetAllLinks(CDDESvrLinks& aoLinks) const;
 	bool      PostLinkUpdate(const CDDELink* pLink);
 
@@ -68,6 +69,11 @@ protected:
 inline int CDDESvrConv::NumLinks() const
 {
 	return m_aoLinks.Size();
+}
+
+inline CDDELink* CDDESvrConv::GetLink(int nIndex) const
+{
+	return m_aoLinks[nIndex];
 }
 
 inline int CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks) const
