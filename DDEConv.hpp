@@ -29,8 +29,15 @@ public:
 	const CString& Service() const;
 	const CString& Topic() const;
 
+	bool           IsConnected() const;
+
 	IDDEConvData*  AppData() const;
 	void           SetAppData(IDDEConvData* pAppData);
+
+	//
+	// Methods.
+	//
+	void Disconnect();
 
 protected:
 	//
@@ -89,6 +96,11 @@ inline const CString& CDDEConv::Topic() const
 	return m_strTopic;
 }
 
+inline bool CDDEConv::IsConnected() const
+{
+	return (m_hConv != NULL);
+}
+
 inline IDDEConvData* CDDEConv::AppData() const
 {
 	return m_pAppData;
@@ -97,6 +109,14 @@ inline IDDEConvData* CDDEConv::AppData() const
 inline void CDDEConv::SetAppData(IDDEConvData* pAppData)
 {
 	m_pAppData = pAppData;
+}
+
+inline void CDDEConv::Disconnect()
+{
+	if (m_hConv != NULL)
+		::DdeDisconnect(m_hConv);
+
+	m_hConv = NULL;
 }
 
 #endif // DDECONV_HPP
