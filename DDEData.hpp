@@ -249,7 +249,7 @@ inline CString CDDEData::GetString() const
 inline void CDDEData::SetData(const void* pBuffer, uint nSize, uint nOffset)
 {
 	ASSERT(m_pHandle != NULL);
-	ASSERT(pBuffer   != NULL);
+	ASSERT((pBuffer != NULL) || (nSize == 0));
 
 	HDDEDATA hData = ::DdeAddData(m_pHandle->m_hData, (byte*)pBuffer, nSize, nOffset);
 
