@@ -17,12 +17,6 @@
 
 // Directive to link to WinSock library.
 #pragma comment(lib, "ws2_32")
-//#pragma comment(lib, "wsock32")
-
-// For message only windows.
-#ifndef HWND_MESSAGE
-#define HWND_MESSAGE     ((HWND)-3)
-#endif
 
 /******************************************************************************
 **
@@ -69,7 +63,7 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 
 	// Create the socket window.
 	g_hSockWnd = ::CreateWindowEx(0, "WinSockClass", "WinSock Message Window",
-								WS_OVERLAPPED, 0, 0, 0, 0, HWND_MESSAGE, NULL,
+								WS_OVERLAPPED, 0, 0, 0, 0, HWND_DESKTOP, NULL,
 								CModule::This().Handle(), NULL);
 
 	ASSERT(g_hSockWnd != NULL);
