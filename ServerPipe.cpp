@@ -71,13 +71,26 @@ CServerPipe::~CServerPipe()
 
 void CServerPipe::Create(const char* pszName)
 {
+	SECURITY_DESCRIPTOR* pSecDescriptor = (SECURITY_DESCRIPTOR*) alloca(SECURITY_DESCRIPTOR_MIN_LENGTH);
+
+	// Create a security descriptor to allow everyone access.
+	::InitializeSecurityDescriptor(pSecDescriptor, SECURITY_DESCRIPTOR_REVISION);
+	::SetSecurityDescriptorDacl(pSecDescriptor, TRUE, NULL, FALSE);
+
+	SECURITY_ATTRIBUTES oSecAttributes = { 0 };
+
+	// Bind descriptor to attributes handle.
+	oSecAttributes.nLength              = sizeof(SECURITY_ATTRIBUTES);
+	oSecAttributes.bInheritHandle       = TRUE;
+	oSecAttributes.lpSecurityDescriptor = pSecDescriptor;
+
 	// Reset error flag, to detect ERROR_ALREADY_EXISTS.
 	::SetLastError(NO_ERROR);
 
 	// Attempt to create the pipe.
 	m_hPipe = ::CreateNamedPipe(pszName, DEF_OPEN_MODE, DEF_PIPE_MODE,
 									PIPE_UNLIMITED_INSTANCES, DEF_BUF_SIZE,
-									DEF_BUF_SIZE, DEF_TIMEOUT, NULL);
+									DEF_BUF_SIZE, DEF_TIMEOUT, &oSecAttributes);
 
 	// Create failed?
 	if (m_hPipe == INVALID_HANDLE_VALUE)
