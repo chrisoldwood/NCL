@@ -276,6 +276,9 @@ void CTCPSvrSocket::OnAcceptReady()
 
 void CTCPSvrSocket::OnClosed(int nReason)
 {
+	// Cleanup.
+	Close();
+
 	// Notify listeners.
 	for (int i = 0; i < m_aoSvrListeners.Size(); ++i)
 		m_aoSvrListeners[i]->OnClosed(this, nReason);

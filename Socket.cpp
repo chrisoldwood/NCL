@@ -196,12 +196,15 @@ uint CSocket::Available()
 
 uint CSocket::Send(const void* pBuffer, uint nBufSize)
 {
-	ASSERT(m_hSocket != INVALID_SOCKET);
-	ASSERT(pBuffer   != NULL);
+	ASSERT(pBuffer != NULL);
 
 	// Ignore, if nothing to send.
 	if (nBufSize == 0)
 		return 0;
+
+	// Socket closed?
+	if (m_hSocket == INVALID_SOCKET)
+		throw CSocketException(CSocketException::E_SEND_FAILED, WSAENOTCONN);
 
 	int nResult = 0;
 
@@ -265,9 +268,12 @@ uint CSocket::Send(const void* pBuffer, uint nBufSize)
 
 uint CSocket::Recv(void* pBuffer, uint nBufSize)
 {
-	ASSERT(m_hSocket != INVALID_SOCKET);
-	ASSERT(pBuffer != NULL);
+	ASSERT(pBuffer  != NULL);
 	ASSERT(nBufSize >= 0);
+
+	// Socket closed?
+	if (m_hSocket == INVALID_SOCKET)
+		throw CSocketException(CSocketException::E_RECV_FAILED, WSAENOTCONN);
 
 	int nResult = 0;
 
@@ -700,6 +706,9 @@ void CSocket::OnWriteReady()
 
 void CSocket::OnClosed(int nReason)
 {
+	// Cleanup.
+	Close();
+
 	// Notify listeners.
 	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
 		m_aoCltListeners[i]->OnClosed(this, nReason);
