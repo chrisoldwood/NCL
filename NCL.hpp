@@ -57,6 +57,10 @@
 #include "WinSock.hpp"
 #include "Socket.hpp"
 #include "TCPSocket.hpp"
+#include "TCPCltSocket.hpp"
+#include "TCPSvrSocket.hpp"
 #include "UDPSocket.hpp"
+#include "UDPCltSocket.hpp"
+#include "UDPSvrSocket.hpp"
 
 #endif //NCL_HPP

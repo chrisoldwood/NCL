@@ -129,11 +129,27 @@ SOURCE=.\SocketException.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TcpCltSocket.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCPSocket.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TcpSvrSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UDPCltSocket.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\UDPSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UDPSvrSocket.cpp
 # End Source File
 # Begin Source File
 
@@ -237,11 +253,27 @@ SOURCE=.\SocketException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TcpCltSocket.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCPSocket.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TcpSvrSocket.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UDPCltSocket.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\UDPSocket.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UDPSvrSocket.hpp
 # End Source File
 # Begin Source File
 
