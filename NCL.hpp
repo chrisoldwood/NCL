@@ -52,4 +52,11 @@
 #include "ClientPipe.hpp"
 #include "ServerPipe.hpp"
 
+// Socket Classes.
+#include "SocketException.hpp"
+#include "WinSock.hpp"
+#include "Socket.hpp"
+#include "TCPSocket.hpp"
+#include "UDPSocket.hpp"
+
 #endif //NCL_HPP

@@ -119,6 +119,26 @@ SOURCE=.\PipeException.cpp
 
 SOURCE=.\ServerPipe.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\Socket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SocketException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCPSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UDPSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\WinSock.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -206,6 +226,26 @@ SOURCE=.\PipeException.hpp
 # Begin Source File
 
 SOURCE=.\ServerPipe.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Socket.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SocketException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCPSocket.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UDPSocket.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\WinSock.hpp
 # End Source File
 # End Group
 # Begin Source File
