@@ -16,6 +16,10 @@
 #define new DBGCRT_NEW
 #endif
 
+// Conditional expression is constant.
+// Caused by FD_SET().
+#pragma warning ( disable : 4127 )
+
 /******************************************************************************
 ** Method:		Constructor.
 **
@@ -68,6 +72,9 @@ void CTCPSvrSocket::Listen(uint nPort, uint nBackLog)
 	ASSERT(m_hSocket == INVALID_SOCKET);
 	ASSERT(nPort     <= USHRT_MAX);
 
+	// Save parameters.
+	m_nPort = nPort;
+
 	sockaddr_in	addr = { 0 };
 
 	addr.sin_family      = AF_INET;
@@ -79,7 +86,7 @@ void CTCPSvrSocket::Listen(uint nPort, uint nBackLog)
 
 	// Bind socket to port.
 	if (bind(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_CONNECT_FAILED, CWinSock::LastError());
+		throw CSocketException(CSocketException::E_BIND_FAILED, CWinSock::LastError());
 
 	// Start accepting client connections.
 	if (listen(m_hSocket, nBackLog)  == SOCKET_ERROR)

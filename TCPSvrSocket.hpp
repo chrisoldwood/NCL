@@ -29,6 +29,11 @@ public:
 	virtual ~CTCPSvrSocket();
 	
 	//
+	// Properties.
+	//
+	uint Port() const;
+
+	//
 	// Methods.
 	//
 	void Listen(uint nPort, uint nBackLog = SOMAXCONN);
@@ -48,5 +53,10 @@ protected:
 **
 *******************************************************************************
 */
+
+inline uint CTCPSvrSocket::Port() const
+{
+	return m_nPort;
+}
 
 #endif // TCPSVRSOCKET_HPP
