@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Constants.
@@ -17,6 +22,7 @@
 *******************************************************************************
 */
 
+const DWORD CClientPipe::DEF_OPEN_MODE = FILE_ATTRIBUTE_NORMAL /*| FILE_FLAG_WRITE_THROUGH*/;
 const DWORD CClientPipe::DEF_PIPE_MODE = PIPE_READMODE_BYTE | PIPE_NOWAIT;
 const DWORD CClientPipe::DEF_TIMEOUT   = 30000;
 const DWORD CClientPipe::DEF_INTERVAL  = 1000;
@@ -78,7 +84,7 @@ void CClientPipe::Open(const char* pszName)
 		::WaitNamedPipe(pszName, DEF_INTERVAL);
 
 		// Try and open the pipe.
-		m_hPipe = ::CreateFile(pszName, GENERIC_READWRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		m_hPipe = ::CreateFile(pszName, GENERIC_READWRITE, 0, NULL, OPEN_EXISTING, DEF_OPEN_MODE, NULL);
 
 		// Success OR NOT server busy?
 		if ( (m_hPipe != INVALID_HANDLE_VALUE) || (::GetLastError() != ERROR_PIPE_BUSY) )
