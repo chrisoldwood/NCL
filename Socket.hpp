@@ -37,15 +37,15 @@ public:
 	//
 	// Methods.
 	//
-	int Send(const void* pBuffer, int nBufSize);
-	int Send(const CBuffer& oBuffer);
-	int Send(const char* pszString);
+	uint Send(const void* pBuffer, uint nBufSize);
+	uint Send(const CBuffer& oBuffer);
+	uint Send(const char* pszString);
 
-	int Recv(void* pBuffer, int nBufSize);
-	int Recv(CBuffer& oBuffer);
+	uint Recv(void* pBuffer, uint nBufSize);
+	uint Recv(CBuffer& oBuffer);
 
-	int Available();
-	int Peek(void* pBuffer, uint nBufSize);
+	uint Available();
+	uint Peek(void* pBuffer, uint nBufSize);
 
 	//
 	// Class methods.
@@ -53,6 +53,7 @@ public:
 	static bool    IsAddress(const char* pszHost);
 	static in_addr Resolve(const char* pszHost);
 	static CString ResolveStr(const char* pszHost);
+	static CString AsyncEventStr(int nEvent);
 
 	// Socket modes.
 	enum Mode
@@ -79,6 +80,8 @@ protected:
 	CString			m_strHost;			// Host, If connected.
 	uint			m_nPort;			// Port, If connected.
 	CCltListeners	m_aoCltListeners;	// The list of event listeners.
+	CNetBuffer*		m_pSendBuffer;		// Send buffer (async only).
+	CNetBuffer*		m_pRecvBuffer;		// Receive buffer (async only).
 
 	// Protect creation etc.
 	CSocket(Mode eMode);
@@ -121,17 +124,17 @@ inline bool CSocket::IsOpen() const
 	return (m_hSocket != INVALID_SOCKET);
 }
 
-inline int CSocket::Send(const CBuffer& oBuffer)
+inline uint CSocket::Send(const CBuffer& oBuffer)
 {
 	return Send(oBuffer.Buffer(), oBuffer.Size());
 }
 
-inline int CSocket::Send(const char* pszString)
+inline uint CSocket::Send(const char* pszString)
 {
 	return Send(pszString, strlen(pszString));
 }
 
-inline int CSocket::Recv(CBuffer& oBuffer)
+inline uint CSocket::Recv(CBuffer& oBuffer)
 {
 	return Recv(oBuffer.Buffer(), oBuffer.Size());
 }

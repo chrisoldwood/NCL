@@ -37,6 +37,8 @@ CSocket::CSocket(Mode eMode)
 	, m_eMode(eMode)
 	, m_strHost("")
 	, m_nPort(0)
+	, m_pSendBuffer(NULL)
+	, m_pRecvBuffer(NULL)
 {
 }
 
@@ -55,6 +57,10 @@ CSocket::CSocket(Mode eMode)
 CSocket::~CSocket()
 {
 	Close();
+
+	// Free resources.
+	delete m_pSendBuffer;
+	delete m_pRecvBuffer;
 }
 
 /******************************************************************************
@@ -125,32 +131,44 @@ void CSocket::Create(int nAF, int nType, int nProtocol)
 *******************************************************************************
 */
 
-int CSocket::Available()
+uint CSocket::Available()
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
-	fd_set  aoSockets;
-	TIMEVAL oWaitTime  = { 0 };
-	ulong   lAvailable = 0;
+	ulong lAvailable = 0;
 
-	FD_ZERO(&aoSockets);
-	FD_SET(m_hSocket, &aoSockets);
-
-	// Check for readability on the socket.
-	if (select(1, &aoSockets, NULL, NULL, &oWaitTime) == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_SELECT_FAILED, CWinSock::LastError());
-
-	// Anything to read?
-	if (FD_ISSET(m_hSocket, &aoSockets))
+	// Blocking socket?
+	if (m_eMode == BLOCK)
 	{
-		// How much data is available?
-		int nResult = ::ioctlsocket(m_hSocket, FIONREAD, &lAvailable);
+		fd_set  aoSockets;
+		TIMEVAL oWaitTime  = { 0 };
 
-		if (nResult == SOCKET_ERROR)
-			throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
+		FD_ZERO(&aoSockets);
+		FD_SET(m_hSocket, &aoSockets);
 
-		if (lAvailable == 0)
-			throw CSocketException(CSocketException::E_DISCONNECTED, WSAESHUTDOWN);
+		// Check for readability on the socket.
+		if (select(1, &aoSockets, NULL, NULL, &oWaitTime) == SOCKET_ERROR)
+			throw CSocketException(CSocketException::E_SELECT_FAILED, CWinSock::LastError());
+
+		// Anything to read?
+		if (FD_ISSET(m_hSocket, &aoSockets))
+		{
+			// How much data is available?
+			int nResult = ::ioctlsocket(m_hSocket, FIONREAD, &lAvailable);
+
+			if (nResult == SOCKET_ERROR)
+				throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
+
+			if (lAvailable == 0)
+				throw CSocketException(CSocketException::E_DISCONNECTED, WSAESHUTDOWN);
+		}
+	}
+	// Async socket.
+	else // (eMode == ASYNC)
+	{
+		ASSERT(m_pRecvBuffer != NULL);
+
+		lAvailable = m_pRecvBuffer->Size();
 	}
 
 	return lAvailable;
@@ -171,16 +189,56 @@ int CSocket::Available()
 *******************************************************************************
 */
 
-int CSocket::Send(const void* pBuffer, int nBufSize)
+uint CSocket::Send(const void* pBuffer, uint nBufSize)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
+	ASSERT(pBuffer   != NULL);
 
-	int nResult = send(m_hSocket, (const char*)pBuffer, nBufSize, 0);
+	// Ignore, if nothing to send.
+	if (nBufSize == 0)
+		return 0;
 
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_SEND_FAILED, CWinSock::LastError());
+	int nResult = 0;
 
-	ASSERT(nResult == nBufSize);
+	// Blocking socket?
+	if (m_eMode == BLOCK)
+	{
+		// Send the entire buffer.
+		nResult = send(m_hSocket, (const char*)pBuffer, nBufSize, 0);
+
+		if (nResult == SOCKET_ERROR)
+			throw CSocketException(CSocketException::E_SEND_FAILED, CWinSock::LastError());
+
+		ASSERT((uint)nResult == nBufSize);
+	}
+	// Async socket.
+	else // (eMode == ASYNC)
+	{
+		// Allocate send buffer, on first call.
+		if (m_pSendBuffer == NULL)
+			m_pSendBuffer = new CNetBuffer();
+
+		// Append new data to existing send data.
+		if (m_pSendBuffer->Append(pBuffer, nBufSize) > 0)
+		{
+			// Try and send the entire buffer.
+			nResult = send(m_hSocket, (const char*)m_pSendBuffer->Ptr(), m_pSendBuffer->Size(), 0);
+
+			if (nResult != SOCKET_ERROR)
+			{
+				// Remove amount sent.
+				m_pSendBuffer->Discard(nResult);
+			}
+			else // (nResult == SOCKET_ERROR)
+			{
+				int nLastErr = CWinSock::LastError();
+
+				// Only an error, if not because of lack of buffer space.
+				if (nLastErr != WSAEWOULDBLOCK)
+					throw CSocketException(CSocketException::E_SEND_FAILED, nLastErr);
+			}
+		}
+	}
 
 	return nResult;
 }
@@ -200,14 +258,38 @@ int CSocket::Send(const void* pBuffer, int nBufSize)
 *******************************************************************************
 */
 
-int CSocket::Recv(void* pBuffer, int nBufSize)
+uint CSocket::Recv(void* pBuffer, uint nBufSize)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
+	ASSERT(pBuffer != NULL);
+	ASSERT(nBufSize >= 0);
 
-	int nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, 0);
+	int nResult = 0;
 
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());
+	// Blocking socket?
+	if (m_eMode == BLOCK)
+	{
+		nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, 0);
+
+		if (nResult == SOCKET_ERROR)
+			throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());
+	}
+	// Async socket.
+	else // (eMode == ASYNC)
+	{
+		ASSERT(m_pRecvBuffer != NULL);
+
+		nBufSize = min(nBufSize, m_pRecvBuffer->Size());
+
+		if (nBufSize != 0)
+		{
+			memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
+
+			m_pRecvBuffer->Discard(nBufSize);
+		}
+
+		nResult = nBufSize;
+	}
 
 	return nResult;
 }
@@ -227,14 +309,33 @@ int CSocket::Recv(void* pBuffer, int nBufSize)
 *******************************************************************************
 */
 
-int CSocket::Peek(void* pBuffer, uint nBufSize)
+uint CSocket::Peek(void* pBuffer, uint nBufSize)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
+	ASSERT(pBuffer   != NULL);
 
-	int nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, MSG_PEEK);
+	int nResult = 0;
 
-	if (nResult == SOCKET_ERROR)
-		throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
+	// Blocking socket?
+	if (m_eMode == BLOCK)
+	{
+		nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, MSG_PEEK);
+
+		if (nResult == SOCKET_ERROR)
+			throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
+	}
+	// Async socket.
+	else // (eMode == ASYNC)
+	{
+		ASSERT(m_pRecvBuffer != NULL);
+
+		nBufSize = min(nBufSize, m_pRecvBuffer->Size());
+
+		if (nBufSize != 0)
+			memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
+
+		nResult = nBufSize;
+	}
 
 	return nResult;
 }
@@ -380,6 +481,36 @@ CString CSocket::ResolveStr(const char* pszHost)
 }
 
 /******************************************************************************
+** Method:		AsyncEventStr()
+**
+** Description:	Convert the async event ID to a string symbol.
+**
+** Parameters:	nEvent		The event ID.
+**
+** Returns:		The event synbol.
+**
+*******************************************************************************
+*/
+
+CString CSocket::AsyncEventStr(int nEvent)
+{
+	// Decode event.
+	switch (nEvent)
+	{
+		case FD_READ:		return "FD_READ";
+		case FD_WRITE:		return "FD_WRITE";
+		case FD_OOB:		return "FD_OOB";
+		case FD_ACCEPT:		return "FD_ACCEPT";
+		case FD_CONNECT:	return "FD_CONNECT";
+		case FD_CLOSE:		return "FD_CLOSE";
+	}
+
+	ASSERT(false);
+
+	return "FD_?";
+}
+
+/******************************************************************************
 ** Method:		AddClientListener()
 **
 ** Description:	Add a socket event listener.
@@ -471,7 +602,37 @@ void CSocket::OnAsyncSelect(int nEvent, int nError)
 
 void CSocket::OnReadReady()
 {
-	// Notify listeners.
+	const uint TMP_BUF_SIZE = USHRT_MAX;
+
+	// Allocate receive buffer, on first call.
+	if (m_pRecvBuffer == NULL)
+		m_pRecvBuffer = new CNetBuffer();
+
+	// Allocate temporary read buffer.
+	byte* pBuffer = (byte*) alloca(TMP_BUF_SIZE);
+
+	// Read as much as possible.
+	int nResult = recv(m_hSocket, (char*)pBuffer, TMP_BUF_SIZE, 0);
+
+	if (nResult == SOCKET_ERROR)
+	{
+		int nLastErr = CWinSock::LastError();
+
+		ASSERT(nLastErr != WSAEWOULDBLOCK);
+
+		// Notify listeners of error.
+		for (int i = 0; i < m_aoCltListeners.Size(); ++i)
+			m_aoCltListeners[i]->OnError(this, FD_READ, nLastErr);
+
+		return;
+	}
+
+	ASSERT(nResult != 0);
+
+	// Append to receive buffer.
+	m_pRecvBuffer->Append(pBuffer, nResult);
+
+	// Notify listeners of data.
 	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
 		m_aoCltListeners[i]->OnReadReady(this);
 }
@@ -490,9 +651,34 @@ void CSocket::OnReadReady()
 
 void CSocket::OnWriteReady()
 {
-	// Notify listeners.
-	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
-		m_aoCltListeners[i]->OnWriteReady(this);
+	// Anything still to send?
+	if ( (m_pSendBuffer != NULL) && (m_pSendBuffer->Size() > 0) )
+	{
+		TRACE1("OnWriteReady: %u\n", m_pSendBuffer->Size());
+
+		// Try and send the entire buffer.
+		int nResult = send(m_hSocket, (const char*)m_pSendBuffer->Ptr(), m_pSendBuffer->Size(), 0);
+
+		if (nResult != SOCKET_ERROR)
+		{
+			// Remove amount sent.
+			m_pSendBuffer->Discard(nResult);
+		}
+		else // (nResult != SOCKET_ERROR)
+		{
+			int nLastErr = CWinSock::LastError();
+
+			// Only an error, if not because of lack of buffer space.
+			if (nLastErr != WSAEWOULDBLOCK)
+			{
+				// Notify listeners of error.
+				for (int i = 0; i < m_aoCltListeners.Size(); ++i)
+					m_aoCltListeners[i]->OnError(this, FD_WRITE, nLastErr);
+
+				return;
+			}
+		}
+	}
 }
 
 /******************************************************************************
@@ -527,6 +713,9 @@ void CSocket::OnClosed(int nReason)
 *******************************************************************************
 */
 
-void CSocket::OnError(int /*nEvent*/, int /*nError*/)
+void CSocket::OnError(int nEvent, int nError)
 {
+	// Notify listeners.
+	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
+		m_aoCltListeners[i]->OnError(this, nEvent, nError);
 }
