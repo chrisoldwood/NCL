@@ -16,6 +16,10 @@
 #define new DBGCRT_NEW
 #endif
 
+// Conditional expression is constant.
+// Caused by FD_SET().
+#pragma warning ( disable : 4127 )
+
 /******************************************************************************
 ** Method:		Constructor.
 **
@@ -30,6 +34,8 @@
 
 CSocket::CSocket()
 	: m_hSocket(INVALID_SOCKET)
+	, m_strHost("")
+	, m_nPort(0)
 {
 }
 
@@ -247,6 +253,10 @@ void CSocket::Connect(const char* pszHost, uint nPort)
 	ASSERT(pszHost   != NULL);
 	ASSERT(nPort     <= USHRT_MAX);
 
+	// Save parameters.
+	m_strHost = pszHost;
+	m_nPort   = nPort;
+
 	sockaddr_in	addr = { 0 };
 
 	addr.sin_family      = AF_INET;
@@ -272,7 +282,6 @@ void CSocket::Connect(const char* pszHost, uint nPort)
 	if (connect(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_CONNECT_FAILED, CWinSock::LastError());
 }
-
 
 /******************************************************************************
 ** Method:		IsAddress()

@@ -28,8 +28,11 @@ public:
 	//
 	// Properties.
 	//
-	SOCKET Handle() const;
-	bool   IsOpen() const;
+	SOCKET	Handle() const;
+	bool	IsOpen() const;
+
+	virtual int Type()     const = 0;
+	virtual int Protocol() const = 0;
 
 	//
 	// Methods.
@@ -56,18 +59,14 @@ protected:
 	//
 	// Members.
 	//
-	SOCKET	m_hSocket;
+	SOCKET	m_hSocket;		// Socket handle.
+	CString	m_strHost;		// Host, If connected.
+	uint	m_nPort;		// Port, If connected.
 
 	// Protect creation etc.
 	CSocket();
 	CSocket(const CSocket&);
 	void operator=(const CSocket&);
-
-	//
-	// Template methods.
-	//
-	virtual int Type()     const = 0;
-	virtual int Protocol() const = 0;
 
 	//
 	// Internal methods.
