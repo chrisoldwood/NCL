@@ -27,6 +27,7 @@ public:
 	//
 	HANDLE Handle() const;
 	bool   IsOpen() const;
+	DWORD  TimeOut() const;
 
 	//
 	// Methods.
@@ -84,6 +85,11 @@ inline HANDLE CNamedPipe::Handle() const
 inline bool CNamedPipe::IsOpen() const
 {
 	return (m_hPipe != INVALID_HANDLE_VALUE);
+}
+
+inline DWORD CNamedPipe::TimeOut() const
+{
+	return m_dwTimeOut;
 }
 
 inline uint CNamedPipe::Peek(CBuffer& oBuffer, uint nBufSize)
