@@ -386,11 +386,12 @@ void CDDEClient::OnAdvise(HCONV hConv, const char* /*pszTopic*/, const char* psz
 	// Find the link.
 	CDDELink* pLink = pConv->FindLink(pszItem, nFormat);
 
-//	ASSERT(pLink != NULL);
-
 	// May still be in the Advise Start.
 	if (pLink == NULL)
+	{
+//		TRACE3("OnAdvise('%s|%s', '%s') - Failed to find link\n", pConv->Service(), pConv->Topic(), pszItem);
 		return;
+	}
 
 	for (int i = 0; i < m_aoListeners.Size(); ++i)
 		m_aoListeners[i]->OnAdvise(pLink, pData);
