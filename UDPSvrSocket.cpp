@@ -28,7 +28,8 @@
 *******************************************************************************
 */
 
-CUDPSvrSocket::CUDPSvrSocket()
+CUDPSvrSocket::CUDPSvrSocket(Mode eMode)
+	: CUDPSocket(eMode)
 {
 }
 

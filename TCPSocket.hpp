@@ -38,7 +38,7 @@ protected:
 	//
 
 	// Protect creation etc.
-	CTCPSocket();
+	CTCPSocket(Mode eMode);
 	CTCPSocket(const CTCPSocket&);
 	void operator=(const CTCPSocket&);
 };

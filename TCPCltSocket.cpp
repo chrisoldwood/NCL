@@ -27,7 +27,8 @@
 *******************************************************************************
 */
 
-CTCPCltSocket::CTCPCltSocket()
+CTCPCltSocket::CTCPCltSocket(Mode eMode)
+	: CTCPSocket(eMode)
 {
 }
 
@@ -43,7 +44,8 @@ CTCPCltSocket::CTCPCltSocket()
 *******************************************************************************
 */
 
-CTCPCltSocket::CTCPCltSocket(SOCKET hSocket)
+CTCPCltSocket::CTCPCltSocket(SOCKET hSocket, Mode eMode)
+	: CTCPSocket(eMode)
 {
 	ASSERT(hSocket != INVALID_SOCKET);
 
@@ -58,6 +60,10 @@ CTCPCltSocket::CTCPCltSocket(SOCKET hSocket)
 		m_strHost = inet_ntoa(addr.sin_addr);
 		m_nPort   = addr.sin_port;
 	}
+
+	// If async mode, do select.
+	if (m_eMode == ASYNC)
+		CWinSock::BeginAsyncSelect(this, (FD_READ | FD_WRITE | FD_CLOSE));
 }
 
 /******************************************************************************

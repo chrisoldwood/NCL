@@ -25,7 +25,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CUDPSvrSocket();
+	CUDPSvrSocket(Mode eMode = BLOCK);
 	virtual ~CUDPSvrSocket();
 	
 	//

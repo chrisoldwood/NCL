@@ -46,7 +46,7 @@ protected:
 	//
 
 	// Protect creation etc.
-	CUDPSocket();
+	CUDPSocket(Mode eMode);
 	CUDPSocket(const CUDPSocket&);
 	void operator=(const CUDPSocket&);
 };

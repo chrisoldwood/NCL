@@ -27,7 +27,8 @@
 *******************************************************************************
 */
 
-CUDPSocket::CUDPSocket()
+CUDPSocket::CUDPSocket(Mode eMode)
+	: CSocket(eMode)
 {
 }
 

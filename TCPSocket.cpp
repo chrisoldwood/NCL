@@ -27,7 +27,8 @@
 *******************************************************************************
 */
 
-CTCPSocket::CTCPSocket()
+CTCPSocket::CTCPSocket(Mode eMode)
+	: CSocket(eMode)
 {
 }
 

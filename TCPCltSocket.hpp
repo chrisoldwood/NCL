@@ -25,7 +25,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CTCPCltSocket();
+	CTCPCltSocket(Mode eMode = BLOCK);
 	virtual ~CTCPCltSocket();
 
 	//
@@ -45,7 +45,7 @@ protected:
 	//
 
 	// For use by CTCPSvrSocket.
-	CTCPCltSocket(SOCKET hSocket);
+	CTCPCltSocket(SOCKET hSocket, Mode eMode);
 
 	// Friends.
 	friend class CTCPSvrSocket;
