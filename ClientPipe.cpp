@@ -17,7 +17,7 @@
 *******************************************************************************
 */
 
-const DWORD CClientPipe::DEF_PIPE_MODE = PIPE_READMODE_MESSAGE | PIPE_NOWAIT;
+const DWORD CClientPipe::DEF_PIPE_MODE = PIPE_READMODE_BYTE | PIPE_NOWAIT;
 const DWORD CClientPipe::DEF_TIMEOUT   = 30000;
 const DWORD CClientPipe::DEF_INTERVAL  = 1000;
 
