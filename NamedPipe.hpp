@@ -23,11 +23,13 @@ class CNamedPipe
 {
 public:
 	//
-	// Accessors.
+	// Properties.
 	//
 	HANDLE Handle() const;
 	bool   IsOpen() const;
+
 	DWORD  TimeOut() const;
+	void   SetTimeOut(DWORD dwTimeOut);
 
 	//
 	// Methods.
@@ -90,6 +92,11 @@ inline bool CNamedPipe::IsOpen() const
 inline DWORD CNamedPipe::TimeOut() const
 {
 	return m_dwTimeOut;
+}
+
+inline void CNamedPipe::SetTimeOut(DWORD dwTimeOut)
+{
+	m_dwTimeOut = dwTimeOut;
 }
 
 inline uint CNamedPipe::Peek(CBuffer& oBuffer, uint nBufSize)
