@@ -49,6 +49,7 @@ public:
 	void         DestroyConversation(CDDECltConv* pConv);
 	CDDECltConv* FindConversation(const char* pszService, const char* pszTopic) const;
 	CDDECltConv* FindConversation(HCONV hConv) const;
+	int          GetNumConversations() const;
 	int          GetAllConversations(CDDECltConvs& aoConvs) const;
 
 	//
@@ -100,6 +101,11 @@ protected:
 **
 *******************************************************************************
 */
+
+inline int CDDEClient::GetNumConversations() const
+{
+	return m_aoConvs.Size();
+}
 
 inline int CDDEClient::GetAllConversations(CDDECltConvs& aoConvs) const
 {

@@ -196,6 +196,7 @@ CDDECltConv* CDDEClient::CreateConversation(const char* pszService, const char* 
 void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 {
 	ASSERT(pConv != NULL);
+	ASSERT(m_aoConvs.Find(pConv) != -1);
 
 	// Last reference?
 	if (--pConv->m_nRefCount == 0)
