@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Class members.
@@ -55,7 +60,15 @@ CDDECltConv::~CDDECltConv()
 {
 	ASSERT(m_nRefCount == 0);
 
-	DestroyAllLinks();
+	// Delete all links.
+	for (int i = 0; i < m_aoLinks.Size(); ++i)
+	{
+		CDDELink* pLink = m_aoLinks[i];
+
+		pLink->m_nRefCount = 0;
+
+		delete pLink;
+	}
 }
 
 /******************************************************************************
@@ -215,7 +228,7 @@ void CDDECltConv::DestroyAllLinks()
 *******************************************************************************
 */
 
-CDDELink* CDDECltConv::FindLink(const char* pszItem, uint nFormat)
+CDDELink* CDDECltConv::FindLink(const char* pszItem, uint nFormat) const
 {
 	ASSERT(pszItem != NULL);
 
@@ -229,24 +242,4 @@ CDDELink* CDDECltConv::FindLink(const char* pszItem, uint nFormat)
 	}
 
 	return NULL;
-}
-
-/******************************************************************************
-** Method:		GetAllLinks()
-**
-** Description:	Gets the collection of links.
-**
-** Parameters:	aoLinks		The return array for the collection.
-**
-** Returns:		The number of links.
-**
-*******************************************************************************
-*/
-
-uint CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks)
-{
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
-		aoLinks.Add(m_aoLinks[i]);
-
-	return aoLinks.Size();
 }

@@ -26,8 +26,9 @@ class CDDECltConv : public CDDEConv
 {
 public:
 	//
-	// Methods.
+	// Properties.
 	//
+	uint RefCount() const;
 
 	//
 	// Request methods.
@@ -41,8 +42,9 @@ public:
 	CDDELink* CreateLink(const char* pszItem, uint nFormat = CF_TEXT);
 	void      DestroyLink(CDDELink* pLink);
 	void      DestroyAllLinks();
-	CDDELink* FindLink(const char* pszItem, uint nFormat = CF_TEXT);
-	uint      GetAllLinks(CDDECltLinks& aoLinks);
+	CDDELink* FindLink(const char* pszItem, uint nFormat = CF_TEXT) const;
+	int       NumLinks() const;
+	int       GetAllLinks(CDDECltLinks& aoLinks) const;
 
 protected:
 	//
@@ -75,5 +77,22 @@ protected:
 **
 *******************************************************************************
 */
+
+inline uint CDDECltConv::RefCount() const
+{
+	return m_nRefCount;
+}
+
+inline int CDDECltConv::NumLinks() const
+{
+	return m_aoLinks.Size();
+}
+
+inline int CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks) const
+{
+	aoLinks.ShallowCopy(m_aoLinks);
+
+	return aoLinks.Size();
+}
 
 #endif // DDECLTCONV_HPP
