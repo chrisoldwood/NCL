@@ -28,8 +28,9 @@ public:
 	//
 	// Link methods.
 	//
-	CDDELink* FindLink(const char* pszItem, uint nFormat);
-	uint      GetAllLinks(CDDESvrLinks& aoLinks);
+	CDDELink* FindLink(const char* pszItem, uint nFormat) const;
+	int       NumLinks() const;
+	int       GetAllLinks(CDDESvrLinks& aoLinks) const;
 	bool      PostLinkUpdate(const CDDELink* pLink);
 
 protected:
@@ -63,5 +64,17 @@ protected:
 **
 *******************************************************************************
 */
+
+inline int CDDESvrConv::NumLinks() const
+{
+	return m_aoLinks.Size();
+}
+
+inline int CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks) const
+{
+	aoLinks.ShallowCopy(m_aoLinks);
+
+	return aoLinks.Size();
+}
 
 #endif // DDESVRCONV_HPP

@@ -10,6 +10,11 @@
 
 #include "ncl.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 ** Method:		Constructor.
 **
@@ -117,7 +122,7 @@ void CDDESvrConv::DestroyAllLinks()
 *******************************************************************************
 */
 
-CDDELink* CDDESvrConv::FindLink(const char* pszItem, uint nFormat)
+CDDELink* CDDESvrConv::FindLink(const char* pszItem, uint nFormat) const
 {
 	ASSERT(pszItem != NULL);
 
@@ -131,26 +136,6 @@ CDDELink* CDDESvrConv::FindLink(const char* pszItem, uint nFormat)
 	}
 
 	return NULL;
-}
-
-/******************************************************************************
-** Method:		GetAllLinks()
-**
-** Description:	Gets the collection of links.
-**
-** Parameters:	aoLinks		The return array for the collection.
-**
-** Returns:		The number of links.
-**
-*******************************************************************************
-*/
-
-uint CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks)
-{
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
-		aoLinks.Add(m_aoLinks[i]);
-
-	return aoLinks.Size();
 }
 
 /******************************************************************************
