@@ -292,9 +292,62 @@ void CDDEServer::RemoveListener(IDDEServerListener* pListener)
 }
 
 /******************************************************************************
+** Methods:		OnWildConnect*()
+**
+** Description:	Multiple connection request from a DDE Client. The DDE Client
+**				will create a connection for each returned service & topic.
+**				NB: It is accepted if any listener accepts it.
+**
+** Parameters:	pszService		The service name.
+**				pszTopic		The topic name.
+**				astrServices	The returned list of service names.
+**				astrTopics		The returned list of topic names.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CDDEServer::OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics)
+{
+	// Query all listeners...
+	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	{
+		if (m_aoListeners[i]->OnWildConnect(astrServices, astrTopics))
+			return true;
+	}
+
+	return false;
+}
+
+bool CDDEServer::OnWildConnectService(const char* pszService, CStrArray& astrTopics)
+{
+	// Query all listeners...
+	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	{
+		if (m_aoListeners[i]->OnWildConnectService(pszService, astrTopics))
+			return true;
+	}
+
+	return false;
+}
+
+bool CDDEServer::OnWildConnectTopic(const char* pszTopic, CStrArray& astrServices)
+{
+	// Query all listeners...
+	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	{
+		if (m_aoListeners[i]->OnWildConnectTopic(pszTopic, astrServices))
+			return true;
+	}
+
+	return false;
+}
+
+/******************************************************************************
 ** Method:		OnConnect()
 **
-** Description:	Connection request from DDE Client.
+** Description:	Connection request from a DDE Client.
 **				NB: It is accepted if any listener accepts it.
 **
 ** Parameters:	pszService	The service name.
@@ -542,6 +595,110 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 	// Forward to handler.
 	switch (uType)
 	{
+		// Querying supported services/topics?
+		case XTYP_WILDCONNECT:
+		{
+			// Querying all supported services & topics?
+			if ((hsz2 == NULL) && (hsz1 == NULL))
+			{
+				CStrArray astrServices, astrTopics;
+
+				// Get list of servers and topics.
+				if (g_pDDEServer->OnWildConnect(astrServices, astrTopics))
+				{
+					ASSERT(astrServices.Size() > 0);
+					ASSERT(astrServices.Size() == astrTopics.Size());
+
+					int nEntries = (astrServices.Size() + 1);
+					int nBufSize = sizeof(HSZPAIR) * nEntries;
+
+					// Allocate temporary data buffer.
+					HSZPAIR* aoPairs = (HSZPAIR*) _alloca(nBufSize);
+
+					// Set entries...
+					for (int i = 0; i < astrServices.Size(); ++i)
+					{
+						aoPairs[i].hszSvc   = CDDEString(g_pDDEServer, astrServices[i], false);
+						aoPairs[i].hszTopic = CDDEString(g_pDDEServer, astrTopics[i],   false);
+					}
+
+					// Last entry is NULL.
+					aoPairs[nEntries-1].hszSvc   = NULL;
+					aoPairs[nEntries-1].hszTopic = NULL;
+
+					// Create result handle from temporary buffer.
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize);
+				}
+			}
+			// Querying all topics supported by a specific server?
+			else if (hsz1 == NULL)
+			{
+				CDDEString strService(g_pDDEServer, hsz2);
+
+				CStrArray astrTopics;
+
+				// Get list of topics.
+				if (g_pDDEServer->OnWildConnectService(strService, astrTopics))
+				{
+					ASSERT(astrTopics.Size() > 0);
+
+					int nEntries = (astrTopics.Size() + 1);
+					int nBufSize = sizeof(HSZPAIR) * nEntries;
+
+					// Allocate temporary data buffer.
+					HSZPAIR* aoPairs = (HSZPAIR*) _alloca(nBufSize);
+
+					// Set entries...
+					for (int i = 0; i < astrTopics.Size(); ++i)
+					{
+						aoPairs[i].hszSvc   = hsz2;
+						aoPairs[i].hszTopic = CDDEString(g_pDDEServer, astrTopics[i],   false);
+					}
+
+					// Last entry is NULL.
+					aoPairs[nEntries-1].hszSvc   = NULL;
+					aoPairs[nEntries-1].hszTopic = NULL;
+
+					// Create result handle from temporary buffer.
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize);
+				}
+			}
+			// Querying all servers supporting a specific topic?
+			else if (hsz2 == NULL)
+			{
+				CDDEString strTopic(g_pDDEServer, hsz1);
+
+				CStrArray astrServices, astrTopics;
+
+				// Get list of servers.
+				if (g_pDDEServer->OnWildConnectTopic(strTopic, astrTopics))
+				{
+					ASSERT(astrServices.Size() > 0);
+
+					int nEntries = (astrServices.Size() + 1);
+					int nBufSize = sizeof(HSZPAIR) * nEntries;
+
+					// Allocate temporary data buffer.
+					HSZPAIR* aoPairs = (HSZPAIR*) _alloca(nBufSize);
+
+					// Set entries...
+					for (int i = 0; i < astrTopics.Size(); ++i)
+					{
+						aoPairs[i].hszSvc   = CDDEString(g_pDDEServer, astrServices[i], false);
+						aoPairs[i].hszTopic = hsz1;
+					}
+
+					// Last entry is NULL.
+					aoPairs[nEntries-1].hszSvc   = NULL;
+					aoPairs[nEntries-1].hszTopic = NULL;
+
+					// Create result handle from temporary buffer.
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize);
+				}
+			}
+		}
+		break;
+
 		// Connection requested?
 		case XTYP_CONNECT:
 		{

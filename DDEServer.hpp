@@ -77,6 +77,9 @@ protected:
 	//
 	// DDECallback handlers.
 	//
+	bool OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics);
+	bool OnWildConnectService(const char* pszService, CStrArray& astrTopics);
+	bool OnWildConnectTopic(const char* pszTopic, CStrArray& astrServices);
 	bool OnConnect(const char* pszService, const char* pszTopic);
 	void OnConnectConfirm(HCONV hConv, const char* pszService, const char* pszTopic);
 	void OnDisconnect(HCONV hConv);
