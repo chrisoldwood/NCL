@@ -143,6 +143,31 @@ bool CTCPSvrSocket::CanAccept() const
 
 CTCPCltSocket* CTCPSvrSocket::Accept()
 {
+	CTCPCltSocket* pSocket = AllocCltSocket();
+
+	Accept(pSocket);
+
+	return pSocket;
+}
+
+/******************************************************************************
+** Method:		Accept()
+**
+** Description:	Accepts a client connection.
+**
+** Parameters:	pCltSocket		The client socket to accept on.
+**
+** Returns:		Nothing.
+**
+** Exceptions:	CSocketException.
+**
+*******************************************************************************
+*/
+
+void CTCPSvrSocket::Accept(CTCPCltSocket* pCltSocket)
+{
+	ASSERT(pCltSocket != NULL);
+
 	SOCKET       hSocket;
 	sockaddr_in  addr      = { 0 };;
 	int          nAddrSize = sizeof(addr);
@@ -151,7 +176,7 @@ CTCPCltSocket* CTCPSvrSocket::Accept()
 	if ((hSocket = accept(m_hSocket, (sockaddr*)&addr, &nAddrSize)) == INVALID_SOCKET)
 		throw CSocketException(CSocketException::E_ACCEPT_FAILED, CWinSock::LastError());
 	
-	return new CTCPCltSocket(hSocket, m_eMode);
+	pCltSocket->Attach(hSocket, m_eMode);
 }
 
 /******************************************************************************
@@ -269,6 +294,27 @@ void CTCPSvrSocket::OnClosed(int nReason)
 *******************************************************************************
 */
 
-void CTCPSvrSocket::OnError(int /*nEvent*/, int /*nError*/)
+void CTCPSvrSocket::OnError(int nEvent, int nError)
 {
+	// Notify listeners.
+	for (int i = 0; i < m_aoSvrListeners.Size(); ++i)
+		m_aoSvrListeners[i]->OnError(this, nEvent, nError);
+}
+
+/******************************************************************************
+** Method:		AllocCltSocket()
+**
+** Description:	Allocate a client TCP socket.
+**
+** Parameters:	nEvent		The event.
+**				nError		The error.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+CTCPCltSocket* CTCPSvrSocket::AllocCltSocket()
+{
+	return new CTCPCltSocket();
 }

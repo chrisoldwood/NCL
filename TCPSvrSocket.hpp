@@ -40,6 +40,7 @@ public:
 
 	bool CanAccept() const;
 	CTCPCltSocket* Accept();
+	void Accept(CTCPCltSocket* pCltSocket);
 
 	//
 	// Event listener methods.
@@ -64,6 +65,11 @@ protected:
 	virtual void OnAcceptReady();
 	virtual void OnClosed(int nReason);
 	virtual void OnError(int nEvent, int nError);
+
+	//
+	// Template methods.
+	//
+	CTCPCltSocket* AllocCltSocket();
 };
 
 /******************************************************************************
