@@ -27,6 +27,9 @@ public:
 	//
 	// Properties.
 	//
+	virtual int Type()     const;
+	virtual int Protocol() const;
+
 	CString PeerAddress() const;
 
 protected:
@@ -38,12 +41,6 @@ protected:
 	CTCPSocket();
 	CTCPSocket(const CTCPSocket&);
 	void operator=(const CTCPSocket&);
-
-	//
-	// Template methods.
-	//
-	virtual int Type()     const;
-	virtual int Protocol() const;
 };
 
 /******************************************************************************
