@@ -88,6 +88,8 @@ protected:
 	bool OnAdviseStart(HCONV hConv, const char* pszItem, uint nFormat);
 	bool OnAdviseRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData);
 	void OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat);
+	bool OnExecute(HCONV hConv, const CDDEData& oData);
+	bool OnPoke(HCONV hConv, const char* pszItem, uint nFormat, const CDDEData& oData);
 
 	// The DDE Callback function.
 	static HDDEDATA CALLBACK DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD dwData1, DWORD dwData2);

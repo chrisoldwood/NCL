@@ -152,6 +152,8 @@ void CDDEServer::Uninitialise()
 
 void CDDEServer::Register(const char* pszService)
 {
+	ASSERT(pszService != NULL);
+
 	CDDEString strService(this, pszService);
 
 	// Try and register the service name.
@@ -175,6 +177,8 @@ void CDDEServer::Register(const char* pszService)
 
 void CDDEServer::Unregister(const char* pszService)
 {
+	ASSERT(pszService != NULL);
+
 	CDDEString strService(this, pszService);
 
 	::DdeNameService(m_dwInst, strService, NULL, DNS_UNREGISTER);
@@ -194,6 +198,7 @@ void CDDEServer::Unregister(const char* pszService)
 
 void CDDEServer::DestroyConversation(CDDESvrConv* pConv)
 {
+	ASSERT(pConv != NULL);
 	ASSERT(m_aoConvs.Find(pConv) != -1);
 
 	// Disconnect from service/topic.
@@ -239,6 +244,8 @@ CDDESvrConv* CDDEServer::FindConversation(const char* pszService, const char* ps
 
 CDDESvrConv* CDDEServer::FindConversation(HCONV hConv) const
 {
+	ASSERT(hConv != NULL);
+
 	// Search the conversation list.
 	for (int i = 0; i < m_aoConvs.Size(); ++i)
 	{
@@ -324,6 +331,8 @@ bool CDDEServer::OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics)
 
 bool CDDEServer::OnWildConnectService(const char* pszService, CStrArray& astrTopics)
 {
+	ASSERT(pszService != NULL);
+
 	// Query all listeners...
 	for (int i = 0; i < m_aoListeners.Size(); ++i)
 	{
@@ -336,6 +345,8 @@ bool CDDEServer::OnWildConnectService(const char* pszService, CStrArray& astrTop
 
 bool CDDEServer::OnWildConnectTopic(const char* pszTopic, CStrArray& astrServices)
 {
+	ASSERT(pszTopic != NULL);
+
 	// Query all listeners...
 	for (int i = 0; i < m_aoListeners.Size(); ++i)
 	{
@@ -362,6 +373,9 @@ bool CDDEServer::OnWildConnectTopic(const char* pszTopic, CStrArray& astrService
 
 bool CDDEServer::OnConnect(const char* pszService, const char* pszTopic)
 {
+	ASSERT(pszService != NULL);
+	ASSERT(pszTopic   != NULL);
+
 	// Query all listeners...
 	for (int i = 0; i < m_aoListeners.Size(); ++i)
 	{
@@ -388,6 +402,10 @@ bool CDDEServer::OnConnect(const char* pszService, const char* pszTopic)
 
 void CDDEServer::OnConnectConfirm(HCONV hConv, const char* pszService, const char* pszTopic)
 {
+	ASSERT(hConv      != NULL);
+	ASSERT(pszService != NULL);
+	ASSERT(pszTopic   != NULL);
+
 	// Allocate a new conversation and add to the collection.
 	CDDESvrConv* pConv = new CDDESvrConv(this, hConv, pszService, pszTopic);
 
@@ -412,6 +430,8 @@ void CDDEServer::OnConnectConfirm(HCONV hConv, const char* pszService, const cha
 
 void CDDEServer::OnDisconnect(HCONV hConv)
 {
+	ASSERT(hConv != NULL);
+
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
@@ -443,6 +463,9 @@ void CDDEServer::OnDisconnect(HCONV hConv)
 
 bool CDDEServer::OnRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData)
 {
+	ASSERT(hConv   != NULL);
+	ASSERT(pszItem != NULL);
+
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
@@ -474,6 +497,9 @@ bool CDDEServer::OnRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDED
 
 bool CDDEServer::OnAdviseStart(HCONV hConv, const char* pszItem, uint nFormat)
 {
+	ASSERT(hConv   != NULL);
+	ASSERT(pszItem != NULL);
+
 	bool bAccept = false;
 
 	// Find the conversation from the handle.
@@ -522,6 +548,9 @@ bool CDDEServer::OnAdviseStart(HCONV hConv, const char* pszItem, uint nFormat)
 
 bool CDDEServer::OnAdviseRequest(HCONV hConv, const char* pszItem, uint nFormat, CDDEData& oData)
 {
+	ASSERT(hConv   != NULL);
+	ASSERT(pszItem != NULL);
+
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
@@ -558,6 +587,9 @@ bool CDDEServer::OnAdviseRequest(HCONV hConv, const char* pszItem, uint nFormat,
 
 void CDDEServer::OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat)
 {
+	ASSERT(hConv   != NULL);
+	ASSERT(pszItem != NULL);
+
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
@@ -577,6 +609,75 @@ void CDDEServer::OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat)
 }
 
 /******************************************************************************
+** Method:		OnExecute()
+**
+** Description:	Execute a command.
+**
+** Parameters:	hConv		The conversation handle.
+**				oData		The command.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CDDEServer::OnExecute(HCONV hConv, const CDDEData& oData)
+{
+	ASSERT(hConv != NULL);
+
+	// Find the conversation from the handle.
+	CDDESvrConv* pConv = FindConversation(hConv);
+
+	ASSERT(pConv != NULL);
+
+	// Command data is a string.
+	CString strCmd = oData.GetString();
+
+	// Notify listeners.
+	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	{
+		if (m_aoListeners[i]->OnExecute(pConv, strCmd))
+			return true;
+	}
+
+	return false;
+}
+
+/******************************************************************************
+** Method:		OnPoke()
+**
+** Description:	Poke a value into an item.
+**
+** Parameters:	hConv		The conversation handle.
+**				pszItem		The item being poked.
+**				nFormat		The data format.
+**				oData		The data.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CDDEServer::OnPoke(HCONV hConv, const char* pszItem, uint nFormat, const CDDEData& oData)
+{
+	ASSERT(hConv != NULL);
+
+	// Find the conversation from the handle.
+	CDDESvrConv* pConv = FindConversation(hConv);
+
+	ASSERT(pConv != NULL);
+
+	// Notify listeners.
+	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	{
+		if (m_aoListeners[i]->OnPoke(pConv, pszItem, nFormat, oData))
+			return true;
+	}
+
+	return false;
+}
+
+/******************************************************************************
 ** Method:		DDECallbackProc()
 **
 ** Description:	The callback function used by the DDEML library.
@@ -588,7 +689,7 @@ void CDDEServer::OnAdviseStop(HCONV hConv, const char* pszItem, uint nFormat)
 *******************************************************************************
 */
 
-HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA /*hData*/, DWORD /*dwData1*/, DWORD /*dwData2*/)
+HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD /*dwData1*/, DWORD /*dwData2*/)
 {
 	ASSERT(g_pDDEServer != NULL);
 
@@ -629,7 +730,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					aoPairs[nEntries-1].hszTopic = NULL;
 
 					// Create result handle from temporary buffer.
-					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize);
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false);
 				}
 			}
 			// Querying all topics supported by a specific server?
@@ -662,7 +763,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					aoPairs[nEntries-1].hszTopic = NULL;
 
 					// Create result handle from temporary buffer.
-					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize);
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false);
 				}
 			}
 			// Querying all servers supporting a specific topic?
@@ -695,7 +796,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					aoPairs[nEntries-1].hszTopic = NULL;
 
 					// Create result handle from temporary buffer.
-					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize);
+					hResult = CDDEData(g_pDDEServer, aoPairs, nBufSize, 0, 0, false);
 				}
 			}
 		}
@@ -775,6 +876,31 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 			CDDEString strItem(g_pDDEServer, hsz2);
 
 			g_pDDEServer->OnAdviseStop(hConv, strItem, uFormat);
+		}
+		break;
+
+		// Execute command?
+		case XTYP_EXECUTE:
+		{
+			CDDEData oData(g_pDDEServer, hData, true);
+
+			hResult = DDE_FNOTPROCESSED;
+
+			if (g_pDDEServer->OnExecute(hConv, oData))
+				hResult = (HDDEDATA) DDE_FACK;
+		}
+		break;
+
+		// Poke item?
+		case XTYP_POKE:
+		{
+			CDDEString strItem(g_pDDEServer, hsz2);
+			CDDEData   oData(g_pDDEServer, hData, true);
+
+			hResult = DDE_FNOTPROCESSED;
+
+			if (g_pDDEServer->OnPoke(hConv, strItem, uFormat, oData))
+				hResult = (HDDEDATA) DDE_FACK;
 		}
 		break;
 
