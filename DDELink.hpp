@@ -35,6 +35,21 @@ public:
 
 	IDDELinkData*  AppData() const;
 	void           SetAppData(IDDELinkData* pAppData);
+
+	//
+	// Clipboard methods.
+	//
+	static bool CopyLink(HWND hOwner, const CDDELink* pLink);
+	static bool CopyLink(HWND hOwner, const char* pszService, const char* pszTopic, const char* pszItem);
+
+	static bool CanPasteLink();
+	static bool PasteLink(CString& strLink);
+	static bool PasteLink(CString& strService, CString& strTopic, CString& strItem);
+
+	//
+	// Parsing methods.
+	//
+	static bool ParseLink(const CString& strLink, CString& strService, CString& strTopic, CString& strItem);
 	
 protected:
 	//
@@ -64,15 +79,6 @@ protected:
 **
 *******************************************************************************
 */
-
-inline CDDELink::CDDELink(CDDEConv* pConv, const char* pszItem, uint nFormat)
-	: m_nRefCount(0)
-	, m_pConv(pConv)
-	, m_strItem(pszItem)
-	, m_nFormat(nFormat)
-	, m_pAppData(NULL)
-{
-}
 
 inline CDDELink::~CDDELink()
 {
