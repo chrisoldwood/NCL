@@ -31,7 +31,7 @@ public:
 	//
 	virtual void OnAcceptReady(CTCPSvrSocket* pSocket) = 0;
 	virtual void OnClosed(CSocket* pSocket, int nReason) = 0;
-//	virtual void OnError(CSocket* pSocket, int nEvent, int nError) = 0;
+	virtual void OnError(CSocket* pSocket, int nEvent, int nError) = 0;
 	
 protected:
 	// Make interface.
