@@ -278,6 +278,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\NetBuffer.cpp">
+			</File>
+			<File
 				RelativePath="PipeException.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -563,6 +566,9 @@
 			</File>
 			<File
 				RelativePath="NCL.hpp">
+			</File>
+			<File
+				RelativePath=".\NetBuffer.hpp">
 			</File>
 			<File
 				RelativePath="PipeException.hpp">
