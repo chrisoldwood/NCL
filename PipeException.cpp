@@ -18,9 +18,40 @@
 /******************************************************************************
 ** Method:		Constructor.
 **
-** Description:	.
+** Description:	Formats an exception which does not use GetLastError().
 **
-** Parameters:	None.
+** Parameters:	eErrCode	The exception code
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+CPipeException::CPipeException(int eErrCode)
+	: CException(eErrCode)
+	, m_hResult(NO_ERROR)
+{
+	// Convert error to string.
+	switch(eErrCode)
+	{
+		case E_BAD_PROTOCOL:
+			m_strErrorText.Format("Invalid pipe protocol version");
+			break;
+
+		// Shouldn't happen!
+		default:
+			ASSERT_FALSE();
+			break;
+	}
+}
+
+/******************************************************************************
+** Method:		Constructor.
+**
+** Description:	Formats an exception which includes GetLastError().
+**
+** Parameters:	eErrCode	The exception code
+**				hResult		The result of GetLastError().
 **
 ** Returns:		Nothing.
 **
@@ -28,10 +59,9 @@
 */
 
 CPipeException::CPipeException(int eErrCode, HRESULT hResult)
-	: m_hResult(hResult)
+	: CException(eErrCode)
+	, m_hResult(hResult)
 {
-	m_nErrorCode = eErrCode;
-
 	// Convert error to string.
 	switch(eErrCode)
 	{

@@ -39,11 +39,13 @@ public:
 		E_SELECT_FAILED  = 19,	// Failed to query socket state.
 		E_QUERY_FAILED   = 20,	// Failed to query socket info.
 		E_DISCONNECTED   = 21,	// Connection was closed.
+		E_BAD_PROTOCOL	 = 22,	// Incorrect protocol version.
 	};
 
 	//
 	// Constructors/Destructor.
 	//
+	CSocketException(int eErrCode);
 	CSocketException(int eErrCode, int nWSACode);
 	~CSocketException();
 	

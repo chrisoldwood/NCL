@@ -28,6 +28,9 @@
 *******************************************************************************
 */
 
+// Utility Classes.
+#include "NetBuffer.hpp"
+
 // DDE Classes.
 #include "DDEInst.hpp"
 #include "DDEException.hpp"

@@ -33,11 +33,13 @@ public:
 		E_PEEK_FAILED	= 13,	// Failed to read from pipe.
 		E_READ_FAILED	= 14,	// Failed to read from pipe.
 		E_WRITE_FAILED	= 15,	// Failed to write to pipe.
+		E_BAD_PROTOCOL	= 16,	// Incorrect protocol version.
 	};
 
 	//
 	// Constructors/Destructor.
 	//
+	CPipeException(int eErrCode);
 	CPipeException(int eErrCode, HRESULT hResult);
 	~CPipeException();
 
