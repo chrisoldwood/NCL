@@ -34,6 +34,8 @@ public:
 	static void BeginAsyncSelect(CSocket* pSocket, long lEventMask);
 	static void EndAsyncSelect(CSocket* pSocket);
 
+	static void ProcessSocketMsgs();
+
 private:
 	// Template shorthands.
 	typedef TMap<SOCKET, CSocket*> CSocketMap;

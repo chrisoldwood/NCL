@@ -290,3 +290,23 @@ void CWinSock::EndAsyncSelect(CSocket* pSocket)
 	if (g_pSockMap->Exists(hSocket))
 		g_pSockMap->Remove(hSocket);
 }
+
+/******************************************************************************
+** Method:		ProcessSocketMsgs()
+**
+** Description:	Process any socket messages in the message queue.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CWinSock::ProcessSocketMsgs()
+{
+	MSG oMsg;
+
+	while (::PeekMessage(&oMsg, g_hSockWnd, g_nSockMsg, g_nSockMsg, PM_REMOVE))
+		::DispatchMessage(&oMsg);
+}
