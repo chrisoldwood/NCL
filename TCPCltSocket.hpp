@@ -27,6 +27,12 @@ public:
 	//
 	CTCPCltSocket();
 	virtual ~CTCPCltSocket();
+
+	//
+	// Properties.
+	//
+	CString	Host() const;
+	uint    Port() const;
 	
 	//
 	// Methods.
@@ -51,6 +57,16 @@ protected:
 **
 *******************************************************************************
 */
+
+inline CString CTCPCltSocket::Host() const
+{
+	return m_strHost;
+}
+
+inline uint CTCPCltSocket::Port() const
+{
+	return m_nPort;
+}
 
 inline void CTCPCltSocket::Connect(const char* pszHost, uint nPort)
 {

@@ -48,6 +48,16 @@ CTCPCltSocket::CTCPCltSocket(SOCKET hSocket)
 	ASSERT(hSocket != INVALID_SOCKET);
 
 	m_hSocket = hSocket;
+
+	sockaddr_in  addr      = { 0 };;
+	int          nAddrSize = sizeof(addr);
+
+	// Get the peer host address and port number.
+	if (getpeername(m_hSocket, (sockaddr*)&addr, &nAddrSize) != SOCKET_ERROR)
+	{
+		m_strHost = inet_ntoa(addr.sin_addr);
+		m_nPort   = addr.sin_port;
+	}
 }
 
 /******************************************************************************
