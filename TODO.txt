@@ -1,5 +1,3 @@
-- Faster lookup of conversations and links.
+- Faster lookup of DDE conversations and links.
 
 - WinInet classes.
-
-- DDE error codes (DDE_*) and messages in DDEInst.
