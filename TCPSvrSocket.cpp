@@ -316,5 +316,5 @@ void CTCPSvrSocket::OnError(int nEvent, int nError)
 
 CTCPCltSocket* CTCPSvrSocket::AllocCltSocket()
 {
-	return new CTCPCltSocket();
+	return new CTCPCltSocket(m_eMode);
 }
