@@ -25,18 +25,16 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CDDEData(CDDEInst* pInst);
-	CDDEData(CDDEInst* pInst, HDDEDATA hData, bool bOwn = true);
-	CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat = CF_TEXT, uint nFlags = 0, bool bOwn = false);
-	CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset = 0, uint nFormat = CF_TEXT, bool bOwn = false);
-	CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat = CF_TEXT, bool bOwn = false);
+	CDDEData(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn);
+	CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, bool bOwn);
+	CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset, uint nFormat, bool bOwn);
+	CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat, bool bOwn);
 	CDDEData(const CDDEData& oData);
 	~CDDEData();
 
 	//
 	// Operators.
 	//
-	operator HDDEDATA() const;
 	CDDEData& operator=(const CDDEData& oData);
 
 	//
@@ -55,6 +53,8 @@ public:
 	void SetBuffer(const CBuffer& oBuffer);
 	void SetString(const char* pszString);
 
+	void Free();
+
 protected:
 	// Forward declarations.
 	class CHandle;
@@ -63,8 +63,6 @@ protected:
 	// Members.
 	//
 	CHandle* m_pHandle;
-
-	// Disallow copies.
 };
 
 /******************************************************************************
@@ -77,7 +75,7 @@ protected:
 class CDDEData::CHandle
 {
 public:
-	CHandle(CDDEInst* pInst, HDDEDATA hData, bool bOwn);
+	CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn);
 	~CHandle();
 
 	//
@@ -86,6 +84,7 @@ public:
 	uint		m_nRefCount;	// The reference count.
 	CDDEInst*	m_pInst;		// The instance handle.
 	HDDEDATA	m_hData;		// The data handle.
+	uint		m_nFormat;		// The data format.
 	bool		m_bOwn;			// Ownership flag.
 };
 
@@ -101,10 +100,11 @@ public:
 #define new DBGCRT_NEW
 #endif
 
-inline CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, bool bOwn)
+inline CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
 	: m_nRefCount(1)
 	, m_pInst(pInst)
 	, m_hData(hData)
+	, m_nFormat(nFormat)
 	, m_bOwn(bOwn)
 {
 	ASSERT(pInst != NULL);
@@ -119,26 +119,21 @@ inline CDDEData::CHandle::~CHandle()
 		::DdeFreeDataHandle(m_hData);
 }
 
-inline CDDEData::CDDEData(CDDEInst* pInst)
-	: m_pHandle(new CHandle(pInst, NULL, false))
+inline CDDEData::CDDEData(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
+	: m_pHandle(new CHandle(pInst, hData, nFormat, bOwn))
 {
 }
 
-inline CDDEData::CDDEData(CDDEInst* pInst, HDDEDATA hData, bool bOwn)
-	: m_pHandle(new CHandle(pInst, hData, bOwn))
-{
-}
-
-inline CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, uint nFlags, bool bOwn)
+inline CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, bool bOwn)
 {
 	// Allocate data handle.
-	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), NULL, 0, 0, hItem, nFormat, nFlags);
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), NULL, 0, 0, hItem, nFormat, 0);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
 
 	// Attach handle.
-	m_pHandle = new CHandle(pInst, hData, bOwn);
+	m_pHandle = new CHandle(pInst, hData, nFormat, bOwn);
 }
 
 inline CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset, uint nFormat, bool bOwn)
@@ -150,7 +145,7 @@ inline CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
 
 	// Attach handle.
-	m_pHandle = new CHandle(pInst, hData, bOwn);
+	m_pHandle = new CHandle(pInst, hData, nFormat, bOwn);
 }
 
 inline CDDEData::CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat, bool bOwn)
@@ -162,29 +157,30 @@ inline CDDEData::CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat,
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
 
 	// Attach handle.
-	m_pHandle = new CHandle(pInst, hData, bOwn);
+	m_pHandle = new CHandle(pInst, hData, nFormat, bOwn);
 }
 
 inline CDDEData::CDDEData(const CDDEData& oData)
 	: m_pHandle(oData.m_pHandle)
 {
+	ASSERT(m_pHandle != NULL);
+
 	++(m_pHandle->m_nRefCount);
 }
 
 inline CDDEData::~CDDEData()
 {
+	ASSERT(m_pHandle != NULL);
+
 	if (--(m_pHandle->m_nRefCount) == 0)
 		delete m_pHandle;
-}
-
-inline CDDEData::operator HDDEDATA() const
-{
-	return m_pHandle->m_hData;
 }
 
 inline CDDEData& CDDEData::operator=(const CDDEData& oData)
 {
 	ASSERT(this != &oData);
+	ASSERT(m_pHandle != NULL);
+	ASSERT(oData.m_pHandle != NULL);
 
 	if (--(m_pHandle->m_nRefCount) == 0)
 		delete m_pHandle;
@@ -198,11 +194,15 @@ inline CDDEData& CDDEData::operator=(const CDDEData& oData)
 
 inline HDDEDATA CDDEData::Handle() const
 {
+	ASSERT(m_pHandle != NULL);
+
 	return m_pHandle->m_hData;
 }
 
 inline uint CDDEData::Size() const
 {
+	ASSERT(m_pHandle != NULL);
+
 	if (m_pHandle->m_hData == NULL)
 		return 0;
 
@@ -211,6 +211,11 @@ inline uint CDDEData::Size() const
 
 inline uint CDDEData::GetData(void* pBuffer, uint nSize, uint nOffset) const
 {
+	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle->m_hData != NULL);
+	ASSERT(pBuffer != NULL);
+	ASSERT(nOffset+nSize <= Size());
+
 	return ::DdeGetData(m_pHandle->m_hData, (byte*)pBuffer, nSize, nOffset);
 }
 
@@ -233,7 +238,7 @@ inline CString CDDEData::GetString() const
 	char* psz = (char*) _alloca(nSize+1);
 
 	// Get the data contents.
-	GetData((byte*)psz, nSize+1, 0);
+	GetData((byte*)psz, nSize, 0);
 
 	// Ensure its null terminated.
 	psz[nSize] = '\0';
@@ -243,6 +248,9 @@ inline CString CDDEData::GetString() const
 
 inline void CDDEData::SetData(const void* pBuffer, uint nSize, uint nOffset)
 {
+	ASSERT(m_pHandle != NULL);
+	ASSERT(pBuffer   != NULL);
+
 	HDDEDATA hData = ::DdeAddData(m_pHandle->m_hData, (byte*)pBuffer, nSize, nOffset);
 
 	if (hData == NULL)
@@ -260,6 +268,16 @@ inline void CDDEData::SetString(const char* pszString)
 {
 	// NB: Must include null terminator.
 	SetData(pszString, strlen(pszString)+1);
+}
+
+inline void CDDEData::Free()
+{
+	ASSERT(m_pHandle != NULL);
+
+	if (m_pHandle->m_hData != NULL)
+		::DdeFreeDataHandle(m_pHandle->m_hData);
+
+	m_pHandle->m_hData = NULL;
 }
 
 #ifdef _DEBUG
