@@ -202,7 +202,7 @@ void CDDEServer::DestroyConversation(CDDESvrConv* pConv)
 	ASSERT(m_aoConvs.Find(pConv) != -1);
 
 	// Disconnect from service/topic.
-	::DdeDisconnect(pConv->m_hConv);
+	pConv->Disconnect();
 
 	// Remove from collection.
 	m_aoConvs.Remove(m_aoConvs.Find(pConv));
