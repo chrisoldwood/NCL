@@ -36,6 +36,8 @@ public:
 	virtual void OnAdviseConfirm(CDDESvrConv* pConv, CDDELink* pLink);
 	virtual bool OnAdviseRequest(CDDESvrConv* pConv, CDDELink* pLink, CDDEData& oData);
 	virtual void OnAdviseStop(CDDESvrConv* pConv, CDDELink* pLink);
+	virtual bool OnExecute(CDDESvrConv* pConv, const CString& strCmd);
+	virtual bool OnPoke(CDDESvrConv* pConv, const char* pszItem, uint nFormat, const CDDEData& oData);
 };
 
 /******************************************************************************
@@ -94,6 +96,16 @@ inline bool CDefDDEServerListener::OnAdviseRequest(CDDESvrConv* pConv, CDDELink*
 
 inline void CDefDDEServerListener::OnAdviseStop(CDDESvrConv* /*pConv*/, CDDELink* /*pLink*/)
 {
+}
+
+inline bool CDefDDEServerListener::OnExecute(CDDESvrConv* /*pConv*/, const CString& /*strCmd*/)
+{
+	return false;
+}
+
+inline bool CDefDDEServerListener::OnPoke(CDDESvrConv* /*pConv*/, const char* /*pszItem*/, uint /*nFormat*/, const CDDEData& /*oData*/)
+{
+	return false;
 }
 
 #endif // DEFDDESERVERLISTENER_HPP

@@ -36,6 +36,8 @@ public:
 	virtual void OnAdviseConfirm(CDDESvrConv* pConv, CDDELink* pLink) = 0;
 	virtual bool OnAdviseRequest(CDDESvrConv* pConv, CDDELink* pLink, CDDEData& oData) = 0;
 	virtual void OnAdviseStop(CDDESvrConv* pConv, CDDELink* pLink) = 0;
+	virtual bool OnExecute(CDDESvrConv* pConv, const CString& strCmd) = 0;
+	virtual bool OnPoke(CDDESvrConv* pConv, const char* pszItem, uint nFormat, const CDDEData& oData) = 0;
 
 protected:
 	// Make interface.
