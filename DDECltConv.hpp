@@ -30,6 +30,9 @@ public:
 	//
 	uint RefCount() const;
 
+	DWORD  TimeOut() const;
+	void   SetTimeOut(DWORD dwTimeOut);
+
 	//
 	// Command methods.
 	//
@@ -87,6 +90,16 @@ protected:
 inline uint CDDECltConv::RefCount() const
 {
 	return m_nRefCount;
+}
+
+inline DWORD CDDECltConv::TimeOut() const
+{
+	return m_dwTimeout;
+}
+
+inline void CDDECltConv::SetTimeOut(DWORD dwTimeOut)
+{
+	m_dwTimeout = dwTimeOut;
 }
 
 inline int CDDECltConv::NumLinks() const
