@@ -97,10 +97,6 @@ SOURCE=.\DDECltConv.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DDEConv.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\DDEException.cpp
 # End Source File
 # Begin Source File
@@ -182,6 +178,14 @@ SOURCE=.\DefDDEServerListener.hpp
 # Begin Source File
 
 SOURCE=.\IDDEClientListener.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IDDEConvData.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IDDELinkData.hpp
 # End Source File
 # Begin Source File
 
