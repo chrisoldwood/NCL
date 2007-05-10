@@ -18,7 +18,8 @@
 *******************************************************************************
 */
 
-#include "wcl.hpp"
+#include <Core/Common.hpp>		// Core library common headers.
+#include <WCL/wcl.hpp>			// Windows C++ library.
 #include <ddeml.h>
 
 /******************************************************************************
