@@ -9,11 +9,21 @@
 */
 
 #include "ncl.hpp"
+#include <WCL/StrArray.hpp>
 
 #ifdef _DEBUG
 // For memory leak detection.
 #define new DBGCRT_NEW
 #endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Constants
+
+//! The maximum length of the server name in chars.
+static const size_t MAX_SERVER_LEN = 256;
+
+//! The maximum length of the topic name in chars.
+static const size_t MAX_TOPIC_LEN = 256;
 
 /******************************************************************************
 **
@@ -513,6 +523,59 @@ void CDDEClient::QueryServerTopics(const char* pszServer, CStrArray& astrTopics)
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
 		}
 
+		astrTopics.Add(szTopic);
+	}
+
+	// Free connection list.
+	::DdeDisconnectList(hList);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Query for all running servers and topics.
+
+void CDDEClient::QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const
+{
+	// Query all servers.
+	HCONVLIST hList = ::DdeConnectList(m_dwInst, NULL, NULL, NULL, NULL);
+
+	// Failed?
+	if (hList == NULL)
+		throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+
+	HCONV hConv = NULL;
+
+	// For all servers & topics...
+	while ((hConv = ::DdeQueryNextServer(hList, hConv)) != NULL)
+	{
+		CONVINFO oConvInfo = { sizeof(oConvInfo), 0 };
+
+		// Query server details.
+		if (!::DdeQueryConvInfo(hConv, QID_SYNC, &oConvInfo))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		char szServer[MAX_SERVER_LEN+1];
+
+		// Get the server name.
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, MAX_SERVER_LEN, CP_WINANSI))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		char szTopic[MAX_TOPIC_LEN+1];
+
+		// Get the topic name.
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszTopic, szTopic, MAX_TOPIC_LEN, CP_WINANSI))
+		{
+			::DdeDisconnectList(hList);
+			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
+		}
+
+		// Add to the collections.
+		astrServers.Add(szServer);
 		astrTopics.Add(szTopic);
 	}
 

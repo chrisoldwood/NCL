@@ -12,6 +12,14 @@
 #ifndef DDECLIENT_HPP
 #define DDECLIENT_HPP
 
+#include "DDEInst.hpp"
+#include <WCL/TArray.hpp>
+
+// Forward declarations.
+class CDDECltConv;
+class IDDEClientListener;
+class CDDEData;
+
 // Template shorthands.
 typedef TPtrArray<CDDECltConv> CDDECltConvs;
 
@@ -63,6 +71,9 @@ public:
 	//
 	void QueryServers(CStrArray& astrServers) const;
 	void QueryServerTopics(const char* pszServer, CStrArray& astrTopics) const;
+
+	//! Query for all running servers and topics.
+	void QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const;
 
 protected:
 	// Template shorthands.
