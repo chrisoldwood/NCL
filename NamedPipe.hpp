@@ -12,6 +12,8 @@
 #ifndef NAMEDPIPE_HPP
 #define NAMEDPIPE_HPP
 
+#include <WCL/Event.hpp>
+
 /******************************************************************************
 ** 
 ** The base class for Named Pipes.

@@ -12,6 +12,8 @@
 #ifndef WINSOCK_HPP
 #define WINSOCK_HPP
 
+#include <WCL/TMap.hpp>
+
 /******************************************************************************
 ** 
 ** Wrapper for the global WinSock functions.

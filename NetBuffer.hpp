@@ -12,6 +12,8 @@
 #ifndef NETBUFFER_HPP
 #define NETBUFFER_HPP
 
+#include <WCL/Buffer.hpp>
+
 /******************************************************************************
 ** 
 ** A variable-sized data buffer.
