@@ -2,7 +2,7 @@
 **
 ** MODULE:		NCL.HPP
 ** COMPONENT:	Network & Comms Library.
-** DESCRIPTION:	Wrapper to include all the core library headers.
+** DESCRIPTION:	Wrapper to include all the library headers.
 **
 *******************************************************************************
 */
@@ -19,7 +19,7 @@
 */
 
 #include <Core/Common.hpp>		// Core library common headers.
-#include <WCL/wcl.hpp>			// Windows C++ library.
+#include <WCL/Common.hpp>		// Windows C++ library common headers.
 #include <ddeml.h>
 
 /******************************************************************************
