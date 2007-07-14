@@ -14,6 +14,7 @@
 
 // Forward declarations.
 class CDDEConv;
+class IDDELinkData;
 
 /******************************************************************************
 ** 

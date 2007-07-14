@@ -9,6 +9,7 @@
 */
 
 #include "ncl.hpp"
+#include <WCL/StrArray.hpp>
 
 #ifdef _DEBUG
 // For memory leak detection.
