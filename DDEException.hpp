@@ -12,6 +12,8 @@
 #ifndef DDEEXCEPTION_HPP
 #define DDEEXCEPTION_HPP
 
+#include <WCL/Exception.hpp>
+
 /******************************************************************************
 ** 
 ** The exception type thrown by the DDE classes.
