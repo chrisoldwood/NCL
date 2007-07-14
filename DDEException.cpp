@@ -28,8 +28,7 @@
 */
 
 CDDEException::CDDEException(int eErrCode, uint nDDECode)
-	: CException(eErrCode)
-	, m_nDDECode(nDDECode)
+	: m_nDDECode(nDDECode)
 {
 	// Get error code as #defined symbol.
 	CString strErrDef = CDDEInst::GetErrorCode(m_nDDECode);
