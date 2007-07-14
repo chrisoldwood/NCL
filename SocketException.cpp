@@ -18,36 +18,6 @@
 /******************************************************************************
 ** Method:		Constructor.
 **
-** Description:	Formats an exception which does not use GetLastError().
-**
-** Parameters:	eErrCode	The exception code
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
-
-CSocketException::CSocketException(int eErrCode)
-	: CException(eErrCode)
-	, m_nWSACode(NO_ERROR)
-{
-	// Convert error to string.
-	switch(eErrCode)
-	{
-		case E_BAD_PROTOCOL:
-			m_strErrorText.Format("Invalid socket protocol version");
-			break;
-
-		// Shouldn't happen!
-		default:
-			ASSERT_FALSE();
-			break;
-	}
-}
-
-/******************************************************************************
-** Method:		Constructor.
-**
 ** Description:	Formats an exception which includes GetLastError().
 **
 ** Parameters:	None.
@@ -58,8 +28,7 @@ CSocketException::CSocketException(int eErrCode)
 */
 
 CSocketException::CSocketException(int eErrCode, int nWSACode)
-	: CException(eErrCode)
-	, m_nWSACode(nWSACode)
+	: m_nWSACode(nWSACode)
 {
 	// Get error code symbol.
 	CString strSymbol = CWinSock::ErrorToSymbol(nWSACode);
@@ -113,6 +82,10 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 
 		case E_DISCONNECTED:
 			m_strErrorText.Format("Connection closed: %s", strSymbol);
+			break;
+
+		case E_BAD_PROTOCOL:
+			m_strErrorText.Format("Invalid socket protocol version");
 			break;
 
 		case E_WAIT_FAILED:
