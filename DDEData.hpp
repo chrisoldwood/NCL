@@ -12,6 +12,12 @@
 #ifndef DDEDATA_HPP
 #define DDEDATA_HPP
 
+#include "DDEException.hpp"
+#include <WCL/Buffer.hpp>
+
+// Forward declarations.
+class CDDEInst;
+
 /******************************************************************************
 ** 
 ** This is a helper class for dealing with DDE data.

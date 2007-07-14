@@ -12,6 +12,13 @@
 #ifndef DDECLTCONV_HPP
 #define DDECLTCONV_HPP
 
+#include "DDEConv.hpp"
+#include <WCL/TArray.hpp>
+
+// Forward declarations.
+class CDDELink;
+class CDDEData;
+
 // Template shorthands.
 typedef TPtrArray<CDDELink> CDDECltLinks;
 
