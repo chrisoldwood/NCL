@@ -39,7 +39,6 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CPipeException(int eErrCode);
 	CPipeException(int eErrCode, HRESULT hResult);
 	~CPipeException();
 

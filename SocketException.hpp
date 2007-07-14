@@ -46,7 +46,6 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CSocketException(int eErrCode);
 	CSocketException(int eErrCode, int nWSACode);
 	~CSocketException();
 	
