@@ -12,6 +12,10 @@
 #ifndef DDECONV_HPP
 #define DDECONV_HPP
 
+// Forward declarations.
+class IDDEConvData;
+class CDDEInst;
+
 /******************************************************************************
 ** 
 ** This class is used to encapsulate a DDE conversation.
@@ -34,11 +38,6 @@ public:
 	IDDEConvData*  AppData() const;
 	void           SetAppData(IDDEConvData* pAppData);
 
-	//
-	// Methods.
-	//
-	void Disconnect();
-
 protected:
 	//
 	// Members.
@@ -55,6 +54,11 @@ protected:
 	CDDEConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic);
 	CDDEConv(const CDDEConv&);
 	virtual ~CDDEConv();
+
+	//
+	// Methods.
+	//
+	void Disconnect();
 };
 
 /******************************************************************************
