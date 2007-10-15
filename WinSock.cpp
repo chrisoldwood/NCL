@@ -8,13 +8,11 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
+#include "Common.hpp"
+#include "WinSock.hpp"
 #include <WCL/Module.hpp>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include "Socket.hpp"
+#include "SocketException.hpp"
 
 // Directive to link to WinSock library.
 #pragma comment(lib, "ws2_32")
@@ -30,7 +28,7 @@ bool    CWinSock::g_bStarted = false;
 WSADATA CWinSock::g_oWSAData = { 0 };
 uint    CWinSock::g_nSockMsg = 0;
 HWND    CWinSock::g_hSockWnd = NULL;
-CWinSock::CSocketMap* CWinSock::g_pSockMap = NULL;
+CWinSock::SocketMap* CWinSock::g_pSockMap = NULL;
 
 /******************************************************************************
 ** Method:		Startup()
@@ -70,7 +68,7 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 	ASSERT(g_hSockWnd != NULL);
 
 	// Create the socket handle map.
-	g_pSockMap = new CSocketMap();
+	g_pSockMap = new SocketMap;
 
 	return ::WSAStartup(MAKEWORD(nMajorVer, nMinorVer), &g_oWSAData);
 }
@@ -89,6 +87,8 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 
 int CWinSock::Cleanup()
 {
+	ASSERT((g_pSockMap == nullptr) || (g_pSockMap->empty()));
+
 	// Destroy the socket handle map.
 	delete g_pSockMap;
 
@@ -202,41 +202,38 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 		int    nEvent  = WSAGETSELECTEVENT(lParam);
 		int    nError  = WSAGETSELECTERROR(lParam);
 
-//		TRACE3("Socket message: 0x%08X %u %u\n", hSocket, nEvent, nError);
-
-		CSocket* pSocket = NULL;
-
-		// Socket mapped?
-		if (g_pSockMap->Find(hSocket, pSocket))
+		try
 		{
-			ASSERT(pSocket != NULL);
+//			TRACE3("Socket message: 0x%08X %u %u\n", hSocket, nEvent, nError);
 
-#ifdef _DEBUG
-			try
+			SocketMap::const_iterator it = g_pSockMap->find(hSocket);
+
+			// Socket mapped?
+			if (it != g_pSockMap->end())
 			{
-#endif
+				CSocket* pSocket = it->second;
 
-			// Forward event.
-			pSocket->OnAsyncSelect(nEvent, nError);
+				ASSERT(pSocket != NULL);
 
-#ifdef _DEBUG
+				// Forward event.
+				pSocket->OnAsyncSelect(nEvent, nError);
+
 			}
-			catch (CException& e)
-			{
-				TRACE3("EXCEPTION in OnAsyncSelect(0x%08X, 0x%08X) [%s]\n", nEvent, nError, e.ErrorText());
 
-				ASSERT_FALSE();
-			}
-			catch (...)
-			{
-				TRACE2("EXCEPTION in OnAsyncSelect(0x%08X, 0x%08X) [unknown]\n", nEvent, nError);
-
-				ASSERT_FALSE();
-			}
-#endif
+			return 0;
 		}
-
-		return 0;
+		catch (const std::exception& e)
+		{
+			WCL::ReportUnhandledException("Unexpected exception caught in CWinSock::WindowProc()\n\n"
+											"Message: Event=0x%08X, Error=0x%08X\n\n%s",
+											nEvent, nError, e.what());
+		}
+		catch (...)
+		{
+			WCL::ReportUnhandledException("Unexpected unknown exception caught in DlgProc()\n\n"
+											"Message: Event=0x%08X, Error=0x%08X",
+											nEvent, nError);
+		}
 	}
 
 	// Do default processing.
@@ -270,8 +267,7 @@ void CWinSock::BeginAsyncSelect(CSocket* pSocket, long lEventMask)
 	ASSERT(hSocket != INVALID_SOCKET);
 
 	// Add handle<->socket mapping.
-	if (!g_pSockMap->Exists(hSocket))
-		g_pSockMap->Add(hSocket, pSocket);
+	g_pSockMap->insert(std::make_pair(hSocket, pSocket));
 
 	// Start events...
 	if (::WSAAsyncSelect(hSocket, g_hSockWnd, g_nSockMsg, lEventMask) == SOCKET_ERROR)
@@ -303,8 +299,10 @@ void CWinSock::EndAsyncSelect(CSocket* pSocket)
 	::WSAAsyncSelect(hSocket, g_hSockWnd, g_nSockMsg, 0);
 
 	// Remove handle<->socket mapping.
-	if (g_pSockMap->Exists(hSocket))
-		g_pSockMap->Remove(hSocket);
+	SocketMap::iterator it = g_pSockMap->find(hSocket);
+
+	if (it != g_pSockMap->end())
+		g_pSockMap->erase(it);
 }
 
 /******************************************************************************
