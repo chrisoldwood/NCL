@@ -12,6 +12,16 @@
 #ifndef TCPSVRSOCKET_HPP
 #define TCPSVRSOCKET_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "TCPSocket.hpp"
+
+// Forward declarations.
+class CTCPCltSocket;
+class IServerSocketListener;
+
 /******************************************************************************
 ** 
 ** A server side TCP socket.
@@ -50,8 +60,8 @@ public:
 
 protected:
 	// Template shorthands.
-	typedef TPtrArray<IClientSocketListener> CCltListeners;
-	typedef TPtrArray<IServerSocketListener> CSvrListeners;
+	typedef std::vector<IClientSocketListener*> CCltListeners;
+	typedef std::vector<IServerSocketListener*> CSvrListeners;
 
 	//
 	// Members.

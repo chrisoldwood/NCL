@@ -12,6 +12,12 @@
 #ifndef UDPCLTSOCKET_HPP
 #define UDPCLTSOCKET_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "UDPSocket.hpp"
+
 /******************************************************************************
 ** 
 ** A client side UDP socket.

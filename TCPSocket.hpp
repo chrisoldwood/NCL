@@ -12,6 +12,12 @@
 #ifndef TCPSOCKET_HPP
 #define TCPSOCKET_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "Socket.hpp"
+
 /******************************************************************************
 ** 
 ** A TCP type socket.

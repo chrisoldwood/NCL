@@ -12,6 +12,12 @@
 #ifndef SERVERPIPE_HPP
 #define SERVERPIPE_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "NamedPipe.hpp"
+
 /******************************************************************************
 ** 
 ** The server end of a Named Pipe.

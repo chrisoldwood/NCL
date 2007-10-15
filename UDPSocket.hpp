@@ -12,6 +12,12 @@
 #ifndef UDPSOCKET_HPP
 #define UDPSOCKET_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "Socket.hpp"
+
 /******************************************************************************
 ** 
 ** A UDP type socket.

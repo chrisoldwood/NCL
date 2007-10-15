@@ -12,6 +12,10 @@
 #ifndef NETBUFFER_HPP
 #define NETBUFFER_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
 #include <WCL/Buffer.hpp>
 
 /******************************************************************************

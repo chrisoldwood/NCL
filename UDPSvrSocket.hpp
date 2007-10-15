@@ -12,6 +12,12 @@
 #ifndef UDPSVRSOCKET_HPP
 #define UDPSVRSOCKET_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "UDPSocket.hpp"
+
 /******************************************************************************
 ** 
 ** A server side UDP socket.

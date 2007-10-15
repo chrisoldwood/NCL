@@ -12,6 +12,11 @@
 #ifndef NAMEDPIPE_HPP
 #define NAMEDPIPE_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/Buffer.hpp>
 #include <WCL/Event.hpp>
 
 /******************************************************************************

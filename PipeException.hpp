@@ -12,6 +12,12 @@
 #ifndef PIPEEXCEPTION_HPP
 #define PIPEEXCEPTION_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/Exception.hpp>
+
 /******************************************************************************
 ** 
 ** The exception type thrown by the Named Pipe classes.

@@ -12,6 +12,16 @@
 #ifndef SOCKET_HPP
 #define SOCKET_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/Buffer.hpp>
+
+// Forward declarations.
+class IClientSocketListener;
+class CNetBuffer;
+
 /******************************************************************************
 ** 
 ** The base class for all sockets.
@@ -72,7 +82,7 @@ public:
 
 protected:
 	// Template shorthands.
-	typedef TPtrArray<IClientSocketListener> CCltListeners;
+	typedef std::vector<IClientSocketListener*> CCltListeners;
 
 	//
 	// Members.
