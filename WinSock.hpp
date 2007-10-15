@@ -12,7 +12,12 @@
 #ifndef WINSOCK_HPP
 #define WINSOCK_HPP
 
-#include <WCL/TMap.hpp>
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+// Forward declarations.
+class CSocket;
 
 /******************************************************************************
 ** 
@@ -40,7 +45,7 @@ public:
 
 private:
 	// Template shorthands.
-	typedef TMap<SOCKET, CSocket*> CSocketMap;
+	typedef std::map<SOCKET, CSocket*> SocketMap;
 
 	//
 	// Class members.
@@ -49,7 +54,7 @@ private:
 	static WSADATA		g_oWSAData;
 	static uint			g_nSockMsg;
 	static HWND			g_hSockWnd;
-	static CSocketMap*	g_pSockMap;
+	static SocketMap*	g_pSockMap;
 
 	// Socket window procedure.
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
