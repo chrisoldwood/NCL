@@ -8,13 +8,14 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
+#include "Common.hpp"
+#include "Socket.hpp"
+#include "NetBuffer.hpp"
+#include "WinSock.hpp"
+#include "SocketException.hpp"
+#include "IClientSocketListener.hpp"
 #include <limits.h>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include <algorithm>
 
 // Conditional expression is constant.
 // Caused by FD_SET().
@@ -539,7 +540,7 @@ void CSocket::AddClientListener(IClientSocketListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	m_aoCltListeners.Add(pListener);
+	m_aoCltListeners.push_back(pListener);
 }
 
 /******************************************************************************
@@ -558,10 +559,10 @@ void CSocket::RemoveClientListener(IClientSocketListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	int i = m_aoCltListeners.Find(pListener);
+	CCltListeners::iterator it = std::find(m_aoCltListeners.begin(), m_aoCltListeners.end(), pListener);
 
-	if (i != -1)
-		m_aoCltListeners.Remove(i);
+	if (it != m_aoCltListeners.end())
+		m_aoCltListeners.erase(it);
 }
 
 /******************************************************************************
@@ -615,6 +616,8 @@ void CSocket::OnAsyncSelect(int nEvent, int nError)
 
 void CSocket::OnReadReady()
 {
+	typedef CCltListeners::const_iterator iter;
+
 	const uint TMP_BUF_SIZE = USHRT_MAX;
 
 	// Allocate receive buffer, on first call.
@@ -634,8 +637,8 @@ void CSocket::OnReadReady()
 		ASSERT(nLastErr != WSAEWOULDBLOCK);
 
 		// Notify listeners of error.
-		for (int i = 0; i < m_aoCltListeners.Size(); ++i)
-			m_aoCltListeners[i]->OnError(this, FD_READ, nLastErr);
+		for (iter it = m_aoCltListeners.begin(); it != m_aoCltListeners.end(); ++it)
+			(*it)->OnError(this, FD_READ, nLastErr);
 
 		return;
 	}
@@ -646,8 +649,8 @@ void CSocket::OnReadReady()
 	m_pRecvBuffer->Append(pBuffer, nResult);
 
 	// Notify listeners of data.
-	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
-		m_aoCltListeners[i]->OnReadReady(this);
+	for (iter it = m_aoCltListeners.begin(); it != m_aoCltListeners.end(); ++it)
+		(*it)->OnReadReady(this);
 }
 
 /******************************************************************************
@@ -664,6 +667,8 @@ void CSocket::OnReadReady()
 
 void CSocket::OnWriteReady()
 {
+	typedef CCltListeners::const_iterator iter;
+
 	// Anything still to send?
 	if ( (m_pSendBuffer != NULL) && (m_pSendBuffer->Size() > 0) )
 	{
@@ -683,8 +688,8 @@ void CSocket::OnWriteReady()
 			if (nLastErr != WSAEWOULDBLOCK)
 			{
 				// Notify listeners of error.
-				for (int i = 0; i < m_aoCltListeners.Size(); ++i)
-					m_aoCltListeners[i]->OnError(this, FD_WRITE, nLastErr);
+				for (iter it = m_aoCltListeners.begin(); it != m_aoCltListeners.end(); ++it)
+					(*it)->OnError(this, FD_WRITE, nLastErr);
 
 				return;
 			}
@@ -706,12 +711,14 @@ void CSocket::OnWriteReady()
 
 void CSocket::OnClosed(int nReason)
 {
+	typedef CCltListeners::const_iterator iter;
+
 	// Cleanup.
 	Close();
 
 	// Notify listeners.
-	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
-		m_aoCltListeners[i]->OnClosed(this, nReason);
+	for (iter it = m_aoCltListeners.begin(); it != m_aoCltListeners.end(); ++it)
+		(*it)->OnClosed(this, nReason);
 }
 
 /******************************************************************************
@@ -729,7 +736,9 @@ void CSocket::OnClosed(int nReason)
 
 void CSocket::OnError(int nEvent, int nError)
 {
+	typedef CCltListeners::const_iterator iter;
+
 	// Notify listeners.
-	for (int i = 0; i < m_aoCltListeners.Size(); ++i)
-		m_aoCltListeners[i]->OnError(this, nEvent, nError);
+	for (iter it = m_aoCltListeners.begin(); it != m_aoCltListeners.end(); ++it)
+		(*it)->OnError(this, nEvent, nError);
 }

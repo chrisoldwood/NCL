@@ -8,13 +8,14 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
+#include "Common.hpp"
+#include "TCPSvrSocket.hpp"
+#include "TCPCltSocket.hpp"
+#include "IServerSocketListener.hpp"
+#include "SocketException.hpp"
+#include "WinSock.hpp"
 #include <limits.h>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include <algorithm>
 
 // Conditional expression is constant.
 // Caused by FD_SET().
@@ -195,7 +196,7 @@ void CTCPSvrSocket::AddServerListener(IServerSocketListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	m_aoSvrListeners.Add(pListener);
+	m_aoSvrListeners.push_back(pListener);
 }
 
 /******************************************************************************
@@ -214,10 +215,10 @@ void CTCPSvrSocket::RemoveServerListener(IServerSocketListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	int i = m_aoSvrListeners.Find(pListener);
+	CSvrListeners::iterator it = std::find(m_aoSvrListeners.begin(), m_aoSvrListeners.end(), pListener);
 
-	if (i != -1)
-		m_aoSvrListeners.Remove(i);
+	if (it != m_aoSvrListeners.end())
+		m_aoSvrListeners.erase(it);
 }
 
 /******************************************************************************
@@ -257,9 +258,11 @@ void CTCPSvrSocket::OnAsyncSelect(int nEvent, int nError)
 
 void CTCPSvrSocket::OnAcceptReady()
 {
+	typedef CSvrListeners::const_iterator iter;
+
 	// Notify listeners.
-	for (int i = 0; i < m_aoSvrListeners.Size(); ++i)
-		m_aoSvrListeners[i]->OnAcceptReady(this);
+	for (iter it = m_aoSvrListeners.begin(); it != m_aoSvrListeners.end(); ++it)
+		(*it)->OnAcceptReady(this);
 }
 
 /******************************************************************************
@@ -276,12 +279,14 @@ void CTCPSvrSocket::OnAcceptReady()
 
 void CTCPSvrSocket::OnClosed(int nReason)
 {
+	typedef CSvrListeners::const_iterator iter;
+
 	// Cleanup.
 	Close();
 
 	// Notify listeners.
-	for (int i = 0; i < m_aoSvrListeners.Size(); ++i)
-		m_aoSvrListeners[i]->OnClosed(this, nReason);
+	for (iter it = m_aoSvrListeners.begin(); it != m_aoSvrListeners.end(); ++it)
+		(*it)->OnClosed(this, nReason);
 }
 
 /******************************************************************************
@@ -299,9 +304,11 @@ void CTCPSvrSocket::OnClosed(int nReason)
 
 void CTCPSvrSocket::OnError(int nEvent, int nError)
 {
+	typedef CSvrListeners::const_iterator iter;
+
 	// Notify listeners.
-	for (int i = 0; i < m_aoSvrListeners.Size(); ++i)
-		m_aoSvrListeners[i]->OnError(this, nEvent, nError);
+	for (iter it = m_aoSvrListeners.begin(); it != m_aoSvrListeners.end(); ++it)
+		(*it)->OnError(this, nEvent, nError);
 }
 
 /******************************************************************************
