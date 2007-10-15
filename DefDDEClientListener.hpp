@@ -12,6 +12,12 @@
 #ifndef DEFDDECLIENTLISTENER_HPP
 #define DEFDDECLIENTLISTENER_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "IDDEClientListener.hpp"
+
 /******************************************************************************
 ** 
 ** Default implementation of IDDEClientListener.

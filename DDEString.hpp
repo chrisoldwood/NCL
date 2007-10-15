@@ -12,6 +12,13 @@
 #ifndef DDESTRING_HPP
 #define DDESTRING_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "DDEInst.hpp"
+#include "DDEException.hpp"
+
 /******************************************************************************
 ** 
 ** This is a helper class for dealing with DDE string handles.

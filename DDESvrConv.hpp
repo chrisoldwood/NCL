@@ -12,6 +12,16 @@
 #ifndef DDESVRCONV_HPP
 #define DDESVRCONV_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <Legacy/TArray.hpp>
+#include "DDEConv.hpp"
+
+// Forward declarations.
+class CDDELink;
+
 // Template shorthands.
 typedef TPtrArray<CDDELink> CDDESvrLinks;
 

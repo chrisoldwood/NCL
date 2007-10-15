@@ -12,6 +12,10 @@
 #ifndef DDEINST_HPP
 #define DDEINST_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
 /******************************************************************************
 ** 
 ** The base class for all DDE services.

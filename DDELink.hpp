@@ -12,6 +12,10 @@
 #ifndef DDELINK_HPP
 #define DDELINK_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
 // Forward declarations.
 class CDDEConv;
 class IDDELinkData;

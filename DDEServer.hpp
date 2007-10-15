@@ -12,6 +12,18 @@
 #ifndef DDESERVER_HPP
 #define DDESERVER_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <Legacy/TArray.hpp>
+#include "DDEInst.hpp"
+
+// Forward declarations.
+class IDDEServerListener;
+class CDDESvrConv;
+class CDDEData;
+
 // Template shorthands.
 typedef TPtrArray<CDDESvrConv> CDDESvrConvs;
 

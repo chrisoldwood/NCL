@@ -12,6 +12,12 @@
 #ifndef CLIENTPIPE_HPP
 #define CLIENTPIPE_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "NamedPipe.hpp"
+
 /******************************************************************************
 ** 
 ** The client end of a Named Pipe.

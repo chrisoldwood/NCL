@@ -12,6 +12,10 @@
 #ifndef IDDELINKDATA_HPP
 #define IDDELINKDATA_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
 /******************************************************************************
 ** 
 ** Marker interface used for custom DDE link data.

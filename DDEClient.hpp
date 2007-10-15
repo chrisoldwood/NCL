@@ -12,8 +12,12 @@
 #ifndef DDECLIENT_HPP
 #define DDECLIENT_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
 #include "DDEInst.hpp"
-#include <WCL/TArray.hpp>
+#include <Legacy/TArray.hpp>
 
 // Forward declarations.
 class CDDECltConv;
