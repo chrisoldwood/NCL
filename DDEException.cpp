@@ -8,12 +8,10 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include "Common.hpp"
+#include "DDEException.hpp"
+#include "DDEInst.hpp"
+#include "DDECltConv.hpp"
 
 /******************************************************************************
 ** Method:		Constructor.

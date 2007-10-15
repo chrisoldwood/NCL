@@ -8,13 +8,9 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
+#include "Common.hpp"
+#include "PipeException.hpp"
 #include <WCL/StrCvt.hpp>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
 
 /******************************************************************************
 ** Method:		Constructor.

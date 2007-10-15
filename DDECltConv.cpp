@@ -8,12 +8,11 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include "Common.hpp"
+#include "DDECltConv.hpp"
+#include "DDELink.hpp"
+#include "DDEData.hpp"
+#include "DDEString.hpp"
 
 /******************************************************************************
 **

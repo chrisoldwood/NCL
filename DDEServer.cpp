@@ -8,13 +8,14 @@
 *******************************************************************************
 */
 
-#include "ncl.hpp"
+#include "Common.hpp"
+#include "DDEServer.hpp"
 #include <WCL/StrArray.hpp>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include "DDEException.hpp"
+#include "DDESvrConv.hpp"
+#include "DDEString.hpp"
+#include "IDDEServerListener.hpp"
+#include "DDEData.hpp"
 
 /******************************************************************************
 **
