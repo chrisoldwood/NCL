@@ -12,6 +12,11 @@
 #ifndef DDEDATA_HPP
 #define DDEDATA_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "DDEInst.hpp"
 #include "DDEException.hpp"
 #include <WCL/Buffer.hpp>
 
@@ -100,11 +105,6 @@ public:
 **
 *******************************************************************************
 */
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
 
 inline CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
 	: m_nRefCount(1)
@@ -285,9 +285,5 @@ inline void CDDEData::Free()
 
 	m_pHandle->m_hData = NULL;
 }
-
-#ifdef _DEBUG
-#undef new
-#endif
 
 #endif // DDEDATA_HPP
