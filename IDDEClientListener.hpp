@@ -16,6 +16,11 @@
 #pragma once
 #endif
 
+// Forward declarations.
+class CDDECltConv;
+class CDDELink;
+class CDDEData;
+
 /******************************************************************************
 ** 
 ** The callback interface for DDE Client events.
