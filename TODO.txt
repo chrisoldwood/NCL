@@ -1,3 +1,5 @@
 - Faster lookup of DDE conversations and links.
 
 - WinInet classes.
+
+- Forward declarations header for DDE and Socket classes.
