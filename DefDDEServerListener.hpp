@@ -17,6 +17,7 @@
 #endif
 
 #include "IDDEServerListener.hpp"
+#include "DDELink.hpp"
 
 /******************************************************************************
 ** 
