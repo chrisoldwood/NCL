@@ -14,7 +14,7 @@
 #include "Socket.hpp"
 #include "SocketException.hpp"
 
-// Directive to link to WinSock library.
+// Linker directive.
 #pragma comment(lib, "ws2_32")
 
 /******************************************************************************
@@ -173,7 +173,7 @@ CString CWinSock::ErrorToSymbol(int nError)
 	char szError[50] = "#";
 
 	// Unrecognised, format as a number.
-	itoa(nError, szError+1, 10);
+	_itoa(nError, szError+1, 10);
 
 	return szError;
 }

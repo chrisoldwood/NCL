@@ -512,7 +512,7 @@ void CDDEClient::QueryServerTopics(const char* pszServer, CStrArray& astrTopics)
 		}
 
 		// Not the server we're after?
-		if (stricmp(szServer, pszServer) != 0)
+		if (_stricmp(szServer, pszServer) != 0)
 			continue;
 
 		char szTopic[256];

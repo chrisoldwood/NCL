@@ -294,7 +294,7 @@ CDDELink* CDDECltConv::FindLink(const char* pszItem, uint nFormat) const
 	{
 		CDDELink* pLink = m_aoLinks[i];
 
-		if ( (stricmp(pLink->Item(), pszItem) == 0) && (pLink->Format() == nFormat) )
+		if ( (_stricmp(pLink->Item(), pszItem) == 0) && (pLink->Format() == nFormat) )
 			return pLink;
 	}
 
