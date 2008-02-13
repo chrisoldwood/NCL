@@ -12,6 +12,7 @@
 #include "DDELink.hpp"
 #include "DDEConv.hpp"
 #include <WCL/Clipboard.hpp>
+#include <Core/AnsiWide.hpp>
 
 /******************************************************************************
 **
@@ -20,7 +21,7 @@
 *******************************************************************************
 */
 
-static uint s_nLinkFormat = CClipboard::RegisterFormat("Link");
+static uint s_nLinkFormat = CClipboard::RegisterFormat(TXT("Link"));
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -34,7 +35,7 @@ static uint s_nLinkFormat = CClipboard::RegisterFormat("Link");
 *******************************************************************************
 */
 
-CDDELink::CDDELink(CDDEConv* pConv, const char* pszItem, uint nFormat)
+CDDELink::CDDELink(CDDEConv* pConv, const tchar* pszItem, uint nFormat)
 	: m_nRefCount(0)
 	, m_pConv(pConv)
 	, m_strItem(pszItem)
@@ -82,7 +83,7 @@ bool CDDELink::CopyLink(HWND hOwner, const CDDELink* pLink)
 *******************************************************************************
 */
 
-bool CDDELink::CopyLink(HWND hOwner, const char* pszService, const char* pszTopic, const char* pszItem)
+bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTopic, const tchar* pszItem)
 {
 	ASSERT(::IsWindow(hOwner));
 	ASSERT(pszService != NULL);
@@ -97,15 +98,21 @@ bool CDDELink::CopyLink(HWND hOwner, const char* pszService, const char* pszTopi
 		// Clear existing contents.
 		if (::EmptyClipboard())
 		{
+			// Strings must be ANSI.
+			std::string strService = T2A(pszService);
+			std::string strTopic   = T2A(pszTopic);
+			std::string strItem    = T2A(pszItem);
+
 			// Format is "SERVICE\0TOPIC\0ITEM\0\0".
-			int     nLen      = strlen(pszService) + strlen(pszTopic) + strlen(pszItem) + 4;
-			HGLOBAL hLinkData = ::GlobalAlloc(GMEM_MOVEABLE, nLen);
-			HGLOBAL hTextData = ::GlobalAlloc(GMEM_MOVEABLE, nLen);
+			size_t  nChars    = strService.length() + strTopic.length() + strItem.length() + 4;
+			size_t  nBytes    = Core::NumBytes<char>(nChars);
+			HGLOBAL hLinkData = ::GlobalAlloc(GMEM_MOVEABLE, nBytes);
+			HGLOBAL hTextData = ::GlobalAlloc(GMEM_MOVEABLE, nBytes);
 
 			// Allocated blocks?
 			if ( (hLinkData != NULL) && (hTextData != NULL) )
 			{
-				char* pszLinkData = (char*) ::GlobalLock(hLinkData);
+				char* pszLinkData = static_cast<char*>(::GlobalLock(hLinkData));
 
 				// Locked "Link" block?
 				if (pszLinkData != NULL)
@@ -113,9 +120,9 @@ bool CDDELink::CopyLink(HWND hOwner, const char* pszService, const char* pszTopi
 					char* pszData = pszLinkData;
 
 					// Copy to clipboard buffer.
-					pszData = strcpy(pszData,                       pszService);
-					pszData = strcpy(pszData + strlen(pszData) + 1, pszTopic);
-					pszData = strcpy(pszData + strlen(pszData) + 1, pszItem);
+					pszData = strcpy(pszData,                       strService.c_str());
+					pszData = strcpy(pszData + strlen(pszData) + 1, strTopic.c_str());
+					pszData = strcpy(pszData + strlen(pszData) + 1, strItem.c_str());
 					pszData = strcpy(pszData + strlen(pszData) + 1, "");
 
 					::GlobalUnlock(hLinkData);
@@ -125,7 +132,7 @@ bool CDDELink::CopyLink(HWND hOwner, const char* pszService, const char* pszTopi
 						bCopied = true;
 				}
 
-				char* pszTextData = (char*) ::GlobalLock(hTextData);
+				char* pszTextData = static_cast<char*>(::GlobalLock(hTextData));
 
 				// Locked "Text" block?
 				if (pszLinkData != NULL)
@@ -133,11 +140,11 @@ bool CDDELink::CopyLink(HWND hOwner, const char* pszService, const char* pszTopi
 					char* pszData = pszTextData;
 
 					// Copy to clipboard buffer.
-					strcpy(pszData, pszService);
+					strcpy(pszData, strService.c_str());
 					strcat(pszData, "|");
-					strcat(pszData, pszTopic);
+					strcat(pszData, strTopic.c_str());
 					strcat(pszData, "!");
-					strcat(pszData, pszItem);
+					strcat(pszData, strItem.c_str());
 
 					::GlobalUnlock(hTextData);
 
@@ -194,7 +201,7 @@ bool CDDELink::PasteLink(CString& strLink)
 		return false;
 
 	// Format.
-	strLink.Format("%s|%s!%s", strService, strTopic, strItem);
+	strLink.Format(TXT("%s|%s!%s"), strService, strTopic, strItem);
 
 	return true;
 }
@@ -225,20 +232,20 @@ bool CDDELink::PasteLink(CString& strService, CString& strTopic, CString& strIte
 		// Got data?
 		if (hData != NULL)
 		{
-			const char* psz = (const char*) ::GlobalLock(hData);
+			const char* psz = static_cast<const char*>(::GlobalLock(hData));
 
 			// Locked block?
 			if (psz != NULL)
 			{
-				// Format is "SERVICE\0TOPIC\0ITEM\0\0".
+				// Format is "SERVICE\0TOPIC\0ITEM\0\0" [ANSI].
 				const char* pszService = psz;
 				const char* pszTopic   = pszService + strlen(pszService) + 1;
 				const char* pszItem    = pszTopic   + strlen(pszTopic)   + 1;
 
 				// Copy to return buffers.
-				strService = pszService;
-				strTopic   = pszTopic;
-				strItem    = pszItem;
+				strService = A2T(pszService);
+				strTopic   = A2T(pszTopic);
+				strItem    = A2T(pszItem);
 			
 				::GlobalUnlock(hData); 
 

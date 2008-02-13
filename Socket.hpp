@@ -48,23 +48,22 @@ public:
 	//
 	virtual void Close();
 
-	uint Send(const void* pBuffer, uint nBufSize);
-	uint Send(const CBuffer& oBuffer);
-	uint Send(const char* pszString);
+	size_t Send(const void* pBuffer, size_t nBufSize);
+	size_t Send(const CBuffer& oBuffer);
 
-	uint Recv(void* pBuffer, uint nBufSize);
-	uint Recv(CBuffer& oBuffer);
+	size_t Recv(void* pBuffer, size_t nBufSize);
+	size_t Recv(CBuffer& oBuffer);
 
-	uint Available();
-	uint Peek(void* pBuffer, uint nBufSize);
-	uint Peek(CBuffer& oBuffer, uint nBufSize);
+	size_t Available();
+	size_t Peek(void* pBuffer, size_t nBufSize);
+	size_t Peek(CBuffer& oBuffer, size_t nBufSize);
 
 	//
 	// Class methods.
 	//
-	static bool    IsAddress(const char* pszHost);
-	static in_addr Resolve(const char* pszHost);
-	static CString ResolveStr(const char* pszHost);
+	static bool    IsAddress(const tchar* pszHost);
+	static in_addr Resolve(const tchar* pszHost);
+	static CString ResolveStr(const tchar* pszHost);
 	static CString AsyncEventStr(int nEvent);
 
 	// Socket modes.
@@ -81,8 +80,10 @@ public:
 	void RemoveClientListener(IClientSocketListener* pListener);
 
 protected:
-	// Template shorthands.
+	//! The collection of socket event handlers.
 	typedef std::vector<IClientSocketListener*> CCltListeners;
+	//! The buffer smart-pointer type.
+	typedef Core::SharedPtr<CNetBuffer> NetBufferPtr;
 
 	//
 	// Members.
@@ -92,8 +93,8 @@ protected:
 	CString			m_strHost;			// Host, If connected.
 	uint			m_nPort;			// Port, If connected.
 	CCltListeners	m_aoCltListeners;	// The list of event listeners.
-	CNetBuffer*		m_pSendBuffer;		// Send buffer (async only).
-	CNetBuffer*		m_pRecvBuffer;		// Receive buffer (async only).
+	NetBufferPtr	m_pSendBuffer;		// Send buffer (async only).
+	NetBufferPtr	m_pRecvBuffer;		// Receive buffer (async only).
 
 	// Protect creation etc.
 	CSocket(Mode eMode);
@@ -104,7 +105,7 @@ protected:
 	// Internal methods.
 	//
 	void Create(int nAF, int nType, int nProtocol);
-	void Connect(const char* pszHost, uint nPort);
+	void Connect(const tchar* pszHost, uint nPort);
 
 	//
 	// Async event methods.
@@ -136,22 +137,17 @@ inline bool CSocket::IsOpen() const
 	return (m_hSocket != INVALID_SOCKET);
 }
 
-inline uint CSocket::Send(const CBuffer& oBuffer)
+inline size_t CSocket::Send(const CBuffer& oBuffer)
 {
 	return Send(oBuffer.Buffer(), oBuffer.Size());
 }
 
-inline uint CSocket::Send(const char* pszString)
-{
-	return Send(pszString, strlen(pszString));
-}
-
-inline uint CSocket::Recv(CBuffer& oBuffer)
+inline size_t CSocket::Recv(CBuffer& oBuffer)
 {
 	return Recv(oBuffer.Buffer(), oBuffer.Size());
 }
 
-inline uint CSocket::Peek(CBuffer& oBuffer, uint nBufSize)
+inline size_t CSocket::Peek(CBuffer& oBuffer, size_t nBufSize)
 {
 	return Peek(oBuffer.Buffer(), nBufSize);
 }

@@ -45,7 +45,7 @@ public:
 	// Clipboard methods.
 	//
 	static bool CopyLink(HWND hOwner, const CDDELink* pLink);
-	static bool CopyLink(HWND hOwner, const char* pszService, const char* pszTopic, const char* pszItem);
+	static bool CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTopic, const tchar* pszItem);
 
 	static bool CanPasteLink();
 	static bool PasteLink(CString& strLink);
@@ -69,7 +69,7 @@ protected:
 	//
 	// Constructors/Destructor.
 	//
-	CDDELink(CDDEConv* pConv, const char* pszItem, uint nFormat);
+	CDDELink(CDDEConv* pConv, const tchar* pszItem, uint nFormat);
 	CDDELink(const CDDELink&);
 	~CDDELink();
 

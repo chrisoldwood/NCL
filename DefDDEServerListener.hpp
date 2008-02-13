@@ -33,18 +33,18 @@ public:
 	// Methods.
 	//
 	virtual bool OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics);
-	virtual bool OnWildConnectService(const char* pszService, CStrArray& astrTopics);
-	virtual bool OnWildConnectTopic(const char* pszTopic, CStrArray& astrServices);
-	virtual bool OnConnect(const char* pszService, const char* pszTopic);
+	virtual bool OnWildConnectService(const tchar* pszService, CStrArray& astrTopics);
+	virtual bool OnWildConnectTopic(const tchar* pszTopic, CStrArray& astrServices);
+	virtual bool OnConnect(const tchar* pszService, const tchar* pszTopic);
 	virtual void OnConnectConfirm(CDDESvrConv* pConv);
 	virtual void OnDisconnect(CDDESvrConv* pConv);
-	virtual bool OnRequest(CDDESvrConv* pConv, const char* pszItem, uint nFormat, CDDEData& oData);
-	virtual bool OnAdviseStart(CDDESvrConv* pConv, const char* pszItem, uint nFormat);
+	virtual bool OnRequest(CDDESvrConv* pConv, const tchar* pszItem, uint nFormat, CDDEData& oData);
+	virtual bool OnAdviseStart(CDDESvrConv* pConv, const tchar* pszItem, uint nFormat);
 	virtual void OnAdviseConfirm(CDDESvrConv* pConv, CDDELink* pLink);
 	virtual bool OnAdviseRequest(CDDESvrConv* pConv, CDDELink* pLink, CDDEData& oData);
 	virtual void OnAdviseStop(CDDESvrConv* pConv, CDDELink* pLink);
 	virtual bool OnExecute(CDDESvrConv* pConv, const CString& strCmd);
-	virtual bool OnPoke(CDDESvrConv* pConv, const char* pszItem, uint nFormat, const CDDEData& oData);
+	virtual bool OnPoke(CDDESvrConv* pConv, const tchar* pszItem, uint nFormat, const CDDEData& oData);
 };
 
 /******************************************************************************
@@ -59,17 +59,17 @@ inline bool CDefDDEServerListener::OnWildConnect(CStrArray& /*astrServices*/, CS
 	return false;
 }
 
-inline bool CDefDDEServerListener::OnWildConnectService(const char* /*pszService*/, CStrArray& /*astrTopics*/)
+inline bool CDefDDEServerListener::OnWildConnectService(const tchar* /*pszService*/, CStrArray& /*astrTopics*/)
 {
 	return false;
 }
 
-inline bool CDefDDEServerListener::OnWildConnectTopic(const char* /*pszTopic*/, CStrArray& /*astrServices*/)
+inline bool CDefDDEServerListener::OnWildConnectTopic(const tchar* /*pszTopic*/, CStrArray& /*astrServices*/)
 {
 	return false;
 }
 
-inline bool CDefDDEServerListener::OnConnect(const char* /*pszService*/, const char* /*pszTopic*/)
+inline bool CDefDDEServerListener::OnConnect(const tchar* /*pszService*/, const tchar* /*pszTopic*/)
 {
 	return false;
 }
@@ -82,12 +82,12 @@ inline void CDefDDEServerListener::OnDisconnect(CDDESvrConv* /*pConv*/)
 {
 }
 
-inline bool CDefDDEServerListener::OnRequest(CDDESvrConv* /*pConv*/, const char* /*pszItem*/, uint /*nFormat*/, CDDEData& /*oData*/)
+inline bool CDefDDEServerListener::OnRequest(CDDESvrConv* /*pConv*/, const tchar* /*pszItem*/, uint /*nFormat*/, CDDEData& /*oData*/)
 {
 	return false;
 }
 
-inline bool CDefDDEServerListener::OnAdviseStart(CDDESvrConv* /*pConv*/, const char* /*pszItem*/, uint /*nFormat*/)
+inline bool CDefDDEServerListener::OnAdviseStart(CDDESvrConv* /*pConv*/, const tchar* /*pszItem*/, uint /*nFormat*/)
 {
 	return false;
 }
@@ -110,7 +110,7 @@ inline bool CDefDDEServerListener::OnExecute(CDDESvrConv* /*pConv*/, const CStri
 	return false;
 }
 
-inline bool CDefDDEServerListener::OnPoke(CDDESvrConv* /*pConv*/, const char* /*pszItem*/, uint /*nFormat*/, const CDDEData& /*oData*/)
+inline bool CDefDDEServerListener::OnPoke(CDDESvrConv* /*pConv*/, const tchar* /*pszItem*/, uint /*nFormat*/, const CDDEData& /*oData*/)
 {
 	return false;
 }

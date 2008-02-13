@@ -13,6 +13,7 @@
 #include "DDELink.hpp"
 #include "DDEData.hpp"
 #include "DDEString.hpp"
+#include <Core/AnsiWide.hpp>
 
 /******************************************************************************
 **
@@ -36,7 +37,7 @@ DWORD CDDECltConv::DEF_TIMEOUT = 30000;
 *******************************************************************************
 */
 
-CDDECltConv::CDDECltConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic)
+CDDECltConv::CDDECltConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
 	: CDDEConv(pInst, hConv, pszService, pszTopic)
 	, m_nRefCount(0)
 	, m_dwTimeout(DEF_TIMEOUT)
@@ -60,7 +61,7 @@ CDDECltConv::~CDDECltConv()
 	ASSERT(m_nRefCount == 0);
 
 	// Delete all links.
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
 	{
 		CDDELink* pLink = m_aoLinks[i];
 
@@ -74,18 +75,23 @@ CDDECltConv::~CDDECltConv()
 ** Method:		Request()
 **
 ** Description:	Request an item from the server.
-**				NB: Assumes that the item is of the format CF_TEXT.
 **
 ** Parameters:	pszItem		The item to fetch.
+**				nformat		The string format (ANSI or Unicode).
 **
 ** Returns:		The item.
 **
 *******************************************************************************
 */
 
-CString CDDECltConv::Request(const char* pszItem)
+CString CDDECltConv::RequestString(const tchar* pszItem, uint nFormat)
 {
-	return Request(pszItem, CF_TEXT).GetString();
+	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
+
+	if (nFormat == CF_TEXT)
+		return Request(pszItem, CF_TEXT).GetString(ANSI_TEXT);
+	else
+		return Request(pszItem, CF_UNICODETEXT).GetString(UNICODE_TEXT);
 }
 
 /******************************************************************************
@@ -101,7 +107,7 @@ CString CDDECltConv::Request(const char* pszItem)
 *******************************************************************************
 */
 
-CDDEData CDDECltConv::Request(const char* pszItem, uint nFormat)
+CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 {
 	ASSERT(pszItem != NULL);
 
@@ -130,12 +136,15 @@ CDDEData CDDECltConv::Request(const char* pszItem, uint nFormat)
 *******************************************************************************
 */
 
-void CDDECltConv::Execute(const char* pszCommand)
+void CDDECltConv::Execute(const tchar* pszCommand)
 {
 	ASSERT(pszCommand != NULL);
 
+	byte*  pBuffer = reinterpret_cast<byte*>(const_cast<tchar*>(pszCommand));
+	size_t nBytes  = Core::NumBytes<tchar>(tstrlen(pszCommand)+1);
+
 	// Execute it.
-	HDDEDATA hResult = ::DdeClientTransaction((byte*)pszCommand, strlen(pszCommand)+1, m_hConv, NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
+	HDDEDATA hResult = ::DdeClientTransaction(pBuffer, nBytes, m_hConv, NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
 
 	// Execute failed?
 	if (hResult == NULL)
@@ -156,20 +165,27 @@ void CDDECltConv::Execute(const char* pszCommand)
 *******************************************************************************
 */
 
-void CDDECltConv::Poke(const char* pszItem, const char* pszValue)
+void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat)
 {
-	Poke(pszItem, CF_TEXT, (const byte*)pszValue, strlen(pszValue)+1);
+	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
+
+	if (nFormat == CF_TEXT)
+		Poke(pszItem, CF_TEXT, T2A(pszValue), Core::NumBytes<char>(tstrlen(pszValue)+1));
+	else
+		Poke(pszItem, CF_UNICODETEXT, T2W(pszValue), Core::NumBytes<wchar_t>(tstrlen(pszValue)+1));
 }
 
-void CDDECltConv::Poke(const char* pszItem, uint nFormat, const void* pValue, uint nSize)
+void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, uint nSize)
 {
 	ASSERT(pszItem != NULL);
 	ASSERT(pValue  != NULL);
 
 	CDDEString strItem(m_pInst, pszItem);
 
+	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pValue));
+
 	// Do the poke.
-	HDDEDATA hResult = ::DdeClientTransaction((byte*)pValue, nSize, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
+	HDDEDATA hResult = ::DdeClientTransaction(lpData, nSize, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
 
 	// Poke failed?
 	if (hResult == NULL)
@@ -189,7 +205,7 @@ void CDDECltConv::Poke(const char* pszItem, uint nFormat, const void* pValue, ui
 *******************************************************************************
 */
 
-CDDELink* CDDECltConv::CreateLink(const char* pszItem, uint nFormat)
+CDDELink* CDDECltConv::CreateLink(const tchar* pszItem, uint nFormat)
 {
 	ASSERT(pszItem != NULL);
 
@@ -285,16 +301,16 @@ void CDDECltConv::DestroyAllLinks()
 *******************************************************************************
 */
 
-CDDELink* CDDECltConv::FindLink(const char* pszItem, uint nFormat) const
+CDDELink* CDDECltConv::FindLink(const tchar* pszItem, uint nFormat) const
 {
 	ASSERT(pszItem != NULL);
 
 	// Search the links list.
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
 	{
 		CDDELink* pLink = m_aoLinks[i];
 
-		if ( (_stricmp(pLink->Item(), pszItem) == 0) && (pLink->Format() == nFormat) )
+		if ( (tstricmp(pLink->Item(), pszItem) == 0) && (pLink->Format() == nFormat) )
 			return pLink;
 	}
 

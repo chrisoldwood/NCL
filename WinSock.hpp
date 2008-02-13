@@ -44,8 +44,10 @@ public:
 	static void ProcessSocketMsgs();
 
 private:
-	// Template shorthands.
+	//! The map of socket handle to object.
 	typedef std::map<SOCKET, CSocket*> SocketMap;
+	//! The socket handle map smart-pointer type.
+	typedef Core::SharedPtr<SocketMap> SocketMapPtr;
 
 	//
 	// Class members.
@@ -54,7 +56,7 @@ private:
 	static WSADATA		g_oWSAData;
 	static uint			g_nSockMsg;
 	static HWND			g_hSockWnd;
-	static SocketMap*	g_pSockMap;
+	static SocketMapPtr	g_pSockMap;
 
 	// Socket window procedure.
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam);

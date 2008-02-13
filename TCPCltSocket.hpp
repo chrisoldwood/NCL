@@ -43,7 +43,7 @@ public:
 	//
 	// Methods.
 	//
-	void Connect(const char* pszHost, uint nPort);
+	void Connect(const tchar* pszHost, uint nPort);
 
 protected:
 	//
@@ -74,7 +74,7 @@ inline uint CTCPCltSocket::Port() const
 	return m_nPort;
 }
 
-inline void CTCPCltSocket::Connect(const char* pszHost, uint nPort)
+inline void CTCPCltSocket::Connect(const tchar* pszHost, uint nPort)
 {
 	CSocket::Connect(pszHost, nPort);
 }

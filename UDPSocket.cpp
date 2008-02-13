@@ -85,7 +85,7 @@ int CUDPSocket::Protocol() const
 *******************************************************************************
 */
 
-uint CUDPSocket::SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, uint nPort)
+size_t CUDPSocket::SendTo(const void* pBuffer, size_t nBufSize, const in_addr& oAddr, uint nPort)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
@@ -95,12 +95,13 @@ uint CUDPSocket::SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr,
 	addr.sin_addr   = oAddr;
 	addr.sin_port   = htons((ushort)nPort);
 
-	int nResult = sendto(m_hSocket, (const char*)pBuffer, nBufSize, 0, (sockaddr*)&addr, sizeof(addr));
+	int nResult = sendto(m_hSocket, static_cast<const char*>(pBuffer), nBufSize, 0,
+							reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
 
 	if (nResult == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_SEND_FAILED, CWinSock::LastError());
 
-	ASSERT(nResult == nBufSize);
+	ASSERT(static_cast<size_t>(nResult) == nBufSize);
 
 	return nResult;
 }
@@ -122,14 +123,15 @@ uint CUDPSocket::SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr,
 *******************************************************************************
 */
 
-uint CUDPSocket::RecvFrom(void* pBuffer, int nBufSize, in_addr& oAddr, uint& nPort)
+size_t CUDPSocket::RecvFrom(void* pBuffer, size_t nBufSize, in_addr& oAddr, uint& nPort)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
 	sockaddr_in	addr;
 	int         nLength = sizeof(addr);
 
-	int nResult = recvfrom(m_hSocket, (char*)pBuffer, nBufSize, 0, (sockaddr*)&addr, &nLength);
+	int nResult = recvfrom(m_hSocket, static_cast<char*>(pBuffer), nBufSize, 0,
+							reinterpret_cast<sockaddr*>(&addr), &nLength);
 
 	if (nResult == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());

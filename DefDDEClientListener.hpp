@@ -31,8 +31,8 @@ public:
 	//
 	// Methods.
 	//
-	virtual void OnRegister(const char* pszBaseName, const char* pszInstName);
-	virtual void OnUnregister(const char* pszBaseName, const char* pszInstName);
+	virtual void OnRegister(const tchar* pszBaseName, const tchar* pszInstName);
+	virtual void OnUnregister(const tchar* pszBaseName, const tchar* pszInstName);
 	virtual void OnDisconnect(CDDECltConv* pConv);
 	virtual void OnAdvise(CDDELink* pLink, const CDDEData* pData);
 };
@@ -44,11 +44,11 @@ public:
 *******************************************************************************
 */
 
-inline void CDefDDEClientListener::OnRegister(const char* /*pszBaseName*/, const char* /*pszInstName*/)
+inline void CDefDDEClientListener::OnRegister(const tchar* /*pszBaseName*/, const tchar* /*pszInstName*/)
 {
 }
 
-inline void CDefDDEClientListener::OnUnregister(const char* /*pszBaseName*/, const char* /*pszInstName*/)
+inline void CDefDDEClientListener::OnUnregister(const tchar* /*pszBaseName*/, const tchar* /*pszInstName*/)
 {
 }
 

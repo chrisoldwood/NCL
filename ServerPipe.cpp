@@ -70,7 +70,7 @@ CServerPipe::~CServerPipe()
 *******************************************************************************
 */
 
-void CServerPipe::Create(const char* pszName)
+void CServerPipe::Create(const tchar* pszName)
 {
 	SECURITY_DESCRIPTOR* pSecDescriptor = (SECURITY_DESCRIPTOR*) alloca(SECURITY_DESCRIPTOR_MIN_LENGTH);
 

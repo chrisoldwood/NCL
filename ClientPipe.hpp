@@ -37,7 +37,7 @@ public:
 	//
 	// Methods.
 	//
-	void Open(const char* pszName);
+	void Open(const tchar* pszName);
 
 	virtual void Close();
 

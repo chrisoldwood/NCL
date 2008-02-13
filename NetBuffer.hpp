@@ -38,15 +38,15 @@ public:
 	// Properties.
 	//
 	bool		Empty() const;
-	uint        Size() const;
-	uint        Capacity() const;
+	size_t      Size() const;
+	size_t      Capacity() const;
 	const void* Ptr() const;
 	
 	//
 	// Methods.
 	//
-	uint Append(const void* pBuffer, uint nBufSize);
-	uint Discard(uint nCount);
+	size_t Append(const void* pBuffer, size_t nBufSize);
+	size_t Discard(size_t nCount);
 	void Clear();
 
 protected:
@@ -54,13 +54,13 @@ protected:
 	// Members.
 	//
 	CBuffer		m_oBuffer;			// The underlying buffer.
-	uint		m_nDataSize;		// The used buffer space.
-	uint		m_nMinCapacity;		// Minimum capacity.
+	size_t		m_nDataSize;		// The used buffer space.
+	size_t		m_nMinCapacity;		// Minimum capacity.
 
 	//
 	// Constants.
 	//
-	static const uint DEF_MIN_CAPACITY = 4096;
+	static const size_t DEF_MIN_CAPACITY = 4096;
 };
 
 /******************************************************************************
@@ -75,12 +75,12 @@ inline bool CNetBuffer::Empty() const
 	return (Size() == 0);
 }
 
-inline uint CNetBuffer::Size() const
+inline size_t CNetBuffer::Size() const
 {
 	return m_nDataSize;
 }
 
-inline uint CNetBuffer::Capacity() const
+inline size_t CNetBuffer::Capacity() const
 {
 	return m_oBuffer.Size();
 }

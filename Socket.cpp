@@ -16,6 +16,7 @@
 #include "IClientSocketListener.hpp"
 #include <limits.h>
 #include <algorithm>
+#include <Core/AnsiWide.hpp>
 
 // Conditional expression is constant.
 // Caused by FD_SET().
@@ -36,10 +37,8 @@
 CSocket::CSocket(Mode eMode)
 	: m_hSocket(INVALID_SOCKET)
 	, m_eMode(eMode)
-	, m_strHost("")
+	, m_strHost(TXT(""))
 	, m_nPort(0)
-	, m_pSendBuffer(NULL)
-	, m_pRecvBuffer(NULL)
 {
 }
 
@@ -58,10 +57,6 @@ CSocket::CSocket(Mode eMode)
 CSocket::~CSocket()
 {
 	Close();
-
-	// Free resources.
-	delete m_pSendBuffer;
-	delete m_pRecvBuffer;
 }
 
 /******************************************************************************
@@ -91,10 +86,10 @@ void CSocket::Close()
 	// Reset members.
 	m_hSocket = INVALID_SOCKET;
 
-	if (m_pSendBuffer != NULL)
+	if (m_pSendBuffer.Get() != nullptr)
 		m_pSendBuffer->Clear();
 
-	if (m_pRecvBuffer != NULL)
+	if (m_pRecvBuffer.Get() != nullptr)
 		m_pRecvBuffer->Clear();
 }
 
@@ -138,7 +133,7 @@ void CSocket::Create(int nAF, int nType, int nProtocol)
 *******************************************************************************
 */
 
-uint CSocket::Available()
+size_t CSocket::Available()
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
@@ -173,7 +168,7 @@ uint CSocket::Available()
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		if (m_pRecvBuffer != NULL)
+		if (m_pRecvBuffer.Get() != nullptr)
 			lAvailable = m_pRecvBuffer->Size();
 	}
 
@@ -195,7 +190,7 @@ uint CSocket::Available()
 *******************************************************************************
 */
 
-uint CSocket::Send(const void* pBuffer, uint nBufSize)
+size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 {
 	ASSERT(pBuffer != NULL);
 
@@ -213,25 +208,25 @@ uint CSocket::Send(const void* pBuffer, uint nBufSize)
 	if (m_eMode == BLOCK)
 	{
 		// Send the entire buffer.
-		nResult = send(m_hSocket, (const char*)pBuffer, nBufSize, 0);
+		nResult = send(m_hSocket, static_cast<const char*>(pBuffer), nBufSize, 0);
 
 		if (nResult == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_SEND_FAILED, CWinSock::LastError());
 
-		ASSERT((uint)nResult == nBufSize);
+		ASSERT(static_cast<size_t>(nResult) == nBufSize);
 	}
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
 		// Allocate send buffer, on first call.
-		if (m_pSendBuffer == NULL)
-			m_pSendBuffer = new CNetBuffer();
+		if (m_pSendBuffer.Get() == nullptr)
+			m_pSendBuffer = NetBufferPtr(new CNetBuffer());
 
 		// Append new data to existing send data.
 		if (m_pSendBuffer->Append(pBuffer, nBufSize) > 0)
 		{
 			// Try and send the entire buffer.
-			nResult = send(m_hSocket, (const char*)m_pSendBuffer->Ptr(), m_pSendBuffer->Size(), 0);
+			nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), m_pSendBuffer->Size(), 0);
 
 			if (nResult != SOCKET_ERROR)
 			{
@@ -267,7 +262,7 @@ uint CSocket::Send(const void* pBuffer, uint nBufSize)
 *******************************************************************************
 */
 
-uint CSocket::Recv(void* pBuffer, uint nBufSize)
+size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 {
 	ASSERT(pBuffer  != NULL);
 	ASSERT(nBufSize >= 0);
@@ -281,7 +276,7 @@ uint CSocket::Recv(void* pBuffer, uint nBufSize)
 	// Blocking socket?
 	if (m_eMode == BLOCK)
 	{
-		nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, 0);
+		nResult = recv(m_hSocket, static_cast<char*>(pBuffer), nBufSize, 0);
 
 		if (nResult == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());
@@ -289,7 +284,7 @@ uint CSocket::Recv(void* pBuffer, uint nBufSize)
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		if (m_pRecvBuffer != NULL)
+		if (m_pRecvBuffer.Get() != nullptr)
 		{
 			nBufSize = min(nBufSize, m_pRecvBuffer->Size());
 
@@ -322,7 +317,7 @@ uint CSocket::Recv(void* pBuffer, uint nBufSize)
 *******************************************************************************
 */
 
-uint CSocket::Peek(void* pBuffer, uint nBufSize)
+size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 	ASSERT(pBuffer   != NULL);
@@ -332,7 +327,7 @@ uint CSocket::Peek(void* pBuffer, uint nBufSize)
 	// Blocking socket?
 	if (m_eMode == BLOCK)
 	{
-		nResult = recv(m_hSocket, (char*)pBuffer, nBufSize, MSG_PEEK);
+		nResult = recv(m_hSocket, static_cast<char*>(pBuffer), nBufSize, MSG_PEEK);
 
 		if (nResult == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
@@ -340,7 +335,7 @@ uint CSocket::Peek(void* pBuffer, uint nBufSize)
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		if (m_pRecvBuffer != NULL)
+		if (m_pRecvBuffer.Get() != nullptr)
 		{
 			nBufSize = min(nBufSize, m_pRecvBuffer->Size());
 
@@ -369,7 +364,7 @@ uint CSocket::Peek(void* pBuffer, uint nBufSize)
 *******************************************************************************
 */
 
-void CSocket::Connect(const char* pszHost, uint nPort)
+void CSocket::Connect(const tchar* pszHost, uint nPort)
 {
 	ASSERT(m_hSocket == INVALID_SOCKET);
 	ASSERT(pszHost   != NULL);
@@ -382,14 +377,14 @@ void CSocket::Connect(const char* pszHost, uint nPort)
 	sockaddr_in	addr = { 0 };
 
 	addr.sin_family      = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(pszHost);
-	addr.sin_port        = htons((ushort)nPort);
+	addr.sin_addr.s_addr = inet_addr(T2A(pszHost));
+	addr.sin_port        = htons(static_cast<ushort>(nPort));
 
 	// Host name isn't an IP Address?
 	if (addr.sin_addr.s_addr == INADDR_NONE)
 	{
 		// Resolve host name.
-		hostent* pHost = gethostbyname(pszHost);
+		hostent* pHost = gethostbyname(T2A(pszHost));
 
 		if (pHost == NULL)
 			throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
@@ -401,7 +396,7 @@ void CSocket::Connect(const char* pszHost, uint nPort)
 	Create(AF_INET, Type(), Protocol());
 
 	// Connect to host.
-	if (connect(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
+	if (connect(m_hSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_CONNECT_FAILED, CWinSock::LastError());
 
 	// If async mode, do select.
@@ -421,9 +416,9 @@ void CSocket::Connect(const char* pszHost, uint nPort)
 *******************************************************************************
 */
 
-bool CSocket::IsAddress(const char* pszHost)
+bool CSocket::IsAddress(const tchar* pszHost)
 {
-	return (inet_addr(pszHost) != INADDR_NONE);
+	return (inet_addr(T2A(pszHost)) != INADDR_NONE);
 }
 
 /******************************************************************************
@@ -440,17 +435,17 @@ bool CSocket::IsAddress(const char* pszHost)
 *******************************************************************************
 */
 
-in_addr CSocket::Resolve(const char* pszHost)
+in_addr CSocket::Resolve(const tchar* pszHost)
 {
 	in_addr addr;
 
 	// Is already an IP address?
-	addr.s_addr = inet_addr(pszHost);
+	addr.s_addr = inet_addr(T2A(pszHost));
 
 	if (addr.s_addr == INADDR_NONE)
 	{
 		// Resolve host name.
-		hostent* pHost = gethostbyname(pszHost);
+		hostent* pHost = gethostbyname(T2A(pszHost));
 
 		if (pHost == NULL)
 			throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
@@ -475,7 +470,7 @@ in_addr CSocket::Resolve(const char* pszHost)
 *******************************************************************************
 */
 
-CString CSocket::ResolveStr(const char* pszHost)
+CString CSocket::ResolveStr(const tchar* pszHost)
 {
 	// Is already an IP address?
 	if (IsAddress(pszHost))
@@ -484,14 +479,14 @@ CString CSocket::ResolveStr(const char* pszHost)
 	in_addr addr;
 
 	// Resolve host name.
-	hostent* pHost = gethostbyname(pszHost);
+	hostent* pHost = gethostbyname(T2A(pszHost));
 
 	if (pHost == NULL)
 		throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
 
 	memcpy(&addr, pHost->h_addr_list[0], pHost->h_length);
 
-	return inet_ntoa(addr);
+	return A2T(inet_ntoa(addr));
 }
 
 /******************************************************************************
@@ -511,17 +506,17 @@ CString CSocket::AsyncEventStr(int nEvent)
 	// Decode event.
 	switch (nEvent)
 	{
-		case FD_READ:		return "FD_READ";
-		case FD_WRITE:		return "FD_WRITE";
-		case FD_OOB:		return "FD_OOB";
-		case FD_ACCEPT:		return "FD_ACCEPT";
-		case FD_CONNECT:	return "FD_CONNECT";
-		case FD_CLOSE:		return "FD_CLOSE";
+		case FD_READ:		return TXT("FD_READ");
+		case FD_WRITE:		return TXT("FD_WRITE");
+		case FD_OOB:		return TXT("FD_OOB");
+		case FD_ACCEPT:		return TXT("FD_ACCEPT");
+		case FD_CONNECT:	return TXT("FD_CONNECT");
+		case FD_CLOSE:		return TXT("FD_CLOSE");
 	}
 
 	ASSERT(false);
 
-	return "FD_?";
+	return TXT("FD_?");
 }
 
 /******************************************************************************
@@ -618,17 +613,17 @@ void CSocket::OnReadReady()
 {
 	typedef CCltListeners::const_iterator iter;
 
-	const uint TMP_BUF_SIZE = USHRT_MAX;
+	const size_t TMP_BUF_SIZE = USHRT_MAX;
 
 	// Allocate receive buffer, on first call.
-	if (m_pRecvBuffer == NULL)
-		m_pRecvBuffer = new CNetBuffer();
+	if (m_pRecvBuffer.Get() == nullptr)
+		m_pRecvBuffer = NetBufferPtr(new CNetBuffer());
 
 	// Allocate temporary read buffer.
-	byte* pBuffer = (byte*) alloca(TMP_BUF_SIZE);
+	void* pBuffer = alloca(TMP_BUF_SIZE);
 
 	// Read as much as possible.
-	int nResult = recv(m_hSocket, (char*)pBuffer, TMP_BUF_SIZE, 0);
+	int nResult = recv(m_hSocket, static_cast<char*>(pBuffer), TMP_BUF_SIZE, 0);
 
 	if (nResult == SOCKET_ERROR)
 	{
@@ -670,10 +665,10 @@ void CSocket::OnWriteReady()
 	typedef CCltListeners::const_iterator iter;
 
 	// Anything still to send?
-	if ( (m_pSendBuffer != NULL) && (m_pSendBuffer->Size() > 0) )
+	if ( (m_pSendBuffer.Get() != nullptr) && (m_pSendBuffer->Size() > 0) )
 	{
 		// Try and send the entire buffer.
-		int nResult = send(m_hSocket, (const char*)m_pSendBuffer->Ptr(), m_pSendBuffer->Size(), 0);
+		int nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), m_pSendBuffer->Size(), 0);
 
 		if (nResult != SOCKET_ERROR)
 		{

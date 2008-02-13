@@ -25,7 +25,7 @@
 *******************************************************************************
 */
 
-CDDESvrConv::CDDESvrConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic)
+CDDESvrConv::CDDESvrConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
 	: CDDEConv(pInst, hConv, pszService, pszTopic)
 {
 }
@@ -60,7 +60,7 @@ CDDESvrConv::~CDDESvrConv()
 *******************************************************************************
 */
 
-CDDELink* CDDESvrConv::CreateLink(const char* pszItem, uint nFormat)
+CDDELink* CDDESvrConv::CreateLink(const tchar* pszItem, uint nFormat)
 {
 	CDDELink* pLink = new CDDELink(this, pszItem, nFormat);
 
@@ -101,7 +101,7 @@ void CDDESvrConv::DestroyLink(CDDELink* pLink)
 
 void CDDESvrConv::DestroyAllLinks()
 {
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
 		delete m_aoLinks[i];
 
 	m_aoLinks.RemoveAll();
@@ -120,12 +120,12 @@ void CDDESvrConv::DestroyAllLinks()
 *******************************************************************************
 */
 
-CDDELink* CDDESvrConv::FindLink(const char* pszItem, uint nFormat) const
+CDDELink* CDDESvrConv::FindLink(const tchar* pszItem, uint nFormat) const
 {
 	ASSERT(pszItem != NULL);
 
 	// Search the links list.
-	for (int i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
 	{
 		CDDELink* pLink = m_aoLinks[i];
 

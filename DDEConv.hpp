@@ -55,7 +55,7 @@ protected:
 	//
 	// Constructors/Destructor.
 	//
-	CDDEConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic);
+	CDDEConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
 	CDDEConv(const CDDEConv&);
 	virtual ~CDDEConv();
 
@@ -72,17 +72,17 @@ protected:
 *******************************************************************************
 */
 
-inline CDDEConv::CDDEConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic)
+inline CDDEConv::CDDEConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
 	: m_pInst(pInst)
 	, m_hConv(hConv)
 	, m_strService(pszService)
 	, m_strTopic(pszTopic)
 	, m_pAppData(NULL)
 {
-	ASSERT(m_pInst      != NULL);
-	ASSERT(m_hConv      != NULL);
-	ASSERT(m_strService != "");
-	ASSERT(m_strTopic   != "");
+	ASSERT(m_pInst != NULL);
+	ASSERT(m_hConv != NULL);
+	ASSERT(!m_strService.Empty());
+	ASSERT(!m_strTopic.Empty());
 }
 
 inline CDDEConv::~CDDEConv()

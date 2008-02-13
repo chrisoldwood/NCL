@@ -19,6 +19,16 @@
 #include "DDEInst.hpp"
 #include "DDEException.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+// The build agnostic definition to use for selecting the code page when using
+// the DDE String functions.
+
+#ifdef ANSI_BUILD
+#define CP_WIN_TCHAR	CP_WINANSI
+#else
+#define CP_WIN_TCHAR	CP_WINUNICODE
+#endif
+
 /******************************************************************************
 ** 
 ** This is a helper class for dealing with DDE string handles.
@@ -32,27 +42,27 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CDDEString(CDDEInst* pInst, const char* pszString, bool bOwn = true);
-	CDDEString(CDDEInst* pInst, HSZ hsz,               bool bOwn = false);
+	CDDEString(CDDEInst* pInst, const tchar* pszString, bool bOwn = true);
+	CDDEString(CDDEInst* pInst, HSZ hsz, bool bOwn = false);
 	~CDDEString();
 
 	//
 	// Operators.
 	//
 	operator HSZ() const;
-	operator const char*() const;
+	operator const tchar*() const;
 
 protected:
-	// Max length of string.
+	// Max length of string (as per DDE documentation).
 	enum { MAX_LENGTH = 255 };
 
 	//
 	// Members.
 	//
-	CDDEInst*	m_pInst;		// The instance handle.
+	CDDEInst*	m_pInst;				// The instance handle.
 	HSZ			m_hsz;					// The string handle.
 	bool		m_bOwn;					// Ownership flag.
-	char		m_sz[MAX_LENGTH+1];		// Original string.
+	tchar		m_sz[MAX_LENGTH+1];		// Original string.
 
 	// Disallow copies.
 	CDDEString(const CDDEString&);
@@ -66,7 +76,7 @@ protected:
 *******************************************************************************
 */
 
-inline CDDEString::CDDEString(CDDEInst* pInst, const char* pszString, bool bOwn)
+inline CDDEString::CDDEString(CDDEInst* pInst, const tchar* pszString, bool bOwn)
 	: m_pInst(pInst)
 	, m_bOwn(bOwn)
 {
@@ -74,13 +84,15 @@ inline CDDEString::CDDEString(CDDEInst* pInst, const char* pszString, bool bOwn)
 	ASSERT(pszString != NULL);
 
 	// Create the string handle.
-	m_hsz = ::DdeCreateStringHandle(m_pInst->Handle(), pszString, CP_WINANSI);
+	m_hsz = ::DdeCreateStringHandle(m_pInst->Handle(), pszString, CP_WIN_TCHAR);
 
 	if (m_hsz == NULL)
 		throw CDDEException(CDDEException::E_STRING_FAILED, m_pInst->LastError());
 
 	// Save original string.
-	strcpy(m_sz, pszString);
+	tstrncpy(m_sz, pszString, MAX_LENGTH);
+
+	m_sz[MAX_LENGTH] = '\0';
 }
 
 inline CDDEString::CDDEString(CDDEInst* pInst, HSZ hsz, bool bOwn)
@@ -91,7 +103,7 @@ inline CDDEString::CDDEString(CDDEInst* pInst, HSZ hsz, bool bOwn)
 	ASSERT(pInst != NULL);
 
 	// Extract original string.
-	::DdeQueryString(m_pInst->Handle(), m_hsz, m_sz, MAX_LENGTH+1, CP_WINANSI);
+	::DdeQueryString(m_pInst->Handle(), m_hsz, m_sz, MAX_LENGTH+1, CP_WIN_TCHAR);
 }
 
 inline CDDEString::~CDDEString()
@@ -106,7 +118,7 @@ inline CDDEString::operator HSZ() const
 	return m_hsz;
 }
 
-inline CDDEString::operator const char*() const
+inline CDDEString::operator const tchar*() const
 {
 	return m_sz;
 }

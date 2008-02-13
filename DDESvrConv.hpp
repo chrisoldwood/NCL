@@ -38,10 +38,10 @@ public:
 	//
 	// Link methods.
 	//
-	CDDELink* FindLink(const char* pszItem, uint nFormat) const;
-	int       NumLinks() const;
-	CDDELink* GetLink(int nIndex) const;
-	int       GetAllLinks(CDDESvrLinks& aoLinks) const;
+	CDDELink* FindLink(const tchar* pszItem, uint nFormat) const;
+	size_t    NumLinks() const;
+	CDDELink* GetLink(size_t nIndex) const;
+	size_t    GetAllLinks(CDDESvrLinks& aoLinks) const;
 	bool      PostLinkUpdate(const CDDELink* pLink);
 
 protected:
@@ -54,14 +54,14 @@ protected:
 	// Constructors/Destructor.
 	// NB: Only available to CDDEServer.
 	//
-	CDDESvrConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic);
+	CDDESvrConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
 	CDDESvrConv(const CDDESvrConv&);
 	virtual ~CDDESvrConv();
 
 	//
 	// Link methods.
 	//
-	CDDELink* CreateLink(const char* pszItem, uint nFormat);
+	CDDELink* CreateLink(const tchar* pszItem, uint nFormat);
 	void      DestroyLink(CDDELink* pLink);
 	void      DestroyAllLinks();
 
@@ -76,17 +76,17 @@ protected:
 *******************************************************************************
 */
 
-inline int CDDESvrConv::NumLinks() const
+inline size_t CDDESvrConv::NumLinks() const
 {
 	return m_aoLinks.Size();
 }
 
-inline CDDELink* CDDESvrConv::GetLink(int nIndex) const
+inline CDDELink* CDDESvrConv::GetLink(size_t nIndex) const
 {
 	return m_aoLinks[nIndex];
 }
 
-inline int CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks) const
+inline size_t CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks) const
 {
 	aoLinks.ShallowCopy(m_aoLinks);
 

@@ -59,7 +59,7 @@ CNetBuffer::~CNetBuffer()
 *******************************************************************************
 */
 
-uint CNetBuffer::Append(const void* pBuffer, uint nBufSize)
+size_t CNetBuffer::Append(const void* pBuffer, size_t nBufSize)
 {
 	ASSERT(pBuffer != NULL);
 
@@ -70,7 +70,7 @@ uint CNetBuffer::Append(const void* pBuffer, uint nBufSize)
 		while ((Size() + nBufSize) > Capacity())
 			m_oBuffer.Size(m_oBuffer.Size() * 2);
 
-		char* pBufEnd = (char*)m_oBuffer.Buffer() + Size();
+		byte* pBufEnd = static_cast<byte*>(m_oBuffer.Buffer()) + Size();
 
 		// Copy data in.
 		memcpy(pBufEnd, pBuffer, nBufSize);
@@ -94,7 +94,7 @@ uint CNetBuffer::Append(const void* pBuffer, uint nBufSize)
 *******************************************************************************
 */
 
-uint CNetBuffer::Discard(uint nCount)
+size_t CNetBuffer::Discard(size_t nCount)
 {
 	// Discarding the entire buffer?
 	if (nCount == m_nDataSize)
@@ -104,7 +104,7 @@ uint CNetBuffer::Discard(uint nCount)
 	// Discarding part only.
 	else if (nCount > 0)
 	{
-		char* pBuffer = (char*)m_oBuffer.Buffer();
+		byte* pBuffer = static_cast<byte*>(m_oBuffer.Buffer());
 
 		// Shuffle data down.
 		memmove(pBuffer, pBuffer+nCount, m_nDataSize-nCount);

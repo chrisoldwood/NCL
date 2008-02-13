@@ -158,7 +158,7 @@ void CDDEClient::Uninitialise()
 *******************************************************************************
 */
 
-CDDECltConv* CDDEClient::CreateConversation(const char* pszService, const char* pszTopic)
+CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar* pszTopic)
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
@@ -237,14 +237,14 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 *******************************************************************************
 */
 
-CDDECltConv* CDDEClient::FindConversation(const char* pszService, const char* pszTopic) const
+CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* pszTopic) const
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
 	ASSERT(m_dwInst   != NULL);
 
 	// Search the conversation list.
-	for (int i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
 	{
 		CDDECltConv* pConv = m_aoConvs[i];
 
@@ -258,7 +258,7 @@ CDDECltConv* CDDEClient::FindConversation(const char* pszService, const char* ps
 CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 {
 	// Search the conversation list.
-	for (int i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
 	{
 		CDDECltConv* pConv = m_aoConvs[i];
 
@@ -323,9 +323,9 @@ void CDDEClient::RemoveListener(IDDEClientListener* pListener)
 *******************************************************************************
 */
 
-void CDDEClient::OnRegister(const char* pszBaseName, const char* pszInstName)
+void CDDEClient::OnRegister(const tchar* pszBaseName, const tchar* pszInstName)
 {
-	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
 		m_aoListeners[i]->OnRegister(pszBaseName, pszInstName);
 }
 
@@ -342,9 +342,9 @@ void CDDEClient::OnRegister(const char* pszBaseName, const char* pszInstName)
 *******************************************************************************
 */
 
-void CDDEClient::OnUnregister(const char* pszBaseName, const char* pszInstName)
+void CDDEClient::OnUnregister(const tchar* pszBaseName, const tchar* pszInstName)
 {
-	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
 		m_aoListeners[i]->OnUnregister(pszBaseName, pszInstName);
 }
 
@@ -367,7 +367,7 @@ void CDDEClient::OnDisconnect(HCONV hConv)
 
 	ASSERT(pConv != NULL);
 
-	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
 		m_aoListeners[i]->OnDisconnect(pConv);
 }
 
@@ -387,7 +387,7 @@ void CDDEClient::OnDisconnect(HCONV hConv)
 *******************************************************************************
 */
 
-void CDDEClient::OnAdvise(HCONV hConv, const char* /*pszTopic*/, const char* pszItem, uint nFormat, const CDDEData* pData)
+void CDDEClient::OnAdvise(HCONV hConv, const tchar* /*pszTopic*/, const tchar* pszItem, uint nFormat, const CDDEData* pData)
 {
 	// Find the conversation for the handle.
 	CDDECltConv* pConv = FindConversation(hConv);
@@ -404,7 +404,7 @@ void CDDEClient::OnAdvise(HCONV hConv, const char* /*pszTopic*/, const char* psz
 		return;
 	}
 
-	for (int i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
 		m_aoListeners[i]->OnAdvise(pLink, pData);
 }
 
@@ -443,10 +443,12 @@ void CDDEClient::QueryServers(CStrArray& astrServers) const
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
 		}
 
-		char szServer[256];
+		const size_t MAX_LEN = 256;
+
+		tchar szServer[MAX_LEN];
 
 		// Get the server name.
-		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, sizeof(szServer), CP_WINANSI))
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, MAX_LEN, CP_WIN_TCHAR))
 		{
 			::DdeDisconnectList(hList);
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
@@ -474,7 +476,7 @@ void CDDEClient::QueryServers(CStrArray& astrServers) const
 *******************************************************************************
 */
 
-void CDDEClient::QueryServerTopics(const char* pszServer, CStrArray& astrTopics) const
+void CDDEClient::QueryServerTopics(const tchar* pszServer, CStrArray& astrTopics) const
 {
 	ASSERT(pszServer != NULL);
 
@@ -501,24 +503,24 @@ void CDDEClient::QueryServerTopics(const char* pszServer, CStrArray& astrTopics)
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
 		}
 
-		char szServer[256];
+		tchar szServer[MAX_SERVER_LEN+1] = { 0 };
 
 		// Get the server name.
 		// NB: Some servers will return all service names regardless.
-		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, sizeof(szServer), CP_WINANSI))
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, MAX_SERVER_LEN, CP_WIN_TCHAR))
 		{
 			::DdeDisconnectList(hList);
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
 		}
 
 		// Not the server we're after?
-		if (_stricmp(szServer, pszServer) != 0)
+		if (tstricmp(szServer, pszServer) != 0)
 			continue;
 
-		char szTopic[256];
+		tchar szTopic[MAX_TOPIC_LEN] = { 0 };
 
 		// Get the topic name.
-		if (!::DdeQueryString(m_dwInst, oConvInfo.hszTopic, szTopic, sizeof(szTopic), CP_WINANSI))
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszTopic, szTopic, MAX_TOPIC_LEN, CP_WIN_TCHAR))
 		{
 			::DdeDisconnectList(hList);
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
@@ -557,19 +559,19 @@ void CDDEClient::QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
 		}
 
-		char szServer[MAX_SERVER_LEN+1];
+		tchar szServer[MAX_SERVER_LEN+1] = { 0 };
 
 		// Get the server name.
-		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, MAX_SERVER_LEN, CP_WINANSI))
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszSvcPartner, szServer, MAX_SERVER_LEN, CP_WIN_TCHAR))
 		{
 			::DdeDisconnectList(hList);
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
 		}
 
-		char szTopic[MAX_TOPIC_LEN+1];
+		tchar szTopic[MAX_TOPIC_LEN+1] = { 0 };
 
 		// Get the topic name.
-		if (!::DdeQueryString(m_dwInst, oConvInfo.hszTopic, szTopic, MAX_TOPIC_LEN, CP_WINANSI))
+		if (!::DdeQueryString(m_dwInst, oConvInfo.hszTopic, szTopic, MAX_TOPIC_LEN, CP_WIN_TCHAR))
 		{
 			::DdeDisconnectList(hList);
 			throw CDDEException(CDDEException::E_QUERY_FAILED, LastError());
@@ -656,7 +658,7 @@ HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		// Unknown message.
 		default:
 		{
-			TRACE1("DDECallbackProc(0x%08X)\n", uType);
+			TRACE1(TXT("DDECallbackProc(0x%08X)\n"), uType);
 			ASSERT_FALSE();
 		}
 		break;

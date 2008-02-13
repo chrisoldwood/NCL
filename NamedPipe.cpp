@@ -81,7 +81,7 @@ CNamedPipe::~CNamedPipe()
 *******************************************************************************
 */
 
-uint CNamedPipe::Available()
+size_t CNamedPipe::Available()
 {
 	DWORD dwAvail, dwMsgAvail;
 
@@ -107,7 +107,7 @@ uint CNamedPipe::Available()
 *******************************************************************************
 */
 
-uint CNamedPipe::Peek(void* pBuffer, uint nBufSize)
+size_t CNamedPipe::Peek(void* pBuffer, size_t nBufSize)
 {
 	DWORD dwRead, dwAvail, dwMsgAvail;
 
@@ -133,7 +133,7 @@ uint CNamedPipe::Peek(void* pBuffer, uint nBufSize)
 *******************************************************************************
 */
 
-void CNamedPipe::Read(void* pBuffer, uint nBufSize)
+void CNamedPipe::Read(void* pBuffer, size_t nBufSize)
 {
 	ASSERT(pBuffer  != NULL);
 	ASSERT(nBufSize != 0 );
@@ -184,7 +184,7 @@ void CNamedPipe::Read(void* pBuffer, uint nBufSize)
 *******************************************************************************
 */
 
-void CNamedPipe::Write(const void* pBuffer, uint nBufSize)
+void CNamedPipe::Write(const void* pBuffer, size_t nBufSize)
 {
 	ASSERT(pBuffer  != NULL);
 	ASSERT(nBufSize != 0 );

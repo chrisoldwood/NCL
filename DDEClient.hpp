@@ -57,12 +57,12 @@ public:
 	//
 	// Conversation methods.
 	//
-	CDDECltConv* CreateConversation(const char* pszService, const char* pszTopic);
+	CDDECltConv* CreateConversation(const tchar* pszService, const tchar* pszTopic);
 	void         DestroyConversation(CDDECltConv* pConv);
-	CDDECltConv* FindConversation(const char* pszService, const char* pszTopic) const;
+	CDDECltConv* FindConversation(const tchar* pszService, const tchar* pszTopic) const;
 	CDDECltConv* FindConversation(HCONV hConv) const;
-	int          GetNumConversations() const;
-	int          GetAllConversations(CDDECltConvs& aoConvs) const;
+	size_t       GetNumConversations() const;
+	size_t       GetAllConversations(CDDECltConvs& aoConvs) const;
 
 	//
 	// Event listener methods.
@@ -74,7 +74,7 @@ public:
 	// Server query methods.
 	//
 	void QueryServers(CStrArray& astrServers) const;
-	void QueryServerTopics(const char* pszServer, CStrArray& astrTopics) const;
+	void QueryServerTopics(const tchar* pszServer, CStrArray& astrTopics) const;
 
 	//! Query for all running servers and topics.
 	void QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const;
@@ -98,10 +98,10 @@ protected:
 	//
 	// DDECallback handlers.
 	//
-	void OnRegister(const char* pszBaseName, const char* pszInstName);
-	void OnUnregister(const char* pszBaseName, const char* pszInstName);
+	void OnRegister(const tchar* pszBaseName, const tchar* pszInstName);
+	void OnUnregister(const tchar* pszBaseName, const tchar* pszInstName);
 	void OnDisconnect(HCONV hConv);
-	void OnAdvise(HCONV hConv, const char* pszTopic, const char* pszItem, uint nFormat, const CDDEData* pData);
+	void OnAdvise(HCONV hConv, const tchar* pszTopic, const tchar* pszItem, uint nFormat, const CDDEData* pData);
 
 	// The DDE Callback function.
 	static HDDEDATA CALLBACK DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD dwData1, DWORD dwData2);
@@ -117,12 +117,12 @@ protected:
 *******************************************************************************
 */
 
-inline int CDDEClient::GetNumConversations() const
+inline size_t CDDEClient::GetNumConversations() const
 {
 	return m_aoConvs.Size();
 }
 
-inline int CDDEClient::GetAllConversations(CDDECltConvs& aoConvs) const
+inline size_t CDDEClient::GetAllConversations(CDDECltConvs& aoConvs) const
 {
 	aoConvs.ShallowCopy(m_aoConvs);
 

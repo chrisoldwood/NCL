@@ -79,6 +79,6 @@ void CUDPSvrSocket::Listen(uint nPort)
 	Create(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	// Bind socket to port.
-	if (bind(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
+	if (bind(m_hSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_BIND_FAILED, CWinSock::LastError());
 }

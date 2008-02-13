@@ -70,7 +70,7 @@ CClientPipe::~CClientPipe()
 *******************************************************************************
 */
 
-void CClientPipe::Open(const char* pszName)
+void CClientPipe::Open(const tchar* pszName)
 {
 	// Calculate max wait time.
 	DWORD dwMaxTime = ::GetTickCount() + m_dwTimeOut;

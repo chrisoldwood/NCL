@@ -11,6 +11,7 @@
 #include "Common.hpp"
 #include "TCPCltSocket.hpp"
 #include "WinSock.hpp"
+#include <Core/AnsiWide.hpp>
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -70,9 +71,9 @@ void CTCPCltSocket::Attach(SOCKET hSocket, Mode eMode)
 	int          nAddrSize = sizeof(addr);
 
 	// Get the peer host address and port number.
-	if (getpeername(m_hSocket, (sockaddr*)&addr, &nAddrSize) != SOCKET_ERROR)
+	if (getpeername(m_hSocket, reinterpret_cast<sockaddr*>(&addr), &nAddrSize) != SOCKET_ERROR)
 	{
-		m_strHost = inet_ntoa(addr.sin_addr);
+		m_strHost = A2T(inet_ntoa(addr.sin_addr));
 		m_nPort   = addr.sin_port;
 	}
 

@@ -39,12 +39,11 @@ public:
 	//
 	// Methods.
 	//
-	uint SendTo(const void* pBuffer, int nBufSize, const in_addr& oAddr, uint nPort);
-	uint SendTo(const CBuffer& oBuffer, const in_addr& oAddr, uint nPort);
-	uint SendTo(const char* pszString, const in_addr& oAddr, uint nPort);
+	size_t SendTo(const void* pBuffer, size_t nBufSize, const in_addr& oAddr, uint nPort);
+	size_t SendTo(const CBuffer& oBuffer, const in_addr& oAddr, uint nPort);
 
-	uint RecvFrom(void* pBuffer, int nBufSize, in_addr& oAddr, uint& nPort);
-	uint RecvFrom(CBuffer& oBuffer, in_addr& oAddr, uint& nPort);
+	size_t RecvFrom(void* pBuffer, size_t nBufSize, in_addr& oAddr, uint& nPort);
+	size_t RecvFrom(CBuffer& oBuffer, in_addr& oAddr, uint& nPort);
 
 protected:
 	//
@@ -64,17 +63,12 @@ protected:
 *******************************************************************************
 */
 
-inline uint CUDPSocket::SendTo(const CBuffer& oBuffer, const in_addr& oAddr, uint nPort)
+inline size_t CUDPSocket::SendTo(const CBuffer& oBuffer, const in_addr& oAddr, uint nPort)
 {
 	return SendTo(oBuffer.Buffer(), oBuffer.Size(), oAddr, nPort);
 }
 
-inline uint CUDPSocket::SendTo(const char* pszString, const in_addr& oAddr, uint nPort)
-{
-	return SendTo(pszString, strlen(pszString), oAddr, nPort);
-}
-
-inline uint CUDPSocket::RecvFrom(CBuffer& oBuffer, in_addr& oAddr, uint& nPort)
+inline size_t CUDPSocket::RecvFrom(CBuffer& oBuffer, in_addr& oAddr, uint& nPort)
 {
 	return RecvFrom(oBuffer.Buffer(), oBuffer.Size(), oAddr, nPort);
 }

@@ -41,12 +41,12 @@ public:
 	//
 	// Methods.
 	//
-	uint Available();
-	uint Peek(void* pBuffer, uint nBufSize);
-	uint Peek(CBuffer& oBuffer, uint nBufSize);
-	void Read(void* pBuffer, uint nBufSize);
+	size_t Available();
+	size_t Peek(void* pBuffer, size_t nBufSize);
+	size_t Peek(CBuffer& oBuffer, size_t nBufSize);
+	void Read(void* pBuffer, size_t nBufSize);
 	void Read(CBuffer& oBuffer);
-	void Write(const void* pBuffer, uint nBufSize);
+	void Write(const void* pBuffer, size_t nBufSize);
 	void Write(const CBuffer& oBuffer);
 
 	virtual void Close();
@@ -62,7 +62,7 @@ protected:
 	CEvent		m_oWriteEvent;	// Write Overlapped I/O event.
 	OVERLAPPED	m_oWriteIO;		// Write Overlapped I/O data.
 	bool		m_bPrevWrite;	// Write outstanding?
-	uint		m_nPrevBytes;	// Previous write size.
+	size_t		m_nPrevBytes;	// Previous write size.
 	DWORD		m_dwTimeOut;	// Connect/Read/Write timeout.
 
 	//
@@ -106,7 +106,7 @@ inline void CNamedPipe::SetTimeOut(DWORD dwTimeOut)
 	m_dwTimeOut = dwTimeOut;
 }
 
-inline uint CNamedPipe::Peek(CBuffer& oBuffer, uint nBufSize)
+inline size_t CNamedPipe::Peek(CBuffer& oBuffer, size_t nBufSize)
 {
 	return Peek(oBuffer.Buffer(), nBufSize);
 }

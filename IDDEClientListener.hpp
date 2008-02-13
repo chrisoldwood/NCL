@@ -34,8 +34,8 @@ public:
 	//
 	// Methods.
 	//
-	virtual void OnRegister(const char* pszBaseName, const char* pszInstName) = 0;
-	virtual void OnUnregister(const char* pszBaseName, const char* pszInstName) = 0;
+	virtual void OnRegister(const tchar* pszBaseName, const tchar* pszInstName) = 0;
+	virtual void OnUnregister(const tchar* pszBaseName, const tchar* pszInstName) = 0;
 	virtual void OnDisconnect(CDDECltConv* pConv) = 0;
 	virtual void OnAdvise(CDDELink* pLink, const CDDEData* pData) = 0;
 	

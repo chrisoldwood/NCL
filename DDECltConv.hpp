@@ -47,24 +47,24 @@ public:
 	//
 	// Command methods.
 	//
-	CString  Request(const char* pszItem);
-	CDDEData Request(const char* pszItem, uint nFormat);
+	CString  RequestString(const tchar* pszItem, uint nFormat);
+	CDDEData Request(const tchar* pszItem, uint nFormat);
 
-	void Execute(const char* pszCommand);
+	void Execute(const tchar* pszCommand);
 
-	void Poke(const char* pszItem, const char* pszValue);
-	void Poke(const char* pszItem, uint nFormat, const void* pValue, uint nSize);
+	void PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat);
+	void Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize);
 
 	//
 	// Link methods.
 	//
-	CDDELink* CreateLink(const char* pszItem, uint nFormat = CF_TEXT);
+	CDDELink* CreateLink(const tchar* pszItem, uint nFormat = CF_TEXT);
 	void      DestroyLink(CDDELink* pLink);
 	void      DestroyAllLinks();
-	CDDELink* FindLink(const char* pszItem, uint nFormat = CF_TEXT) const;
-	int       NumLinks() const;
-	CDDELink* GetLink(int nIndex) const;
-	int       GetAllLinks(CDDECltLinks& aoLinks) const;
+	CDDELink* FindLink(const tchar* pszItem, uint nFormat = CF_TEXT) const;
+	size_t    NumLinks() const;
+	CDDELink* GetLink(size_t nIndex) const;
+	size_t    GetAllLinks(CDDECltLinks& aoLinks) const;
 
 protected:
 	//
@@ -83,7 +83,7 @@ protected:
 	// Constructors/Destructor.
 	// NB: Only available to CDDEClient.
 	//
-	CDDECltConv(CDDEInst* pInst, HCONV hConv, const char* pszService, const char* pszTopic);
+	CDDECltConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
 	CDDECltConv(const CDDECltConv&);
 	virtual ~CDDECltConv();
 
@@ -113,17 +113,17 @@ inline void CDDECltConv::SetTimeOut(DWORD dwTimeOut)
 	m_dwTimeout = dwTimeOut;
 }
 
-inline int CDDECltConv::NumLinks() const
+inline size_t CDDECltConv::NumLinks() const
 {
 	return m_aoLinks.Size();
 }
 
-inline CDDELink* CDDECltConv::GetLink(int nIndex) const
+inline CDDELink* CDDECltConv::GetLink(size_t nIndex) const
 {
 	return m_aoLinks[nIndex];
 }
 
-inline int CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks) const
+inline size_t CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks) const
 {
 	aoLinks.ShallowCopy(m_aoLinks);
 

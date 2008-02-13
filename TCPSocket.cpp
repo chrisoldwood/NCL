@@ -12,6 +12,7 @@
 #include "TCPSocket.hpp"
 #include "SocketException.hpp"
 #include "WinSock.hpp"
+#include <Core/AnsiWide.hpp>
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -90,8 +91,8 @@ CString CTCPSocket::PeerAddress() const
 	int          nAddrSize = sizeof(addr);
 
 	// Get the peer host address and port number.
-	if (getpeername(m_hSocket, (sockaddr*)&addr, &nAddrSize) == SOCKET_ERROR)
+	if (getpeername(m_hSocket, reinterpret_cast<sockaddr*>(&addr), &nAddrSize) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_QUERY_FAILED, CWinSock::LastError());
 
-	return inet_ntoa(addr.sin_addr);
+	return A2T(inet_ntoa(addr.sin_addr));
 }

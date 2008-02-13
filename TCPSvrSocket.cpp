@@ -87,7 +87,7 @@ void CTCPSvrSocket::Listen(uint nPort, uint nBackLog)
 	Create(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	// Bind socket to port.
-	if (bind(m_hSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR)
+	if (bind(m_hSocket, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_BIND_FAILED, CWinSock::LastError());
 
 	// Start accepting client connections.
@@ -174,7 +174,7 @@ void CTCPSvrSocket::Accept(CTCPCltSocket* pCltSocket)
 	int          nAddrSize = sizeof(addr);
 
 	// Accept the next client connection.
-	if ((hSocket = accept(m_hSocket, (sockaddr*)&addr, &nAddrSize)) == INVALID_SOCKET)
+	if ((hSocket = accept(m_hSocket, reinterpret_cast<sockaddr*>(&addr), &nAddrSize)) == INVALID_SOCKET)
 		throw CSocketException(CSocketException::E_ACCEPT_FAILED, CWinSock::LastError());
 	
 	pCltSocket->Attach(hSocket, m_eMode);
