@@ -20,7 +20,7 @@
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
@@ -80,7 +80,7 @@
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
@@ -150,6 +150,9 @@
 			</File>
 			<File
 				RelativePath="DDECltConv.cpp">
+			</File>
+			<File
+				RelativePath=".\DDEData.cpp">
 			</File>
 			<File
 				RelativePath="DDEException.cpp">
@@ -289,9 +292,6 @@
 			</File>
 			<File
 				RelativePath="NamedPipe.hpp">
-			</File>
-			<File
-				RelativePath="NCL.hpp">
 			</File>
 			<File
 				RelativePath=".\NetBuffer.hpp">
