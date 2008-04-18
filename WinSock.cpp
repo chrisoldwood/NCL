@@ -224,6 +224,12 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 
 			return 0;
 		}
+		catch (const Core::Exception& e)
+		{
+			WCL::ReportUnhandledException(	TXT("Unexpected exception caught in CWinSock::WindowProc()\n\n")
+											TXT("Message: Event=0x%08X, Error=0x%08X\n\n%s"),
+											nEvent, nError, e.What());
+		}
 		catch (const std::exception& e)
 		{
 			WCL::ReportUnhandledException(	TXT("Unexpected exception caught in CWinSock::WindowProc()\n\n")
