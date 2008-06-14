@@ -15,6 +15,7 @@
 #include "SocketException.hpp"
 #include <tchar.h>
 #include <limits>
+#include <WCL/Exception.hpp>
 
 // Linker directive.
 #pragma comment(lib, "ws2_32")
