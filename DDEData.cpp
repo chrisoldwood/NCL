@@ -148,7 +148,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		// Copy the ANSI string to a temporary buffer.
 		char* psz = static_cast<char*>(_alloca(nChars));
 
-		GetData(reinterpret_cast<byte*>(str.Buffer()), nBytes, 0);
+		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
 
 		// Convert to Unicode.
 		Core::AnsiToWide(psz, psz+nChars, str.Buffer());
@@ -169,7 +169,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		// Copy the Unicode string to a temporary buffer.
 		wchar_t* psz = static_cast<wchar_t*>(_alloca(nChars));
 
-		GetData(reinterpret_cast<byte*>(str.Buffer()), nBytes, 0);
+		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
 
 		// Convert to ANSI.
 		Core::WideToAnsi(psz, psz+nChars, str.Buffer());
