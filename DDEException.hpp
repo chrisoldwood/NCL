@@ -16,7 +16,7 @@
 #pragma once
 #endif
 
-#include <WCL/Exception.hpp>
+#include <Core/Exception.hpp>
 
 /******************************************************************************
 ** 
@@ -25,7 +25,7 @@
 *******************************************************************************
 */
 
-class CDDEException : public CException
+class CDDEException : public Core::Exception
 {
 public:
 	//
