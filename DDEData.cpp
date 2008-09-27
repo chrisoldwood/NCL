@@ -139,7 +139,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		size_t nChars = nBytes;
 
 		// Allocate the string buffer.
-		str.BufferSize(nChars);
+		str.BufferSize(nChars+1);
 
 #ifdef ANSI_BUILD
 		// Copy the data contents directly into the string.
@@ -163,7 +163,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		size_t nChars = nBytes / 2;
 
 		// Allocate the string buffer.
-		str.BufferSize(nChars);
+		str.BufferSize(nChars+1);
 
 #ifdef ANSI_BUILD
 		// Copy the Unicode string to a temporary buffer.
