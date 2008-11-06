@@ -27,7 +27,7 @@ class CDDEInst;
 *******************************************************************************
 */
 
-class CDDEConv
+class CDDEConv : private Core::NotCopyable
 {
 public:
 	//
@@ -56,7 +56,6 @@ protected:
 	// Constructors/Destructor.
 	//
 	CDDEConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
-	CDDEConv(const CDDEConv&);
 	virtual ~CDDEConv();
 
 	//
