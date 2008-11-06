@@ -37,22 +37,15 @@ typedef TPtrArray<CDDESvrConv> CDDESvrConvs;
 class CDDEServer : public CDDEInst
 {
 public:
+	//! Constructor.
+	CDDEServer(DWORD dwFlags = CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS);
+
+	//! Destructor.
 	virtual ~CDDEServer();
 
 	//
-	// Singleton methods.
+	// Methods.
 	//
-	static CDDEServer* Instance();
-
-	//
-	// Accessors.
-	//
-
-	//
-	// Initialisation methods.
-	//
-	void Initialise(DWORD dwFlags = CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS);
-	void Uninitialise();
 	void Register(const tchar* pszService);
 	void Unregister(const tchar* pszService);
 
@@ -82,10 +75,10 @@ protected:
 	CListeners		m_aoListeners;	// The list of event listeners.
 
 	//
-	// Constructors/Destructor.
+	// Initialisation methods.
 	//
-	CDDEServer();
-	CDDEServer(const CDDEServer&);
+	void Initialise(DWORD dwFlags);
+	void Uninitialise();
 
 	//
 	// DDECallback handlers.
@@ -109,6 +102,12 @@ protected:
 	// The single DDE Client object.
 	static CDDEServer* g_pDDEServer;
 };
+
+namespace DDE
+{
+//! The default CDDEServer smart-pointer type.
+typedef Core::SharedPtr<CDDEServer> ServerPtr;
+}
 
 /******************************************************************************
 **

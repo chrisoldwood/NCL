@@ -37,22 +37,11 @@ typedef TPtrArray<CDDECltConv> CDDECltConvs;
 class CDDEClient : public CDDEInst
 {
 public:
+	//! Constructor.
+	CDDEClient(DWORD dwFlags = CBF_FAIL_ALLSVRXACTIONS | CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS);
+
+	//! Destructor.
 	virtual ~CDDEClient();
-
-	//
-	// Singleton methods.
-	//
-	static CDDEClient* Instance();
-
-	//
-	// Accessors.
-	//
-
-	//
-	// Initialisation methods.
-	//
-	void Initialise(DWORD dwFlags = CBF_FAIL_ALLSVRXACTIONS | CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS);
-	void Uninitialise();
 
 	//
 	// Conversation methods.
@@ -90,10 +79,10 @@ protected:
 	CListeners		m_aoListeners;	// The list of event listeners.
 
 	//
-	// Constructors/Destructor.
+	// Initialisation methods.
 	//
-	CDDEClient();
-	CDDEClient(const CDDEClient&);
+	void Initialise(DWORD dwFlags);
+	void Uninitialise();
 
 	//
 	// DDECallback handlers.
@@ -109,6 +98,12 @@ protected:
 	// The single DDE Client object.
 	static CDDEClient* g_pDDEClient;
 };
+
+namespace DDE
+{
+//! The default CDDEClient smart-pointer type.
+typedef Core::SharedPtr<CDDEClient> ClientPtr;
+}
 
 /******************************************************************************
 **

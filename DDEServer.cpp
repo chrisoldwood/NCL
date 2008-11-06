@@ -27,63 +27,31 @@
 // The single DDE Client object.
 CDDEServer* CDDEServer::g_pDDEServer = NULL;
 
-/******************************************************************************
-** Method:		Constructor.
-**
-** Description:	.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
+////////////////////////////////////////////////////////////////////////////////
+//! Constructor.
 
-CDDEServer::CDDEServer()
+CDDEServer::CDDEServer(DWORD dwFlags)
 {
 	m_eType = SERVER;
+
+	Initialise(dwFlags);
+
+	ASSERT(g_pDDEServer == NULL);
+	g_pDDEServer = this;
 }
 
-/******************************************************************************
-** Method:		Destructor.
-**
-** Description:	.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
+////////////////////////////////////////////////////////////////////////////////
+//! Destructor.
 
 CDDEServer::~CDDEServer()
 {
+	ASSERT(g_pDDEServer == this);
+	g_pDDEServer = NULL;
+
 	Uninitialise();
 
 	ASSERT(m_aoConvs.Size() == 0);
 	ASSERT(m_aoListeners.Size() == 0);
-}
-
-/******************************************************************************
-** Method:		Instance()
-**
-** Description:	Get the single instance of the DDE Server.
-**
-** Parameters:	None.
-**
-** Returns:		The DDE Client.
-**
-*******************************************************************************
-*/
-
-CDDEServer* CDDEServer::Instance()
-{
-	static CDDEServer g_oDDEServer;
-
-	// Set Callback object pointer.
-	g_pDDEServer = &g_oDDEServer;
-
-	return g_pDDEServer;
 }
 
 /******************************************************************************

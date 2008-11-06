@@ -36,63 +36,31 @@ static const size_t MAX_TOPIC_LEN = 256;
 // The single DDE Client object.
 CDDEClient* CDDEClient::g_pDDEClient = NULL;
 
-/******************************************************************************
-** Method:		Constructor.
-**
-** Description:	.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
+////////////////////////////////////////////////////////////////////////////////
+//! Constructor.
 
-CDDEClient::CDDEClient()
+CDDEClient::CDDEClient(DWORD dwFlags)
 {
 	m_eType = CLIENT;
+
+	Initialise(dwFlags);
+
+	ASSERT(g_pDDEClient == NULL);
+	g_pDDEClient = this;
 }
 
-/******************************************************************************
-** Method:		Destructor.
-**
-** Description:	.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
+////////////////////////////////////////////////////////////////////////////////
+//! Destructor.
 
 CDDEClient::~CDDEClient()
 {
+	ASSERT(g_pDDEClient == this);
+	g_pDDEClient = NULL;
+
 	Uninitialise();
 
 	ASSERT(m_aoConvs.Size() == 0);
 	ASSERT(m_aoListeners.Size() == 0);
-}
-
-/******************************************************************************
-** Method:		Instance()
-**
-** Description:	Get the single instance of the DDE Client.
-**
-** Parameters:	None.
-**
-** Returns:		The DDE Client.
-**
-*******************************************************************************
-*/
-
-CDDEClient* CDDEClient::Instance()
-{
-	static CDDEClient g_oDDEClient;
-
-	// Set Callback object pointer.
-	g_pDDEClient = &g_oDDEClient;
-
-	return g_pDDEClient;
 }
 
 /******************************************************************************
