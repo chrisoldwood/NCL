@@ -80,7 +80,7 @@ inline CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 	{
 		ASSERT(pPointer != nullptr);
 
-		m_pPointer = CDDEClient::Instance()->CreateConversation(pPointer->Service(), pPointer->Topic());
+		m_pPointer = pPointer->Client()->CreateConversation(pPointer->Service(), pPointer->Topic());
 	}
 }
 
@@ -91,7 +91,7 @@ inline CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 inline CltConvPtr::CltConvPtr(const CltConvPtr& oPtr)
 {
 	if (oPtr.m_pPointer != nullptr)
-		m_pPointer = CDDEClient::Instance()->CreateConversation(oPtr->Service(), oPtr->Topic());
+		m_pPointer = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ inline CltConvPtr& CltConvPtr::operator=(const CltConvPtr& oPtr)
 
 		// Create a copy of the conversation.
 		if (oPtr.m_pPointer != nullptr)
-			m_pPointer = CDDEClient::Instance()->CreateConversation(oPtr->Service(), oPtr->Topic());
+			m_pPointer = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
 	}
 
 	return *this;
@@ -128,8 +128,7 @@ inline void CltConvPtr::Release()
 {
 	if (m_pPointer != nullptr)
 	{
-		CDDEClient::Instance()->DestroyConversation(m_pPointer);
-
+		m_pPointer->Client()->DestroyConversation(m_pPointer);
 		m_pPointer = nullptr;
 	}
 }
