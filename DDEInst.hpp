@@ -23,7 +23,7 @@
 *******************************************************************************
 */
 
-class CDDEInst
+class CDDEInst : private Core::NotCopyable
 {
 public:
 	// Service types.
