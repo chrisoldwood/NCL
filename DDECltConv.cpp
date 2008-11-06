@@ -10,6 +10,7 @@
 
 #include "Common.hpp"
 #include "DDECltConv.hpp"
+#include "DDEClient.hpp"
 #include "DDELink.hpp"
 #include "DDEData.hpp"
 #include "DDEString.hpp"
@@ -37,9 +38,10 @@ DWORD CDDECltConv::DEF_TIMEOUT = 30000;
 *******************************************************************************
 */
 
-CDDECltConv::CDDECltConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
-	: CDDEConv(pInst, hConv, pszService, pszTopic)
+CDDECltConv::CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
+	: CDDEConv(client, hConv, pszService, pszTopic)
 	, m_nRefCount(0)
+	, m_client(client)
 	, m_dwTimeout(DEF_TIMEOUT)
 {
 }

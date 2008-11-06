@@ -20,6 +20,7 @@
 #include <Legacy/TArray.hpp>
 
 // Forward declarations.
+class CDDEClient;
 class CDDELink;
 class CDDEData;
 
@@ -40,6 +41,7 @@ public:
 	// Properties.
 	//
 	uint RefCount() const;
+	CDDEClient*	Client() const;
 
 	DWORD  TimeOut() const;
 	void   SetTimeOut(DWORD dwTimeOut);
@@ -71,6 +73,7 @@ protected:
 	// Members.
 	//
 	uint			m_nRefCount;	// The reference count.
+	CDDEClient*		m_client;		//!< The owning DDE client.
 	DWORD			m_dwTimeout;	// The timeout value for transactions.
 	CDDECltLinks	m_aoLinks;		// The list of links.
 
@@ -83,7 +86,7 @@ protected:
 	// Constructors/Destructor.
 	// NB: Only available to CDDEClient.
 	//
-	CDDECltConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
+	CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
 	CDDECltConv(const CDDECltConv&);
 	virtual ~CDDECltConv();
 
@@ -101,6 +104,14 @@ protected:
 inline uint CDDECltConv::RefCount() const
 {
 	return m_nRefCount;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the DDE Client that this conversation belongs to.
+
+inline CDDEClient* CDDECltConv::Client() const
+{
+	return m_client;
 }
 
 inline DWORD CDDECltConv::TimeOut() const
