@@ -16,6 +16,7 @@
 #include "DDECltConv.hpp"
 #include "IDDEClientListener.hpp"
 #include "DDEData.hpp"
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -59,8 +60,8 @@ CDDEClient::~CDDEClient()
 
 	Uninitialise();
 
-	ASSERT(m_aoConvs.Size() == 0);
-	ASSERT(m_aoListeners.Size() == 0);
+	ASSERT(m_aoConvs.empty());
+	ASSERT(m_aoListeners.empty());
 }
 
 /******************************************************************************
@@ -107,8 +108,8 @@ void CDDEClient::Uninitialise()
 
 	// Reset members.
 	m_dwInst = 0;
-	m_aoConvs.RemoveAll();
-	m_aoListeners.RemoveAll();
+	m_aoConvs.clear();
+	m_aoListeners.clear();
 }
 
 /******************************************************************************
@@ -151,7 +152,7 @@ CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar
 		pConv = new CDDECltConv(this, hConv, pszService, pszTopic);
 
 		// Add to collection.
-		m_aoConvs.Add(pConv);
+		m_aoConvs.push_back(pConv);
 	}
 
 	// New reference.
@@ -175,7 +176,7 @@ CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar
 void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 {
 	ASSERT(pConv != NULL);
-	ASSERT(m_aoConvs.Find(pConv) != -1);
+	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv) != m_aoConvs.end());
 
 	// Last reference?
 	if (--pConv->m_nRefCount == 0)
@@ -184,7 +185,7 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 		pConv->Disconnect();
 
 		// Remove from collection.
-		m_aoConvs.Remove(m_aoConvs.Find(pConv));
+		m_aoConvs.erase(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv));
 
 		// Delete conversation.
 		delete pConv;
@@ -212,7 +213,7 @@ CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* 
 	ASSERT(m_dwInst   != NULL);
 
 	// Search the conversation list.
-	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
 		CDDECltConv* pConv = m_aoConvs[i];
 
@@ -226,7 +227,7 @@ CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* 
 CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 {
 	// Search the conversation list.
-	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
 		CDDECltConv* pConv = m_aoConvs[i];
 
@@ -253,7 +254,7 @@ void CDDEClient::AddListener(IDDEClientListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	m_aoListeners.Add(pListener);
+	m_aoListeners.push_back(pListener);
 }
 
 /******************************************************************************
@@ -272,10 +273,10 @@ void CDDEClient::RemoveListener(IDDEClientListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	int i = m_aoListeners.Find(pListener);
+	CListeners::iterator it = std::find(m_aoListeners.begin(), m_aoListeners.end(), pListener);
 
-	if (i != -1)
-		m_aoListeners.Remove(i);
+	if (it != m_aoListeners.end())
+		m_aoListeners.erase(it);
 }
 
 /******************************************************************************
@@ -293,7 +294,7 @@ void CDDEClient::RemoveListener(IDDEClientListener* pListener)
 
 void CDDEClient::OnRegister(const tchar* pszBaseName, const tchar* pszInstName)
 {
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnRegister(pszBaseName, pszInstName);
 }
 
@@ -312,7 +313,7 @@ void CDDEClient::OnRegister(const tchar* pszBaseName, const tchar* pszInstName)
 
 void CDDEClient::OnUnregister(const tchar* pszBaseName, const tchar* pszInstName)
 {
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnUnregister(pszBaseName, pszInstName);
 }
 
@@ -335,7 +336,7 @@ void CDDEClient::OnDisconnect(HCONV hConv)
 
 	ASSERT(pConv != NULL);
 
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnDisconnect(pConv);
 }
 
@@ -372,7 +373,7 @@ void CDDEClient::OnAdvise(HCONV hConv, const tchar* /*pszTopic*/, const tchar* p
 		return;
 	}
 
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnAdvise(pLink, pData);
 }
 

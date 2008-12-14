@@ -17,7 +17,7 @@
 #endif
 
 #include "DDEInst.hpp"
-#include <Legacy/TArray.hpp>
+#include <vector>
 
 // Forward declarations.
 class CDDECltConv;
@@ -25,7 +25,7 @@ class IDDEClientListener;
 class CDDEData;
 
 // Template shorthands.
-typedef TPtrArray<CDDECltConv> CDDECltConvs;
+typedef std::vector<CDDECltConv*> CDDECltConvs;
 
 /******************************************************************************
 ** 
@@ -70,7 +70,7 @@ public:
 
 protected:
 	// Template shorthands.
-	typedef TPtrArray<IDDEClientListener> CListeners;
+	typedef std::vector<IDDEClientListener*> CListeners;
 
 	//
 	// Members.
@@ -114,14 +114,14 @@ typedef Core::SharedPtr<CDDEClient> ClientPtr;
 
 inline size_t CDDEClient::GetNumConversations() const
 {
-	return m_aoConvs.Size();
+	return m_aoConvs.size();
 }
 
 inline size_t CDDEClient::GetAllConversations(CDDECltConvs& aoConvs) const
 {
-	aoConvs.ShallowCopy(m_aoConvs);
+	aoConvs = m_aoConvs;
 
-	return aoConvs.Size();
+	return aoConvs.size();
 }
 
 #endif // DDECLIENT_HPP

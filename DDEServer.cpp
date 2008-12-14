@@ -16,6 +16,7 @@
 #include "DDEString.hpp"
 #include "IDDEServerListener.hpp"
 #include "DDEData.hpp"
+#include <algorithm>
 
 /******************************************************************************
 **
@@ -50,8 +51,8 @@ CDDEServer::~CDDEServer()
 
 	Uninitialise();
 
-	ASSERT(m_aoConvs.Size() == 0);
-	ASSERT(m_aoListeners.Size() == 0);
+	ASSERT(m_aoConvs.empty());
+	ASSERT(m_aoListeners.empty());
 }
 
 /******************************************************************************
@@ -97,13 +98,13 @@ void CDDEServer::Uninitialise()
 		::DdeUninitialize(m_dwInst);
 
 	// Delete all conversations.
-	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 		delete m_aoConvs[i];
 
 	// Reset members.
 	m_dwInst = 0;
-	m_aoConvs.RemoveAll();
-	m_aoListeners.RemoveAll();
+	m_aoConvs.clear();
+	m_aoListeners.clear();
 }
 
 /******************************************************************************
@@ -169,13 +170,13 @@ void CDDEServer::Unregister(const tchar* pszService)
 void CDDEServer::DestroyConversation(CDDESvrConv* pConv)
 {
 	ASSERT(pConv != NULL);
-	ASSERT(m_aoConvs.Find(pConv) != -1);
+	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv) != m_aoConvs.end());
 
 	// Disconnect from service/topic.
 	pConv->Disconnect();
 
 	// Remove from collection.
-	m_aoConvs.Remove(m_aoConvs.Find(pConv));
+	m_aoConvs.erase(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv));
 
 	// Delete conversation.
 	delete pConv;
@@ -201,7 +202,7 @@ CDDESvrConv* CDDEServer::FindConversation(const tchar* pszService, const tchar* 
 	ASSERT(pszTopic   != NULL);
 
 	// Search the conversation list.
-	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
 		CDDESvrConv* pConv = m_aoConvs[i];
 
@@ -217,7 +218,7 @@ CDDESvrConv* CDDEServer::FindConversation(HCONV hConv) const
 	ASSERT(hConv != NULL);
 
 	// Search the conversation list.
-	for (size_t i = 0; i < m_aoConvs.Size(); ++i)
+	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
 		CDDESvrConv* pConv = m_aoConvs[i];
 
@@ -245,7 +246,7 @@ void CDDEServer::AddListener(IDDEServerListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	m_aoListeners.Add(pListener);
+	m_aoListeners.push_back(pListener);
 }
 
 /******************************************************************************
@@ -264,10 +265,10 @@ void CDDEServer::RemoveListener(IDDEServerListener* pListener)
 {
 	ASSERT(pListener != NULL);
 
-	int i = m_aoListeners.Find(pListener);
+	CListeners::iterator it = std::find(m_aoListeners.begin(), m_aoListeners.end(), pListener);
 
-	if (i != -1)
-		m_aoListeners.Remove(i);
+	if (it != m_aoListeners.end())
+		m_aoListeners.erase(it);
 }
 
 /******************************************************************************
@@ -290,7 +291,7 @@ void CDDEServer::RemoveListener(IDDEServerListener* pListener)
 bool CDDEServer::OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics)
 {
 	// Query all listeners...
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnWildConnect(astrServices, astrTopics))
 			return true;
@@ -304,7 +305,7 @@ bool CDDEServer::OnWildConnectService(const tchar* pszService, CStrArray& astrTo
 	ASSERT(pszService != NULL);
 
 	// Query all listeners...
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnWildConnectService(pszService, astrTopics))
 			return true;
@@ -318,7 +319,7 @@ bool CDDEServer::OnWildConnectTopic(const tchar* pszTopic, CStrArray& astrServic
 	ASSERT(pszTopic != NULL);
 
 	// Query all listeners...
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnWildConnectTopic(pszTopic, astrServices))
 			return true;
@@ -347,7 +348,7 @@ bool CDDEServer::OnConnect(const tchar* pszService, const tchar* pszTopic)
 	ASSERT(pszTopic   != NULL);
 
 	// Query all listeners...
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnConnect(pszService, pszTopic))
 			return true;
@@ -379,10 +380,10 @@ void CDDEServer::OnConnectConfirm(HCONV hConv, const tchar* pszService, const tc
 	// Allocate a new conversation and add to the collection.
 	CDDESvrConv* pConv = new CDDESvrConv(this, hConv, pszService, pszTopic);
 
-	m_aoConvs.Add(pConv);
+	m_aoConvs.push_back(pConv);
 
 	// Notify listeners.
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnConnectConfirm(pConv);
 }
 
@@ -408,11 +409,11 @@ void CDDEServer::OnDisconnect(HCONV hConv)
 	ASSERT(pConv != NULL);
 
 	// Notify listeners.
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnDisconnect(pConv);
 
 	// Remove from collection and delete.
-	m_aoConvs.Remove(m_aoConvs.Find(pConv));
+	m_aoConvs.erase(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv));
 	delete pConv;
 }
 
@@ -442,7 +443,7 @@ bool CDDEServer::OnRequest(HCONV hConv, const tchar* pszItem, uint nFormat, CDDE
 	ASSERT(pConv != NULL);
 
 	// Query all listeners...
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnRequest(pConv, pszItem, nFormat, oData))
 			return true;
@@ -478,7 +479,7 @@ bool CDDEServer::OnAdviseStart(HCONV hConv, const tchar* pszItem, uint nFormat)
 	ASSERT(pConv != NULL);
 
 	// Query all listeners...
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnAdviseStart(pConv, pszItem, nFormat))
 		{
@@ -494,7 +495,7 @@ bool CDDEServer::OnAdviseStart(HCONV hConv, const tchar* pszItem, uint nFormat)
 		CDDELink* pLink = pConv->CreateLink(pszItem, nFormat);
 
 		// Notify listeners.
-		for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+		for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 			m_aoListeners[i]->OnAdviseConfirm(pConv, pLink);
 	}
 
@@ -532,7 +533,7 @@ bool CDDEServer::OnAdviseRequest(HCONV hConv, const tchar* pszItem, uint nFormat
 	ASSERT(pLink != NULL);
 
 	// Notify listeners.
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnAdviseRequest(pConv, pLink, oData))
 			return true;
@@ -571,7 +572,7 @@ void CDDEServer::OnAdviseStop(HCONV hConv, const tchar* pszItem, uint nFormat)
 	ASSERT(pLink != NULL);
 
 	// Notify listeners.
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnAdviseStop(pConv, pLink);
 
 	// Remove from conversation.
@@ -609,7 +610,7 @@ bool CDDEServer::OnExecute(HCONV hConv, const CDDEData& oData)
 #endif
 
 	// Notify listeners.
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnExecute(pConv, strCmd))
 			return true;
@@ -643,7 +644,7 @@ bool CDDEServer::OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const C
 	ASSERT(pConv != NULL);
 
 	// Notify listeners.
-	for (size_t i = 0; i < m_aoListeners.Size(); ++i)
+	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 	{
 		if (m_aoListeners[i]->OnPoke(pConv, pszItem, nFormat, oData))
 			return true;

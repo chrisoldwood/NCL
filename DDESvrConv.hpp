@@ -16,14 +16,14 @@
 #pragma once
 #endif
 
-#include <Legacy/TArray.hpp>
+#include <vector>
 #include "DDEConv.hpp"
 
 // Forward declarations.
 class CDDELink;
 
 // Template shorthands.
-typedef TPtrArray<CDDELink> CDDESvrLinks;
+typedef std::vector<CDDELink*> CDDESvrLinks;
 
 /******************************************************************************
 ** 
@@ -78,7 +78,7 @@ protected:
 
 inline size_t CDDESvrConv::NumLinks() const
 {
-	return m_aoLinks.Size();
+	return m_aoLinks.size();
 }
 
 inline CDDELink* CDDESvrConv::GetLink(size_t nIndex) const
@@ -88,9 +88,9 @@ inline CDDELink* CDDESvrConv::GetLink(size_t nIndex) const
 
 inline size_t CDDESvrConv::GetAllLinks(CDDESvrLinks& aoLinks) const
 {
-	aoLinks.ShallowCopy(m_aoLinks);
+	aoLinks = m_aoLinks;
 
-	return aoLinks.Size();
+	return aoLinks.size();
 }
 
 #endif // DDESVRCONV_HPP

@@ -15,6 +15,7 @@
 #include "DDEData.hpp"
 #include "DDEString.hpp"
 #include <Core/AnsiWide.hpp>
+#include <algorithm>
 
 /******************************************************************************
 **
@@ -63,7 +64,7 @@ CDDECltConv::~CDDECltConv()
 	ASSERT(m_nRefCount == 0);
 
 	// Delete all links.
-	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0, n = m_aoLinks.size(); i != n; ++i)
 	{
 		CDDELink* pLink = m_aoLinks[i];
 
@@ -230,7 +231,7 @@ CDDELink* CDDECltConv::CreateLink(const tchar* pszItem, uint nFormat)
 		pLink = new CDDELink(this, pszItem, nFormat);
 
 		// Add to collection.
-		m_aoLinks.Add(pLink);
+		m_aoLinks.push_back(pLink);
 	}
 
 	// New reference.
@@ -268,7 +269,7 @@ void CDDECltConv::DestroyLink(CDDELink* pLink)
 		delete pLink;
 
 		// Remove from collection.
-		m_aoLinks.Remove(m_aoLinks.Find(pLink));
+		m_aoLinks.erase(std::find(m_aoLinks.begin(), m_aoLinks.end(), pLink));
 	}
 }
 
@@ -286,7 +287,7 @@ void CDDECltConv::DestroyLink(CDDELink* pLink)
 
 void CDDECltConv::DestroyAllLinks()
 {
-	while (m_aoLinks.Size() > 0)
+	while (!m_aoLinks.empty())
 		DestroyLink(m_aoLinks[0]);
 }
 
@@ -308,7 +309,7 @@ CDDELink* CDDECltConv::FindLink(const tchar* pszItem, uint nFormat) const
 	ASSERT(pszItem != NULL);
 
 	// Search the links list.
-	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0, n = m_aoLinks.size(); i != n; ++i)
 	{
 		CDDELink* pLink = m_aoLinks[i];
 

@@ -17,7 +17,7 @@
 #endif
 
 #include "DDEConv.hpp"
-#include <Legacy/TArray.hpp>
+#include <vector>
 
 // Forward declarations.
 class CDDEClient;
@@ -25,7 +25,7 @@ class CDDELink;
 class CDDEData;
 
 // Template shorthands.
-typedef TPtrArray<CDDELink> CDDECltLinks;
+typedef std::vector<CDDELink*> CDDECltLinks;
 
 /******************************************************************************
 ** 
@@ -126,7 +126,7 @@ inline void CDDECltConv::SetTimeOut(DWORD dwTimeOut)
 
 inline size_t CDDECltConv::NumLinks() const
 {
-	return m_aoLinks.Size();
+	return m_aoLinks.size();
 }
 
 inline CDDELink* CDDECltConv::GetLink(size_t nIndex) const
@@ -136,9 +136,9 @@ inline CDDELink* CDDECltConv::GetLink(size_t nIndex) const
 
 inline size_t CDDECltConv::GetAllLinks(CDDECltLinks& aoLinks) const
 {
-	aoLinks.ShallowCopy(m_aoLinks);
+	aoLinks = m_aoLinks;
 
-	return aoLinks.Size();
+	return aoLinks.size();
 }
 
 #endif // DDECLTCONV_HPP

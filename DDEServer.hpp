@@ -16,7 +16,7 @@
 #pragma once
 #endif
 
-#include <Legacy/TArray.hpp>
+#include <vector>
 #include "DDEInst.hpp"
 
 // Forward declarations.
@@ -25,7 +25,7 @@ class CDDESvrConv;
 class CDDEData;
 
 // Template shorthands.
-typedef TPtrArray<CDDESvrConv> CDDESvrConvs;
+typedef std::vector<CDDESvrConv*> CDDESvrConvs;
 
 /******************************************************************************
 ** 
@@ -66,7 +66,7 @@ public:
 
 protected:
 	// Template shorthands.
-	typedef TPtrArray<IDDEServerListener> CListeners;
+	typedef std::vector<IDDEServerListener*> CListeners;
 
 	//
 	// Members.
@@ -118,14 +118,14 @@ typedef Core::SharedPtr<CDDEServer> ServerPtr;
 
 inline size_t CDDEServer::GetNumConversations() const
 {
-	return m_aoConvs.Size();
+	return m_aoConvs.size();
 }
 
 inline size_t CDDEServer::GetAllConversations(CDDESvrConvs& aoConvs) const
 {
-	aoConvs.ShallowCopy(m_aoConvs);
+	aoConvs = m_aoConvs;
 
-	return aoConvs.Size();
+	return aoConvs.size();
 }
 
 #endif // DDESERVER_HPP

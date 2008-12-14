@@ -12,6 +12,7 @@
 #include "DDESvrConv.hpp"
 #include "DDEString.hpp"
 #include "DDELink.hpp"
+#include <algorithm>
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -64,7 +65,7 @@ CDDELink* CDDESvrConv::CreateLink(const tchar* pszItem, uint nFormat)
 {
 	CDDELink* pLink = new CDDELink(this, pszItem, nFormat);
 
-	m_aoLinks.Add(pLink);
+	m_aoLinks.push_back(pLink);
 
 	return pLink;
 }
@@ -83,7 +84,9 @@ CDDELink* CDDESvrConv::CreateLink(const tchar* pszItem, uint nFormat)
 
 void CDDESvrConv::DestroyLink(CDDELink* pLink)
 {
-	m_aoLinks.Remove(m_aoLinks.Find(pLink));
+	ASSERT(std::find(m_aoLinks.begin(), m_aoLinks.end(), pLink) != m_aoLinks.end());
+
+	m_aoLinks.erase(std::find(m_aoLinks.begin(), m_aoLinks.end(), pLink));
 	delete pLink;
 }
 
@@ -101,10 +104,10 @@ void CDDESvrConv::DestroyLink(CDDELink* pLink)
 
 void CDDESvrConv::DestroyAllLinks()
 {
-	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0, n = m_aoLinks.size(); i != n; ++i)
 		delete m_aoLinks[i];
 
-	m_aoLinks.RemoveAll();
+	m_aoLinks.clear();
 }
 
 /******************************************************************************
@@ -125,7 +128,7 @@ CDDELink* CDDESvrConv::FindLink(const tchar* pszItem, uint nFormat) const
 	ASSERT(pszItem != NULL);
 
 	// Search the links list.
-	for (size_t i = 0; i < m_aoLinks.Size(); ++i)
+	for (size_t i = 0, n = m_aoLinks.size(); i != n; ++i)
 	{
 		CDDELink* pLink = m_aoLinks[i];
 
