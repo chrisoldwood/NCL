@@ -286,7 +286,7 @@ size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 	{
 		if (m_pRecvBuffer.Get() != nullptr)
 		{
-			nBufSize = min(nBufSize, m_pRecvBuffer->Size());
+			nBufSize = std::min(nBufSize, m_pRecvBuffer->Size());
 
 			if (nBufSize != 0)
 			{
@@ -337,7 +337,7 @@ size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 	{
 		if (m_pRecvBuffer.Get() != nullptr)
 		{
-			nBufSize = min(nBufSize, m_pRecvBuffer->Size());
+			nBufSize = std::min(nBufSize, m_pRecvBuffer->Size());
 
 			if (nBufSize != 0)
 				memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
