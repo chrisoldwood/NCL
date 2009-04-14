@@ -48,12 +48,12 @@ CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, bool bOwn)
 	m_pHandle = new CHandle(pInst, hData, nFormat, bOwn);
 }
 
-CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, uint nSize, uint nOffset, uint nFormat, bool bOwn)
+CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, size_t nSize, size_t nOffset, uint nFormat, bool bOwn)
 {
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pBuffer));
 
 	// Allocate data handle.
-	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), lpData, nSize, nOffset, NULL, nFormat, 0);
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), lpData, static_cast<DWORD>(nSize), static_cast<DWORD>(nOffset), NULL, nFormat, 0);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
@@ -67,7 +67,7 @@ CDDEData::CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat, bool b
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(oBuffer.Buffer()));
 
 	// Allocate data handle.
-	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), lpData, oBuffer.Size(), 0, NULL, nFormat, 0);
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), lpData, static_cast<DWORD>(oBuffer.Size()), 0, NULL, nFormat, 0);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
@@ -108,7 +108,7 @@ CDDEData& CDDEData::operator=(const CDDEData& oData)
 	return *this;
 }
 
-uint CDDEData::Size() const
+size_t CDDEData::Size() const
 {
 	ASSERT(m_pHandle != NULL);
 
@@ -120,7 +120,7 @@ uint CDDEData::Size() const
 
 CBuffer CDDEData::GetBuffer() const
 {
-	uint nSize = Size();
+	size_t nSize = Size();
 
 	CBuffer oBuffer(nSize);
 
@@ -184,14 +184,14 @@ CString CDDEData::GetString(TextFormat eFormat) const
 	return str;
 }
 
-void CDDEData::SetData(const void* pBuffer, uint nSize, uint nOffset)
+void CDDEData::SetData(const void* pBuffer, size_t nSize, size_t nOffset)
 {
 	ASSERT(m_pHandle != NULL);
 	ASSERT((pBuffer != NULL) || (nSize == 0));
 
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pBuffer));
 
-	HDDEDATA hData = ::DdeAddData(m_pHandle->m_hData, lpData, nSize, nOffset);
+	HDDEDATA hData = ::DdeAddData(m_pHandle->m_hData, lpData, static_cast<DWORD>(nSize), static_cast<DWORD>(nOffset));
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, m_pHandle->m_pInst->LastError());

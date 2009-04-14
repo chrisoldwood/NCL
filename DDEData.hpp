@@ -120,7 +120,8 @@ inline size_t CDDEData::GetData(void* pBuffer, size_t nSize, size_t nOffset) con
 	ASSERT(pBuffer != NULL);
 	ASSERT(nOffset+nSize <= Size());
 
-	return ::DdeGetData(m_pHandle->m_hData, static_cast<byte*>(pBuffer), nSize, nOffset);
+	return ::DdeGetData(m_pHandle->m_hData, static_cast<byte*>(pBuffer),
+						static_cast<DWORD>(nSize), static_cast<DWORD>(nOffset));
 }
 
 inline void CDDEData::SetBuffer(const CBuffer& oBuffer)

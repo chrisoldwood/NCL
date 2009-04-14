@@ -147,7 +147,8 @@ void CDDECltConv::Execute(const tchar* pszCommand)
 	size_t nBytes  = Core::NumBytes<tchar>(tstrlen(pszCommand)+1);
 
 	// Execute it.
-	HDDEDATA hResult = ::DdeClientTransaction(pBuffer, nBytes, m_hConv, NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
+	HDDEDATA hResult = ::DdeClientTransaction(pBuffer, static_cast<DWORD>(nBytes), m_hConv,
+												NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
 
 	// Execute failed?
 	if (hResult == NULL)
@@ -178,7 +179,7 @@ void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint n
 		Poke(pszItem, CF_UNICODETEXT, T2W(pszValue), Core::NumBytes<wchar_t>(tstrlen(pszValue)+1));
 }
 
-void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, uint nSize)
+void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize)
 {
 	ASSERT(pszItem != NULL);
 	ASSERT(pValue  != NULL);
@@ -188,7 +189,8 @@ void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, u
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pValue));
 
 	// Do the poke.
-	HDDEDATA hResult = ::DdeClientTransaction(lpData, nSize, m_hConv, strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
+	HDDEDATA hResult = ::DdeClientTransaction(lpData, static_cast<DWORD>(nSize), m_hConv,
+												strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
 
 	// Poke failed?
 	if (hResult == NULL)

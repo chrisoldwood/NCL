@@ -665,7 +665,7 @@ bool CDDEServer::OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const C
 *******************************************************************************
 */
 
-HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD /*dwData1*/, DWORD /*dwData2*/)
+HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, ULONG_PTR /*dwData1*/, ULONG_PTR /*dwData2*/)
 {
 	ASSERT(g_pDDEServer != NULL);
 
@@ -688,8 +688,8 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 					ASSERT(astrServices.Size() > 0);
 					ASSERT(astrServices.Size() == astrTopics.Size());
 
-					int nEntries = (astrServices.Size() + 1);
-					int nBufSize = sizeof(HSZPAIR) * nEntries;
+					size_t nEntries = (astrServices.Size() + 1);
+					size_t nBufSize = sizeof(HSZPAIR) * nEntries;
 
 					// Allocate temporary data buffer.
 					HSZPAIR* aoPairs = static_cast<HSZPAIR*>(_alloca(nBufSize));
@@ -721,8 +721,8 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 				{
 					ASSERT(astrTopics.Size() > 0);
 
-					int nEntries = (astrTopics.Size() + 1);
-					int nBufSize = sizeof(HSZPAIR) * nEntries;
+					size_t nEntries = (astrTopics.Size() + 1);
+					size_t nBufSize = sizeof(HSZPAIR) * nEntries;
 
 					// Allocate temporary data buffer.
 					HSZPAIR* aoPairs = static_cast<HSZPAIR*>(_alloca(nBufSize));
@@ -754,8 +754,8 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 				{
 					ASSERT(astrServices.Size() > 0);
 
-					int nEntries = (astrServices.Size() + 1);
-					int nBufSize = sizeof(HSZPAIR) * nEntries;
+					size_t nEntries = (astrServices.Size() + 1);
+					size_t nBufSize = sizeof(HSZPAIR) * nEntries;
 
 					// Allocate temporary data buffer.
 					HSZPAIR* aoPairs = static_cast<HSZPAIR*>(_alloca(nBufSize));
@@ -784,7 +784,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 			CDDEString strService(g_pDDEServer, hsz2);
 			CDDEString strTopic(g_pDDEServer, hsz1);
 
-			hResult = (HDDEDATA) g_pDDEServer->OnConnect(strService, strTopic);
+			hResult = reinterpret_cast<HDDEDATA>(g_pDDEServer->OnConnect(strService, strTopic));
 		}
 		break;
 
@@ -823,7 +823,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		{
 			CDDEString strItem(g_pDDEServer, hsz2);
 
-			hResult = (HDDEDATA) g_pDDEServer->OnAdviseStart(hConv, strItem, uFormat);
+			hResult = reinterpret_cast<HDDEDATA>(g_pDDEServer->OnAdviseStart(hConv, strItem, uFormat));
 		}
 		break;
 
@@ -857,7 +857,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 			hResult = DDE_FNOTPROCESSED;
 
 			if (g_pDDEServer->OnExecute(hConv, oData))
-				hResult = (HDDEDATA) DDE_FACK;
+				hResult = reinterpret_cast<HDDEDATA>(DDE_FACK);
 		}
 		break;
 
@@ -870,7 +870,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 			hResult = DDE_FNOTPROCESSED;
 
 			if (g_pDDEServer->OnPoke(hConv, strItem, uFormat, oData))
-				hResult = (HDDEDATA) DDE_FACK;
+				hResult = reinterpret_cast<HDDEDATA>(DDE_FACK);
 		}
 		break;
 

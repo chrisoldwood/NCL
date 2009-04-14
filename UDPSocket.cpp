@@ -93,9 +93,9 @@ size_t CUDPSocket::SendTo(const void* pBuffer, size_t nBufSize, const in_addr& o
 
 	addr.sin_family = AF_INET;
 	addr.sin_addr   = oAddr;
-	addr.sin_port   = htons((ushort)nPort);
+	addr.sin_port   = htons(static_cast<u_short>(nPort));
 
-	int nResult = sendto(m_hSocket, static_cast<const char*>(pBuffer), nBufSize, 0,
+	int nResult = sendto(m_hSocket, static_cast<const char*>(pBuffer), static_cast<int>(nBufSize), 0,
 							reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
 
 	if (nResult == SOCKET_ERROR)
@@ -130,7 +130,7 @@ size_t CUDPSocket::RecvFrom(void* pBuffer, size_t nBufSize, in_addr& oAddr, uint
 	sockaddr_in	addr;
 	int         nLength = sizeof(addr);
 
-	int nResult = recvfrom(m_hSocket, static_cast<char*>(pBuffer), nBufSize, 0,
+	int nResult = recvfrom(m_hSocket, static_cast<char*>(pBuffer), static_cast<int>(nBufSize), 0,
 							reinterpret_cast<sockaddr*>(&addr), &nLength);
 
 	if (nResult == SOCKET_ERROR)

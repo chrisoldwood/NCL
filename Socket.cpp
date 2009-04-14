@@ -137,7 +137,7 @@ size_t CSocket::Available()
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
 
-	ulong lAvailable = 0;
+	u_long lAvailable = 0;
 
 	// Blocking socket?
 	if (m_eMode == BLOCK)
@@ -169,7 +169,7 @@ size_t CSocket::Available()
 	else // (eMode == ASYNC)
 	{
 		if (m_pRecvBuffer.Get() != nullptr)
-			lAvailable = m_pRecvBuffer->Size();
+			lAvailable = static_cast<u_long>(m_pRecvBuffer->Size());
 	}
 
 	return lAvailable;
@@ -208,7 +208,7 @@ size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 	if (m_eMode == BLOCK)
 	{
 		// Send the entire buffer.
-		nResult = send(m_hSocket, static_cast<const char*>(pBuffer), nBufSize, 0);
+		nResult = send(m_hSocket, static_cast<const char*>(pBuffer), static_cast<int>(nBufSize), 0);
 
 		if (nResult == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_SEND_FAILED, CWinSock::LastError());
@@ -226,7 +226,7 @@ size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 		if (m_pSendBuffer->Append(pBuffer, nBufSize) > 0)
 		{
 			// Try and send the entire buffer.
-			nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), m_pSendBuffer->Size(), 0);
+			nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), static_cast<int>(m_pSendBuffer->Size()), 0);
 
 			if (nResult != SOCKET_ERROR)
 			{
@@ -271,12 +271,12 @@ size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 	if (m_hSocket == INVALID_SOCKET)
 		throw CSocketException(CSocketException::E_RECV_FAILED, WSAENOTCONN);
 
-	int nResult = 0;
+	size_t nResult = 0;
 
 	// Blocking socket?
 	if (m_eMode == BLOCK)
 	{
-		nResult = recv(m_hSocket, static_cast<char*>(pBuffer), nBufSize, 0);
+		nResult = recv(m_hSocket, static_cast<char*>(pBuffer), static_cast<int>(nBufSize), 0);
 
 		if (nResult == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_RECV_FAILED, CWinSock::LastError());
@@ -322,12 +322,12 @@ size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 	ASSERT(m_hSocket != INVALID_SOCKET);
 	ASSERT(pBuffer   != NULL);
 
-	int nResult = 0;
+	size_t nResult = 0;
 
 	// Blocking socket?
 	if (m_eMode == BLOCK)
 	{
-		nResult = recv(m_hSocket, static_cast<char*>(pBuffer), nBufSize, MSG_PEEK);
+		nResult = recv(m_hSocket, static_cast<char*>(pBuffer), static_cast<int>(nBufSize), MSG_PEEK);
 
 		if (nResult == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_PEEK_FAILED, CWinSock::LastError());
@@ -668,7 +668,7 @@ void CSocket::OnWriteReady()
 	if ( (m_pSendBuffer.Get() != nullptr) && (m_pSendBuffer->Size() > 0) )
 	{
 		// Try and send the entire buffer.
-		int nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), m_pSendBuffer->Size(), 0);
+		size_t nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), static_cast<int>(m_pSendBuffer->Size()), 0);
 
 		if (nResult != SOCKET_ERROR)
 		{

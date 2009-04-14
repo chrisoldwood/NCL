@@ -567,7 +567,7 @@ void CDDEClient::QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const
 *******************************************************************************
 */
 
-HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD /*dwData1*/, DWORD /*dwData2*/)
+HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, ULONG_PTR /*dwData1*/, ULONG_PTR /*dwData2*/)
 {
 	ASSERT(g_pDDEClient != NULL);
 
@@ -620,7 +620,7 @@ HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 				g_pDDEClient->OnAdvise(hConv, strTopic, strItem, uFormat, NULL);
 			}
 
-			hResult = (HDDEDATA)DDE_FACK;
+			hResult = reinterpret_cast<HDDEDATA>(DDE_FACK);
 		}
 		break;
 

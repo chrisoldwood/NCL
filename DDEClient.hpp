@@ -93,7 +93,7 @@ protected:
 	void OnAdvise(HCONV hConv, const tchar* pszTopic, const tchar* pszItem, uint nFormat, const CDDEData* pData);
 
 	// The DDE Callback function.
-	static HDDEDATA CALLBACK DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD dwData1, DWORD dwData2);
+	static HDDEDATA CALLBACK DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, ULONG_PTR dwData1, ULONG_PTR dwData2);
 
 	// The single DDE Client object.
 	static CDDEClient* g_pDDEClient;

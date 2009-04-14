@@ -97,7 +97,7 @@ protected:
 	bool OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const CDDEData& oData);
 
 	// The DDE Callback function.
-	static HDDEDATA CALLBACK DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD dwData1, DWORD dwData2);
+	static HDDEDATA CALLBACK DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, ULONG_PTR dwData1, ULONG_PTR dwData2);
 
 	// The single DDE Client object.
 	static CDDEServer* g_pDDEServer;

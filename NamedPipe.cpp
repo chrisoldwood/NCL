@@ -112,7 +112,7 @@ size_t CNamedPipe::Peek(void* pBuffer, size_t nBufSize)
 	DWORD dwRead, dwAvail, dwMsgAvail;
 
 	// Query the bytes available.
-	if (!::PeekNamedPipe(m_hPipe, pBuffer, nBufSize, &dwRead, &dwAvail, &dwMsgAvail))
+	if (!::PeekNamedPipe(m_hPipe, pBuffer, static_cast<DWORD>(nBufSize), &dwRead, &dwAvail, &dwMsgAvail))
 		throw CPipeException(CPipeException::E_PEEK_FAILED, ::GetLastError());
 
 	return dwRead;
@@ -141,7 +141,7 @@ void CNamedPipe::Read(void* pBuffer, size_t nBufSize)
 	DWORD dwRead;
 
 	// Start the read.
-	BOOL bResult = ::ReadFile(m_hPipe, pBuffer, nBufSize, &dwRead, &m_oReadIO);
+	BOOL bResult = ::ReadFile(m_hPipe, pBuffer, static_cast<DWORD>(nBufSize), &dwRead, &m_oReadIO);
 
 	// Read failed?
 	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_PENDING) )
@@ -216,7 +216,7 @@ void CNamedPipe::Write(const void* pBuffer, size_t nBufSize)
 	}
 
 	// Start the write.
-	BOOL bResult = ::WriteFile(m_hPipe, pBuffer, nBufSize, &dwWritten, &m_oWriteIO);
+	BOOL bResult = ::WriteFile(m_hPipe, pBuffer, static_cast<DWORD>(nBufSize), &dwWritten, &m_oWriteIO);
 
 	// Write failed?
 	if ( (bResult == FALSE) && (::GetLastError() != ERROR_IO_PENDING) )
