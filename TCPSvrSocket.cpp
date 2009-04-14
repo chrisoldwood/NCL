@@ -81,7 +81,7 @@ void CTCPSvrSocket::Listen(uint nPort, uint nBackLog)
 
 	addr.sin_family      = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port        = htons((ushort)nPort);
+	addr.sin_port        = htons(static_cast<u_short>(nPort));
 
 	// Create the socket.
 	Create(AF_INET, SOCK_STREAM, IPPROTO_TCP);
