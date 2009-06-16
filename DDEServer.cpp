@@ -17,6 +17,7 @@
 #include "IDDEServerListener.hpp"
 #include "DDEData.hpp"
 #include <algorithm>
+#include <malloc.h>
 
 /******************************************************************************
 **

@@ -11,6 +11,7 @@
 #include "Common.hpp"
 #include "DDEData.hpp"
 #include <Core/AnsiWide.hpp>
+#include <malloc.h>
 
 CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
 	: m_nRefCount(1)

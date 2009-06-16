@@ -11,6 +11,7 @@
 #include "Common.hpp"
 #include "ServerPipe.hpp"
 #include "PipeException.hpp"
+#include <malloc.h>
 
 /******************************************************************************
 **

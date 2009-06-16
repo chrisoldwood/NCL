@@ -17,6 +17,7 @@
 #include <limits.h>
 #include <algorithm>
 #include <Core/AnsiWide.hpp>
+#include <malloc.h>
 
 // Conditional expression is constant.
 // Caused by FD_SET().
