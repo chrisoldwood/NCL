@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="NCL" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release Win32">
+				<Option output="Release\lib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="Release" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-frtti" />
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_LIB" />
+					<Add directory="..\..\Lib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Lib" />
+				</ResourceCompiler>
+			</Target>
+			<Target title="Debug Win32">
+				<Option output="Debug\lib" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="Debug" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O0" />
+					<Add option="-frtti" />
+					<Add option="-DWIN32" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_LIB" />
+					<Add directory="..\..\Lib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="..\..\Lib" />
+				</ResourceCompiler>
+			</Target>
+		</Build>
+		<Unit filename="ClientPipe.cpp" />
+		<Unit filename="ClientPipe.hpp" />
+		<Unit filename="Common.hpp" />
+		<Unit filename="DDEClient.cpp" />
+		<Unit filename="DDEClient.hpp" />
+		<Unit filename="DDECltConv.cpp" />
+		<Unit filename="DDECltConv.hpp" />
+		<Unit filename="DDECltConvPtr.hpp" />
+		<Unit filename="DDEConv.hpp" />
+		<Unit filename="DDEData.cpp" />
+		<Unit filename="DDEData.hpp" />
+		<Unit filename="DDEException.cpp" />
+		<Unit filename="DDEException.hpp" />
+		<Unit filename="DDEInst.cpp" />
+		<Unit filename="DDEInst.hpp" />
+		<Unit filename="DDELink.cpp" />
+		<Unit filename="DDELink.hpp" />
+		<Unit filename="DDEServer.cpp" />
+		<Unit filename="DDEServer.hpp" />
+		<Unit filename="DDEString.hpp" />
+		<Unit filename="DDESvrConv.cpp" />
+		<Unit filename="DDESvrConv.hpp" />
+		<Unit filename="DefDDEClientListener.hpp" />
+		<Unit filename="DefDDEServerListener.hpp" />
+		<Unit filename="IClientSocketListener.hpp" />
+		<Unit filename="IDDEClientListener.hpp" />
+		<Unit filename="IDDEConvData.hpp" />
+		<Unit filename="IDDELinkData.hpp" />
+		<Unit filename="IDDEServerListener.hpp" />
+		<Unit filename="IServerSocketListener.hpp" />
+		<Unit filename="NamedPipe.cpp" />
+		<Unit filename="NamedPipe.hpp" />
+		<Unit filename="NetBuffer.cpp" />
+		<Unit filename="NetBuffer.hpp" />
+		<Unit filename="PipeException.cpp" />
+		<Unit filename="PipeException.hpp" />
+		<Unit filename="ReadMe.txt" />
+		<Unit filename="ServerPipe.cpp" />
+		<Unit filename="ServerPipe.hpp" />
+		<Unit filename="Socket.cpp" />
+		<Unit filename="Socket.hpp" />
+		<Unit filename="SocketException.cpp" />
+		<Unit filename="SocketException.hpp" />
+		<Unit filename="TCPSocket.cpp" />
+		<Unit filename="TCPSocket.hpp" />
+		<Unit filename="TODO.txt" />
+		<Unit filename="TcpCltSocket.cpp" />
+		<Unit filename="TcpCltSocket.hpp" />
+		<Unit filename="TcpSvrSocket.cpp" />
+		<Unit filename="TcpSvrSocket.hpp" />
+		<Unit filename="UDPCltSocket.cpp" />
+		<Unit filename="UDPCltSocket.hpp" />
+		<Unit filename="UDPSocket.cpp" />
+		<Unit filename="UDPSocket.hpp" />
+		<Unit filename="UDPSvrSocket.cpp" />
+		<Unit filename="UDPSvrSocket.hpp" />
+		<Unit filename="WinSock.cpp" />
+		<Unit filename="WinSock.hpp" />
+		<Unit filename="pch.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
