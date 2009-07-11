@@ -152,7 +152,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
 
 		// Convert to Unicode.
-		Core::AnsiToWide(psz, psz+nChars, str.Buffer());
+		Core::ansiToWide(psz, psz+nChars, str.Buffer());
 #endif
 		// Ensure its null terminated.
 		str[nChars] = TXT('\0');
@@ -206,7 +206,7 @@ void CDDEData::SetAnsiString(const CString& str, TextFormat eFormat)
 
 	if (eFormat == ANSI_TEXT)
 	{
-		size_t nBytes = Core::NumBytes<char>(nChars+1);
+		size_t nBytes = Core::numBytes<char>(nChars+1);
 
 #ifdef ANSI_BUILD
 		SetData(str.Buffer(), nBytes);
@@ -216,7 +216,7 @@ void CDDEData::SetAnsiString(const CString& str, TextFormat eFormat)
 	}
 	else // (eFormat == UNICODE_TEXT)
 	{
-		size_t nBytes = Core::NumBytes<wchar_t>(nChars+1);
+		size_t nBytes = Core::numBytes<wchar_t>(nChars+1);
 
 #ifdef ANSI_BUILD
 		SetData(T2W(str.Buffer()), nBytes);

@@ -90,10 +90,10 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 
 int CWinSock::Cleanup()
 {
-	ASSERT((g_pSockMap.Get() == nullptr) || (g_pSockMap->empty()));
+	ASSERT((g_pSockMap.get() == nullptr) || (g_pSockMap->empty()));
 
 	// Destroy the socket handle map.
-	g_pSockMap.Reset();
+	g_pSockMap.reset();
 
 	// Destroy the socket window.
 	if (g_hSockWnd != NULL)
@@ -198,7 +198,7 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 	// Is a socket message?
 	if (nMsg == g_nSockMsg)
 	{
-		ASSERT(g_pSockMap.Get() != nullptr);
+		ASSERT(g_pSockMap.get() != nullptr);
 
 		// Extract message details.
 		SOCKET hSocket = wParam;
@@ -229,7 +229,7 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 		{
 			WCL::ReportUnhandledException(	TXT("Unexpected exception caught in CWinSock::WindowProc()\n\n")
 											TXT("Message: Event=0x%08X, Error=0x%08X\n\n%s"),
-											nEvent, nError, e.What());
+											nEvent, nError, e.twhat());
 		}
 		catch (const std::exception& e)
 		{
@@ -268,7 +268,7 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 void CWinSock::BeginAsyncSelect(CSocket* pSocket, long lEventMask)
 {
 	ASSERT(pSocket != nullptr);
-	ASSERT(g_pSockMap.Get() != nullptr);
+	ASSERT(g_pSockMap.get() != nullptr);
 
 	// Get the socket handle.
 	SOCKET hSocket = pSocket->Handle();

@@ -87,10 +87,10 @@ void CSocket::Close()
 	// Reset members.
 	m_hSocket = INVALID_SOCKET;
 
-	if (m_pSendBuffer.Get() != nullptr)
+	if (m_pSendBuffer.get() != nullptr)
 		m_pSendBuffer->Clear();
 
-	if (m_pRecvBuffer.Get() != nullptr)
+	if (m_pRecvBuffer.get() != nullptr)
 		m_pRecvBuffer->Clear();
 }
 
@@ -169,7 +169,7 @@ size_t CSocket::Available()
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		if (m_pRecvBuffer.Get() != nullptr)
+		if (m_pRecvBuffer.get() != nullptr)
 			lAvailable = static_cast<u_long>(m_pRecvBuffer->Size());
 	}
 
@@ -220,7 +220,7 @@ size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 	else // (eMode == ASYNC)
 	{
 		// Allocate send buffer, on first call.
-		if (m_pSendBuffer.Get() == nullptr)
+		if (m_pSendBuffer.get() == nullptr)
 			m_pSendBuffer = NetBufferPtr(new CNetBuffer());
 
 		// Append new data to existing send data.
@@ -285,7 +285,7 @@ size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		if (m_pRecvBuffer.Get() != nullptr)
+		if (m_pRecvBuffer.get() != nullptr)
 		{
 			nBufSize = std::min(nBufSize, m_pRecvBuffer->Size());
 
@@ -336,7 +336,7 @@ size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 	// Async socket.
 	else // (eMode == ASYNC)
 	{
-		if (m_pRecvBuffer.Get() != nullptr)
+		if (m_pRecvBuffer.get() != nullptr)
 		{
 			nBufSize = std::min(nBufSize, m_pRecvBuffer->Size());
 
@@ -617,7 +617,7 @@ void CSocket::OnReadReady()
 	const size_t TMP_BUF_SIZE = USHRT_MAX;
 
 	// Allocate receive buffer, on first call.
-	if (m_pRecvBuffer.Get() == nullptr)
+	if (m_pRecvBuffer.get() == nullptr)
 		m_pRecvBuffer = NetBufferPtr(new CNetBuffer());
 
 	// Allocate temporary read buffer.
@@ -666,7 +666,7 @@ void CSocket::OnWriteReady()
 	typedef CCltListeners::const_iterator iter;
 
 	// Anything still to send?
-	if ( (m_pSendBuffer.Get() != nullptr) && (m_pSendBuffer->Size() > 0) )
+	if ( (m_pSendBuffer.get() != nullptr) && (m_pSendBuffer->Size() > 0) )
 	{
 		// Try and send the entire buffer.
 		size_t nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), static_cast<int>(m_pSendBuffer->Size()), 0);

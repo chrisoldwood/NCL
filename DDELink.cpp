@@ -105,7 +105,7 @@ bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTo
 
 			// Format is "SERVICE\0TOPIC\0ITEM\0\0".
 			size_t  nChars    = strService.length() + strTopic.length() + strItem.length() + 4;
-			size_t  nBytes    = Core::NumBytes<char>(nChars);
+			size_t  nBytes    = Core::numBytes<char>(nChars);
 			HGLOBAL hLinkData = ::GlobalAlloc(GMEM_MOVEABLE, nBytes);
 			HGLOBAL hTextData = ::GlobalAlloc(GMEM_MOVEABLE, nBytes);
 

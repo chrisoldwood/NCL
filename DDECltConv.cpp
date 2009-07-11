@@ -144,7 +144,7 @@ void CDDECltConv::Execute(const tchar* pszCommand)
 	ASSERT(pszCommand != NULL);
 
 	byte*  pBuffer = reinterpret_cast<byte*>(const_cast<tchar*>(pszCommand));
-	size_t nBytes  = Core::NumBytes<tchar>(tstrlen(pszCommand)+1);
+	size_t nBytes  = Core::numBytes<tchar>(tstrlen(pszCommand)+1);
 
 	// Execute it.
 	HDDEDATA hResult = ::DdeClientTransaction(pBuffer, static_cast<DWORD>(nBytes), m_hConv,
@@ -174,9 +174,9 @@ void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint n
 	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
 
 	if (nFormat == CF_TEXT)
-		Poke(pszItem, CF_TEXT, T2A(pszValue), Core::NumBytes<char>(tstrlen(pszValue)+1));
+		Poke(pszItem, CF_TEXT, T2A(pszValue), Core::numBytes<char>(tstrlen(pszValue)+1));
 	else
-		Poke(pszItem, CF_UNICODETEXT, T2W(pszValue), Core::NumBytes<wchar_t>(tstrlen(pszValue)+1));
+		Poke(pszItem, CF_UNICODETEXT, T2W(pszValue), Core::numBytes<wchar_t>(tstrlen(pszValue)+1));
 }
 
 void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize)
