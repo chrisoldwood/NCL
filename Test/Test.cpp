@@ -7,17 +7,7 @@
 #include <tchar.h>
 #include <Core/UnitTest.hpp>
 
-////////////////////////////////////////////////////////////////////////////////
-// The test group functions.
-
-////////////////////////////////////////////////////////////////////////////////
-//! The entry point for the test harness.
-
 int _tmain(int argc, _TCHAR* argv[])
 {
-	TEST_SUITE_BEGIN(argc, argv)
-	{
-		Core::setTestRunFinalStatus(true);
-	}
-	TEST_SUITE_END
+	TEST_SUITE_MAIN(argc, argv);
 }
