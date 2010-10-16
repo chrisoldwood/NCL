@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   CltConvPtr.hpp
+//! \file   DDECltConvPtr.hpp
 //! \brief  The CltConvPtr class declaration.
 //! \author Chris Oldwood
 

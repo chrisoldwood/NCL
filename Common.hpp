@@ -16,6 +16,13 @@
 //
 //! \namespace NCL
 //! \brief     The Network & Comms Library namespace.
+//!
+//! \namespace DDE
+//! \brief     The Dynamic Data Exchange namespace.
+//!
+//! \mainpage  Network & Comms C++ Library
+//! \section   introduction Introduction
+//! This is a class library for Inter Process Communication.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Standard headers.
