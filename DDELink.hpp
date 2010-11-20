@@ -21,13 +21,13 @@ class CDDEConv;
 class IDDELinkData;
 
 /******************************************************************************
-** 
+**
 ** This is the data class for a DDE link.
 **
 *******************************************************************************
 */
 
-class CDDELink
+class CDDELink /*: private NotCopyable*/
 {
 public:
 	//
@@ -55,7 +55,7 @@ public:
 	// Parsing methods.
 	//
 	static bool ParseLink(const CString& strLink, CString& strService, CString& strTopic, CString& strItem);
-	
+
 protected:
 	//
 	// Members.
@@ -76,6 +76,10 @@ protected:
 	// Friends.
 	friend class CDDECltConv;
 	friend class CDDESvrConv;
+
+private:
+	// NotCopyable.
+	CDDELink& operator=(const CDDELink&);
 };
 
 /******************************************************************************

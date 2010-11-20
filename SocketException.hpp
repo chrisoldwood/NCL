@@ -19,7 +19,7 @@
 #include <Core/Exception.hpp>
 
 /******************************************************************************
-** 
+**
 ** The exception type thrown by the Socket classes.
 **
 *******************************************************************************
@@ -53,8 +53,8 @@ public:
 	// Constructors/Destructor.
 	//
 	CSocketException(int eErrCode, int nWSACode);
-	~CSocketException();
-	
+	virtual ~CSocketException() throw();
+
 	//
 	// Members.
 	//

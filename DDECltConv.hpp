@@ -28,7 +28,7 @@ class CDDEData;
 typedef std::vector<CDDELink*> CDDECltLinks;
 
 /******************************************************************************
-** 
+**
 ** The type on conversation used by a DDE Server.
 **
 *******************************************************************************
@@ -92,6 +92,10 @@ protected:
 
 	// Friends.
 	friend class CDDEClient;
+
+private:
+	// NotCopyable.
+	CDDECltConv& operator=(const CDDECltConv&);
 };
 
 /******************************************************************************

@@ -35,8 +35,11 @@ const DWORD CNamedPipe::DEF_TIMEOUT = 30000;
 
 CNamedPipe::CNamedPipe()
 	: m_hPipe(INVALID_HANDLE_VALUE)
+	, m_strName()
 	, m_oReadEvent(true, true)
+	, m_oReadIO()
 	, m_oWriteEvent(true, true)
+	, m_oWriteIO()
 	, m_bPrevWrite(false)
 	, m_nPrevBytes(0)
 	, m_dwTimeOut(DEF_TIMEOUT)

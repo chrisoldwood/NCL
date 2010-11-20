@@ -19,9 +19,16 @@
 #include <Core/AnsiWide.hpp>
 #include <malloc.h>
 
+#ifdef _MSC_VER
 // Conditional expression is constant.
 // Caused by FD_SET().
 #pragma warning ( disable : 4127 )
+#endif
+
+#if __GNUC__
+// missing initializer for member 'X'
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -40,6 +47,9 @@ CSocket::CSocket(Mode eMode)
 	, m_eMode(eMode)
 	, m_strHost(TXT(""))
 	, m_nPort(0)
+	, m_aoCltListeners()
+	, m_pSendBuffer()
+	, m_pRecvBuffer()
 {
 }
 
@@ -266,13 +276,12 @@ size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 {
 	ASSERT(pBuffer  != NULL);
-	ASSERT(nBufSize >= 0);
 
 	// Socket closed?
 	if (m_hSocket == INVALID_SOCKET)
 		throw CSocketException(CSocketException::E_RECV_FAILED, WSAENOTCONN);
 
-	size_t nResult = 0;
+	int nResult = 0;
 
 	// Blocking socket?
 	if (m_eMode == BLOCK)
@@ -323,7 +332,7 @@ size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 	ASSERT(m_hSocket != INVALID_SOCKET);
 	ASSERT(pBuffer   != NULL);
 
-	size_t nResult = 0;
+	int nResult = 0;
 
 	// Blocking socket?
 	if (m_eMode == BLOCK)
@@ -513,11 +522,10 @@ CString CSocket::AsyncEventStr(int nEvent)
 		case FD_ACCEPT:		return TXT("FD_ACCEPT");
 		case FD_CONNECT:	return TXT("FD_CONNECT");
 		case FD_CLOSE:		return TXT("FD_CLOSE");
+		default:			ASSERT_FALSE();
 	}
 
-	ASSERT(false);
-
-	return TXT("FD_?");
+	return CString::Fmt(TXT("FD_<%d>"), nEvent);
 }
 
 /******************************************************************************
@@ -669,7 +677,7 @@ void CSocket::OnWriteReady()
 	if ( (m_pSendBuffer.get() != nullptr) && (m_pSendBuffer->Size() > 0) )
 	{
 		// Try and send the entire buffer.
-		size_t nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), static_cast<int>(m_pSendBuffer->Size()), 0);
+		int nResult = send(m_hSocket, static_cast<const char*>(m_pSendBuffer->Ptr()), static_cast<int>(m_pSendBuffer->Size()), 0);
 
 		if (nResult != SOCKET_ERROR)
 		{

@@ -22,7 +22,7 @@ class CDDELink;
 class CDDEData;
 
 /******************************************************************************
-** 
+**
 ** The callback interface for DDE Client events.
 **
 *******************************************************************************
@@ -38,10 +38,10 @@ public:
 	virtual void OnUnregister(const tchar* pszBaseName, const tchar* pszInstName) = 0;
 	virtual void OnDisconnect(CDDECltConv* pConv) = 0;
 	virtual void OnAdvise(CDDELink* pLink, const CDDEData* pData) = 0;
-	
+
 protected:
 	// Make interface.
-	virtual ~IDDEClientListener() = 0 {}; 
+	virtual ~IDDEClientListener() {};
 };
 
 /******************************************************************************

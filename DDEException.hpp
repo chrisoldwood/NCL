@@ -19,7 +19,7 @@
 #include <Core/Exception.hpp>
 
 /******************************************************************************
-** 
+**
 ** The exception type thrown by the DDE classes.
 **
 *******************************************************************************
@@ -49,8 +49,8 @@ public:
 	// Constructors/Destructor.
 	//
 	CDDEException(int eErrCode, uint nDDECode);
-	~CDDEException();
-	
+	virtual ~CDDEException() throw();
+
 	//
 	// Members.
 	//

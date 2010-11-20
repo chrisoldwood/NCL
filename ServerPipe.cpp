@@ -13,6 +13,11 @@
 #include "PipeException.hpp"
 #include <malloc.h>
 
+#if __GNUC__
+// missing initializer for member 'X'
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
+
 /******************************************************************************
 **
 ** Constants.

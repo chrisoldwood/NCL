@@ -17,13 +17,14 @@
 #endif
 
 #include <WCL/Buffer.hpp>
+#include <vector>
 
 // Forward declarations.
 class IClientSocketListener;
 class CNetBuffer;
 
 /******************************************************************************
-** 
+**
 ** The base class for all sockets.
 **
 *******************************************************************************

@@ -44,6 +44,7 @@ CDDECltConv::CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszServic
 	, m_nRefCount(0)
 	, m_client(client)
 	, m_dwTimeout(DEF_TIMEOUT)
+	, m_aoLinks()
 {
 }
 
@@ -123,7 +124,7 @@ CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 	// Request failed?
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_REQUEST_FAILED, m_pInst->LastError());
-		
+
 	return CDDEData(m_pInst, hData, nFormat, true);
 }
 
@@ -148,7 +149,7 @@ void CDDECltConv::Execute(const tchar* pszCommand)
 
 	// Execute it.
 	HDDEDATA hResult = ::DdeClientTransaction(pBuffer, static_cast<DWORD>(nBytes), m_hConv,
-												NULL, NULL, XTYP_EXECUTE, m_dwTimeout, NULL);
+												NULL, 0, XTYP_EXECUTE, m_dwTimeout, NULL);
 
 	// Execute failed?
 	if (hResult == NULL)

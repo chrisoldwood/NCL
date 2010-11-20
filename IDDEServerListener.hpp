@@ -22,7 +22,7 @@ class CDDELink;
 class CDDESvrConv;
 
 /******************************************************************************
-** 
+**
 ** The callback interface for DDE Server events.
 **
 *******************************************************************************
@@ -50,7 +50,7 @@ public:
 
 protected:
 	// Make interface.
-	virtual ~IDDEServerListener() = 0 {}; 
+	virtual ~IDDEServerListener() {};
 };
 
 /******************************************************************************

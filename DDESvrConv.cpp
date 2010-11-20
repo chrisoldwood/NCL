@@ -28,6 +28,7 @@
 
 CDDESvrConv::CDDESvrConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
 	: CDDEConv(pInst, hConv, pszService, pszTopic)
+	, m_aoLinks()
 {
 }
 

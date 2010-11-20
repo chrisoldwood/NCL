@@ -33,6 +33,8 @@ CDDEServer* CDDEServer::g_pDDEServer = NULL;
 //! Constructor.
 
 CDDEServer::CDDEServer(DWORD dwFlags)
+	: m_aoConvs()
+	, m_aoListeners()
 {
 	m_eType = SERVER;
 

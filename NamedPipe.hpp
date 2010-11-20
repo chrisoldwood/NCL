@@ -20,13 +20,13 @@
 #include <WCL/Event.hpp>
 
 /******************************************************************************
-** 
+**
 ** The base class for Named Pipes.
 **
 *******************************************************************************
 */
 
-class CNamedPipe
+class CNamedPipe /*: private NotCopyable*/
 {
 public:
 	//
@@ -76,6 +76,7 @@ protected:
 	//
 	CNamedPipe();
 	CNamedPipe(const CNamedPipe&);
+	CNamedPipe& operator=(const CNamedPipe&);
 	virtual ~CNamedPipe();
 };
 

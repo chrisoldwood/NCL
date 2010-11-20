@@ -20,7 +20,7 @@
 class CSocket;
 
 /******************************************************************************
-** 
+**
 ** The callback interface for client socket events.
 **
 *******************************************************************************
@@ -35,10 +35,10 @@ public:
 	virtual void OnReadReady(CSocket* pSocket) = 0;
 	virtual void OnClosed(CSocket* pSocket, int nReason) = 0;
 	virtual void OnError(CSocket* pSocket, int nEvent, int nError) = 0;
-	
+
 protected:
 	// Make interface.
-	virtual ~IClientSocketListener() = 0 {}; 
+	virtual ~IClientSocketListener() {};
 };
 
 /******************************************************************************

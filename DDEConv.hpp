@@ -21,13 +21,13 @@ class IDDEConvData;
 class CDDEInst;
 
 /******************************************************************************
-** 
+**
 ** This class is used to encapsulate a DDE conversation.
 **
 *******************************************************************************
 */
 
-class CDDEConv : private Core::NotCopyable
+class CDDEConv /*: private Core::NotCopyable*/
 {
 public:
 	//
@@ -62,6 +62,11 @@ protected:
 	// Methods.
 	//
 	void Disconnect();
+
+private:
+	// NotCopyable.
+	CDDEConv(const CDDEConv&);
+	CDDEConv& operator=(const CDDEConv&);
 };
 
 /******************************************************************************

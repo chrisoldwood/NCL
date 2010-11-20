@@ -17,13 +17,13 @@
 #endif
 
 /******************************************************************************
-** 
+**
 ** The base class for all DDE services.
 **
 *******************************************************************************
 */
 
-class CDDEInst : private Core::NotCopyable
+class CDDEInst /*: private Core::NotCopyable*/
 {
 public:
 	// Service types.
@@ -60,6 +60,11 @@ protected:
 	//
 	CDDEInst();
 	virtual ~CDDEInst();
+
+private:
+	// NotCopyable.
+	CDDEInst(const CDDEInst&);
+	CDDEInst& operator=(const CDDEInst&);
 };
 
 /******************************************************************************

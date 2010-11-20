@@ -38,6 +38,7 @@ CDDEData::CDDEData(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
 }
 
 CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, bool bOwn)
+	: m_pHandle()
 {
 	// Allocate data handle.
 	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), NULL, 0, 0, hItem, nFormat, 0);
@@ -50,6 +51,7 @@ CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, bool bOwn)
 }
 
 CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, size_t nSize, size_t nOffset, uint nFormat, bool bOwn)
+	: m_pHandle()
 {
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pBuffer));
 
@@ -64,6 +66,7 @@ CDDEData::CDDEData(CDDEInst* pInst, const void* pBuffer, size_t nSize, size_t nO
 }
 
 CDDEData::CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat, bool bOwn)
+	: m_pHandle()
 {
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(oBuffer.Buffer()));
 
@@ -101,7 +104,7 @@ CDDEData& CDDEData::operator=(const CDDEData& oData)
 
 	if (--(m_pHandle->m_nRefCount) == 0)
 		delete m_pHandle;
-	
+
 	m_pHandle = oData.m_pHandle;
 
 	++(m_pHandle->m_nRefCount);
@@ -144,7 +147,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 
 #ifdef ANSI_BUILD
 		// Copy the data contents directly into the string.
-		GetData(reinterpret_cast<byte*>(str.Buffer()), nSize, 0);
+		GetData(reinterpret_cast<byte*>(str.Buffer()), nBytes, 0);
 #else
 		// Copy the ANSI string to a temporary buffer.
 		char* psz = static_cast<char*>(_alloca(nChars));
@@ -173,7 +176,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
 
 		// Convert to ANSI.
-		Core::WideToAnsi(psz, psz+nChars, str.Buffer());
+		Core::wideToAnsi(psz, psz+nChars, str.Buffer());
 #else
 		// Copy the data contents directly into the string.
 		GetData(reinterpret_cast<byte*>(str.Buffer()), nBytes, 0);

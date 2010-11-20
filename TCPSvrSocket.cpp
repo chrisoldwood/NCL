@@ -17,9 +17,16 @@
 #include <limits.h>
 #include <algorithm>
 
+#ifdef _MSC_VER
 // Conditional expression is constant.
 // Caused by FD_SET().
 #pragma warning ( disable : 4127 )
+#endif
+
+#if __GNUC__
+// missing initializer for member 'X'
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -35,6 +42,7 @@
 
 CTCPSvrSocket::CTCPSvrSocket(Mode eMode)
 	: CTCPSocket(eMode)
+	, m_aoSvrListeners()
 {
 }
 
@@ -176,7 +184,7 @@ void CTCPSvrSocket::Accept(CTCPCltSocket* pCltSocket)
 	// Accept the next client connection.
 	if ((hSocket = accept(m_hSocket, reinterpret_cast<sockaddr*>(&addr), &nAddrSize)) == INVALID_SOCKET)
 		throw CSocketException(CSocketException::E_ACCEPT_FAILED, CWinSock::LastError());
-	
+
 	pCltSocket->Attach(hSocket, m_eMode);
 }
 

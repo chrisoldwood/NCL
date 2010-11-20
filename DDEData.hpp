@@ -24,7 +24,7 @@
 class CDDEInst;
 
 /******************************************************************************
-** 
+**
 ** This is a helper class for dealing with DDE data.
 **
 *******************************************************************************
@@ -77,13 +77,13 @@ protected:
 };
 
 /******************************************************************************
-** 
+**
 ** This is the reference counted body of CDDEData.
 **
 *******************************************************************************
 */
 
-class CDDEData::CHandle
+class CDDEData::CHandle /*: private NotCopyable*/
 {
 public:
 	CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn);
@@ -97,6 +97,11 @@ public:
 	HDDEDATA	m_hData;		// The data handle.
 	uint		m_nFormat;		// The data format.
 	bool		m_bOwn;			// Ownership flag.
+
+private:
+	// NotCopyable.
+	CHandle(const CHandle&);
+	CHandle& operator=(const CHandle&);
 };
 
 /******************************************************************************

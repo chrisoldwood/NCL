@@ -14,6 +14,11 @@
 #include "WinSock.hpp"
 #include <Core/AnsiWide.hpp>
 
+#if __GNUC__
+// missing initializer for member 'X'
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
+
 /******************************************************************************
 ** Method:		Constructor.
 **

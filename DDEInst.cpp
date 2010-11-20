@@ -47,6 +47,7 @@ CString CDDEInst::GetErrorCode(uint nError)
 		case DMLERR_SYS_ERROR:				return TXT("DMLERR_SYS_ERROR");
 		case DMLERR_UNADVACKTIMEOUT:		return TXT("DMLERR_UNADVACKTIMEOUT");
 		case DMLERR_UNFOUND_QUEUE_ID:		return TXT("DMLERR_UNFOUND_QUEUE_ID");
+		default:							ASSERT_FALSE();
 	}
 
 	// Unknown error code.

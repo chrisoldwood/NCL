@@ -17,8 +17,15 @@
 #include <limits>
 #include <WCL/Exception.hpp>
 
+#ifdef _MSC_VER
 // Linker directive.
 #pragma comment(lib, "ws2_32")
+#endif
+
+#if __GNUC__
+// missing initializer for member 'X'
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
 
 /******************************************************************************
 **
@@ -171,14 +178,11 @@ CString CWinSock::ErrorToSymbol(int nError)
 		case WSATRY_AGAIN:			return TXT("WSATRY_AGAIN");
 		case WSANO_RECOVERY:		return TXT("WSANO_RECOVERY");
 		case WSANO_DATA:			return TXT("WSANO_DATA");
+		default:					ASSERT_FALSE();
 	}
 
-	tchar szError[std::numeric_limits<int>::digits10+3] = TXT("#");
-
 	// Unrecognised, format as a number.
-	_itot(nError, szError+1, 10);
-
-	return szError;
+	return CString::Fmt(TXT("#%d"), nError);
 }
 
 /******************************************************************************

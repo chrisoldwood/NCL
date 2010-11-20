@@ -201,7 +201,7 @@ bool CDDELink::PasteLink(CString& strLink)
 		return false;
 
 	// Format.
-	strLink.Format(TXT("%s|%s!%s"), strService, strTopic, strItem);
+	strLink.Format(TXT("%s|%s!%s"), strService.c_str(), strTopic.c_str(), strItem.c_str());
 
 	return true;
 }
@@ -246,11 +246,11 @@ bool CDDELink::PasteLink(CString& strService, CString& strTopic, CString& strIte
 				strService = A2T(pszService);
 				strTopic   = A2T(pszTopic);
 				strItem    = A2T(pszItem);
-			
-				::GlobalUnlock(hData); 
+
+				::GlobalUnlock(hData);
 
 				bPasted = true;
-			} 
+			}
 		}
 
 		// Close it.

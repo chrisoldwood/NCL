@@ -18,6 +18,11 @@
 #include "DDEData.hpp"
 #include <algorithm>
 
+#if __GNUC__
+// missing initializer for member 'X'
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
 
@@ -41,6 +46,8 @@ CDDEClient* CDDEClient::g_pDDEClient = NULL;
 //! Constructor.
 
 CDDEClient::CDDEClient(DWORD dwFlags)
+	: m_aoConvs()
+	, m_aoListeners()
 {
 	m_eType = CLIENT;
 
@@ -131,7 +138,7 @@ CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
-	ASSERT(m_dwInst   != NULL);
+	ASSERT(m_dwInst   != 0);
 
 	// Already connected?
 	CDDECltConv* pConv = FindConversation(pszService, pszTopic);
@@ -210,7 +217,7 @@ CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* 
 {
 	ASSERT(pszService != NULL);
 	ASSERT(pszTopic   != NULL);
-	ASSERT(m_dwInst   != NULL);
+	ASSERT(m_dwInst   != 0);
 
 	// Search the conversation list.
 	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
@@ -424,7 +431,7 @@ void CDDEClient::QueryServers(CStrArray& astrServers) const
 		}
 
 		// Add, if not a duplicate.
-		if (astrServers.Find(szServer, true) == -1)
+		if (astrServers.Find(szServer, true) == Core::npos)
 			astrServers.Add(szServer);
 	}
 

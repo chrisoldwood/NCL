@@ -30,7 +30,7 @@
 #endif
 
 /******************************************************************************
-** 
+**
 ** This is a helper class for dealing with DDE string handles.
 **
 *******************************************************************************
@@ -78,6 +78,7 @@ protected:
 
 inline CDDEString::CDDEString(CDDEInst* pInst, const tchar* pszString, bool bOwn)
 	: m_pInst(pInst)
+	, m_hsz()
 	, m_bOwn(bOwn)
 {
 	ASSERT(pInst     != NULL);

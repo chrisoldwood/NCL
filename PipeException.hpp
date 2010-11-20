@@ -19,7 +19,7 @@
 #include <Core/Exception.hpp>
 
 /******************************************************************************
-** 
+**
 ** The exception type thrown by the Named Pipe classes.
 **
 *******************************************************************************
@@ -46,7 +46,7 @@ public:
 	// Constructors/Destructor.
 	//
 	CPipeException(int eErrCode, HRESULT hResult);
-	~CPipeException();
+	virtual ~CPipeException() throw();
 
 	//
 	// Members.

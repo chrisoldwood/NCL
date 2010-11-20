@@ -33,27 +33,27 @@ CPipeException::CPipeException(int eErrCode, HRESULT hResult)
 	switch(eErrCode)
 	{
 		case E_CREATE_FAILED:
-			m_strDetails = Core::fmt(TXT("Failed to create pipe:\n\n%s"), CStrCvt::FormatError(hResult));
+			m_strDetails = Core::fmt(TXT("Failed to create pipe:\n\n%s"), CStrCvt::FormatError(hResult).c_str());
 			break;
 
 		case E_OPEN_FAILED:
-			m_strDetails = Core::fmt(TXT("Failed to open pipe:\n\n%s"), CStrCvt::FormatError(hResult));
+			m_strDetails = Core::fmt(TXT("Failed to open pipe:\n\n%s"), CStrCvt::FormatError(hResult).c_str());
 			break;
 
 		case E_ACCEPT_FAILED:
-			m_strDetails = Core::fmt(TXT("Failed to accept pipe connection:\n\n%s"), CStrCvt::FormatError(hResult));
+			m_strDetails = Core::fmt(TXT("Failed to accept pipe connection:\n\n%s"), CStrCvt::FormatError(hResult).c_str());
 			break;
 
 		case E_PEEK_FAILED:
-			m_strDetails = Core::fmt(TXT("Failed to peek from pipe:\n\n%s"), CStrCvt::FormatError(hResult));
+			m_strDetails = Core::fmt(TXT("Failed to peek from pipe:\n\n%s"), CStrCvt::FormatError(hResult).c_str());
 			break;
 
 		case E_READ_FAILED:
-			m_strDetails = Core::fmt(TXT("Failed to read from pipe:\n\n%s"), CStrCvt::FormatError(hResult));
+			m_strDetails = Core::fmt(TXT("Failed to read from pipe:\n\n%s"), CStrCvt::FormatError(hResult).c_str());
 			break;
 
 		case E_WRITE_FAILED:
-			m_strDetails = Core::fmt(TXT("Failed to write to pipe:\n\n%s"), CStrCvt::FormatError(hResult));
+			m_strDetails = Core::fmt(TXT("Failed to write to pipe:\n\n%s"), CStrCvt::FormatError(hResult).c_str());
 			break;
 
 		case E_BAD_PROTOCOL:
@@ -79,6 +79,6 @@ CPipeException::CPipeException(int eErrCode, HRESULT hResult)
 *******************************************************************************
 */
 
-CPipeException::~CPipeException()
+CPipeException::~CPipeException() throw()
 {
 }
