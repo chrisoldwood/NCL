@@ -43,7 +43,6 @@ public:
 	// Methods.
 	//
 	uint    LastError() const;
-	CString LastErrorCode() const;
 
 	static CString GetErrorCode(uint nError);
 
@@ -96,12 +95,8 @@ inline CDDEInst::InstType CDDEInst::Type() const
 
 inline uint CDDEInst::LastError() const
 {
+	// NB: Resets the error code to DMLERR_NO_ERROR.
 	return ::DdeGetLastError(m_dwInst);
-}
-
-inline CString CDDEInst::LastErrorCode() const
-{
-	return GetErrorCode(::DdeGetLastError(m_dwInst));
 }
 
 #endif // DDEINST_HPP
