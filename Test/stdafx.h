@@ -6,4 +6,5 @@
 #pragma once
 
 #include <Core/Common.hpp>
+#include <NCL/Common.hpp>
 #include <iostream>
