@@ -12,6 +12,7 @@
 #include "DDEData.hpp"
 #include <Core/AnsiWide.hpp>
 #include <malloc.h>
+#include <Core/StringUtils.hpp>
 
 CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
 	: m_nRefCount(1)
@@ -119,7 +120,26 @@ size_t CDDEData::Size() const
 	if (m_pHandle->m_hData == NULL)
 		return 0;
 
-	return ::DdeGetData(m_pHandle->m_hData, NULL, 0, 0);
+	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, NULL, 0, 0);
+
+	ASSERT(m_pHandle->m_pInst->LastError() == DMLERR_NO_ERROR);
+
+	return dwResult;
+}
+
+size_t CDDEData::GetData(void* pBuffer, size_t nSize, size_t nOffset) const
+{
+	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle->m_hData != NULL);
+	ASSERT(pBuffer != NULL);
+	ASSERT(nOffset+nSize <= Size());
+
+	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, static_cast<byte*>(pBuffer),
+						static_cast<DWORD>(nSize), static_cast<DWORD>(nOffset));
+
+	ASSERT(m_pHandle->m_pInst->LastError() == DMLERR_NO_ERROR);
+
+	return dwResult;
 }
 
 CBuffer CDDEData::GetBuffer() const
@@ -154,6 +174,8 @@ CString CDDEData::GetString(TextFormat eFormat) const
 
 		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
 
+		nChars = strnlen(psz, nChars);
+
 		// Convert to Unicode.
 		Core::ansiToWide(psz, psz+nChars, str.Buffer());
 #endif
@@ -174,6 +196,8 @@ CString CDDEData::GetString(TextFormat eFormat) const
 		wchar_t* psz = static_cast<wchar_t*>(_alloca(nChars));
 
 		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
+
+		nChars = wcsnlen(psz, nChars);
 
 		// Convert to ANSI.
 		Core::wideToAnsi(psz, psz+nChars, str.Buffer());

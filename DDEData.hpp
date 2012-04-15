@@ -118,17 +118,6 @@ inline HDDEDATA CDDEData::Handle() const
 	return m_pHandle->m_hData;
 }
 
-inline size_t CDDEData::GetData(void* pBuffer, size_t nSize, size_t nOffset) const
-{
-	ASSERT(m_pHandle != NULL);
-	ASSERT(m_pHandle->m_hData != NULL);
-	ASSERT(pBuffer != NULL);
-	ASSERT(nOffset+nSize <= Size());
-
-	return ::DdeGetData(m_pHandle->m_hData, static_cast<byte*>(pBuffer),
-						static_cast<DWORD>(nSize), static_cast<DWORD>(nOffset));
-}
-
 inline void CDDEData::SetBuffer(const CBuffer& oBuffer)
 {
 	SetData(oBuffer.Buffer(), oBuffer.Size());
