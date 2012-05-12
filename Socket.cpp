@@ -305,7 +305,7 @@ size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 				m_pRecvBuffer->Discard(nBufSize);
 			}
 
-			nResult = nBufSize;
+			nResult = static_cast<int>(nBufSize);
 		}
 	}
 
@@ -352,7 +352,7 @@ size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 			if (nBufSize != 0)
 				memcpy(pBuffer, m_pRecvBuffer->Ptr(), nBufSize);
 
-			nResult = nBufSize;
+			nResult = static_cast<int>(nBufSize);
 		}
 	}
 
