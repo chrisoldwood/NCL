@@ -36,7 +36,7 @@ public:
 
 	//! Destructor.
 	~CltConvPtr();
-	
+
 	//
 	// Operators.
 	//
@@ -50,7 +50,7 @@ public:
 
 	//! Release the pointer.
 	void Release();
-	
+
 private:
 	//
 	// Members.
@@ -61,6 +61,7 @@ private:
 //! Default constructor.
 
 inline CltConvPtr::CltConvPtr()
+	: Core::SmartPtr<CDDECltConv>()
 {
 }
 
@@ -69,6 +70,7 @@ inline CltConvPtr::CltConvPtr()
 //! or if bAddRef is true, shares ownership by requesting a copy.
 
 inline CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
+	: Core::SmartPtr<CDDECltConv>()
 {
 	// Take ownership.
 	if (!bAddRef)
@@ -89,6 +91,7 @@ inline CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 //! which only needs to increase the reference count.
 
 inline CltConvPtr::CltConvPtr(const CltConvPtr& oPtr)
+	: Core::SmartPtr<CDDECltConv>()
 {
 	if (oPtr.m_pPointer != nullptr)
 		m_pPointer = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
