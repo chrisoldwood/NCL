@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<Linker>
@@ -53,6 +54,21 @@
 			<Add option="-D_CONSOLE" />
 			<Add directory="..\..\..\Lib" />
 		</Compiler>
+		<ResourceCompiler>
+			<Add directory="..\..\..\Lib" />
+		</ResourceCompiler>
+		<Linker>
+			<Add library="ole32" />
+			<Add library="oleaut32" />
+			<Add library="uuid" />
+			<Add library="comdlg32" />
+			<Add library="version" />
+			<Add library="gdi32" />
+			<Add library="ntdll" />
+			<Add library="advapi32" />
+			<Add library="shlwapi" />
+		</Linker>
+		<Unit filename="DDEDataTests.cpp" />
 		<Unit filename="Test.cpp" />
 		<Unit filename="stdafx.cpp" />
 		<Unit filename="stdafx.h" />
