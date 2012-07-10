@@ -75,14 +75,14 @@ inline CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 	// Take ownership.
 	if (!bAddRef)
 	{
-		m_pPointer = pPointer;
+		m_ptr = pPointer;
 	}
 	// Shared onership.
 	else
 	{
 		ASSERT(pPointer != nullptr);
 
-		m_pPointer = pPointer->Client()->CreateConversation(pPointer->Service(), pPointer->Topic());
+		m_ptr = pPointer->Client()->CreateConversation(pPointer->Service(), pPointer->Topic());
 	}
 }
 
@@ -93,8 +93,8 @@ inline CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 inline CltConvPtr::CltConvPtr(const CltConvPtr& oPtr)
 	: Core::SmartPtr<CDDECltConv>()
 {
-	if (oPtr.m_pPointer != nullptr)
-		m_pPointer = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
+	if (oPtr.m_ptr != nullptr)
+		m_ptr = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,8 +117,8 @@ inline CltConvPtr& CltConvPtr::operator=(const CltConvPtr& oPtr)
 		Release();
 
 		// Create a copy of the conversation.
-		if (oPtr.m_pPointer != nullptr)
-			m_pPointer = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
+		if (oPtr.m_ptr != nullptr)
+			m_ptr = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());
 	}
 
 	return *this;
@@ -129,10 +129,10 @@ inline CltConvPtr& CltConvPtr::operator=(const CltConvPtr& oPtr)
 
 inline void CltConvPtr::Release()
 {
-	if (m_pPointer != nullptr)
+	if (m_ptr != nullptr)
 	{
-		m_pPointer->Client()->DestroyConversation(m_pPointer);
-		m_pPointer = nullptr;
+		m_ptr->Client()->DestroyConversation(m_ptr);
+		m_ptr = nullptr;
 	}
 }
 
