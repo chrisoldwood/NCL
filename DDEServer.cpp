@@ -79,7 +79,9 @@ void CDDEServer::Initialise(DWORD dwFlags)
 
 	// Failed?
 	if (nResult != DMLERR_NO_ERROR)
-		throw CDDEException(CDDEException::E_INIT_FAILED, ::DdeGetLastError(m_dwInst));
+		throw CDDEException(CDDEException::E_INIT_FAILED, nResult);
+
+	ASSERT(m_dwInst != 0);	// Not guarenteed, but highly likely.
 }
 
 /******************************************************************************
