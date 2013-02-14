@@ -54,7 +54,9 @@ public:
 	//
 	// Parsing methods.
 	//
-	static bool ParseLink(const CString& strLink, CString& strService, CString& strTopic, CString& strItem);
+
+	//! Parse the DDE link into its separate parts.
+	static bool ParseLink(const tstring& link, tstring& service, tstring& topic, tstring& item);
 
 protected:
 	//
