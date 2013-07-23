@@ -597,22 +597,24 @@ void CDDEServer::OnAdviseStop(HCONV hConv, const tchar* pszItem, uint nFormat)
 *******************************************************************************
 */
 
-bool CDDEServer::OnExecute(HCONV hConv, const CDDEData& oData)
+bool CDDEServer::OnExecute(HCONV hConv, const CDDEData& oData, uint nFormat)
 {
 	ASSERT(hConv != NULL);
+	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
 
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
 	ASSERT(pConv != NULL);
 
-	ASSERT_FALSE(); // Is this comamnd string Ansi or Unicode or tchar?
-	// Command data is a string.
-#ifdef ANSI_BUILD
-	CString strCmd = oData.GetString(ANSI_TEXT);
-#else
-	CString strCmd = oData.GetString(UNICODE_TEXT);
-#endif
+	CString strCmd;
+
+	// Command data is assumed to be a CF_TEXT or CF_UNICODETEXT
+	// string as XTYP_EXECUTE says format is unspecified.
+	if (nFormat == CF_UNICODETEXT)
+		strCmd = oData.GetString(UNICODE_TEXT);
+	else
+		strCmd = oData.GetString(ANSI_TEXT);
 
 	// Notify listeners.
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -656,6 +658,23 @@ bool CDDEServer::OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const C
 	}
 
 	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Attempt to guess the format of the text data by inspecting it.
+
+static uint GuessTextFormat(const CDDEData& data)
+{
+	CBuffer buffer = data.GetBuffer();
+
+	// Minimum unicode string is 1 character + EOL.
+	if (buffer.Size() < Core::numBytes<wchar_t>(2))
+		return CF_TEXT;
+
+	byte* iter   = static_cast<byte*>(buffer.Buffer());
+//	byte* end    = iter + buffer.Size();
+
+	return (*(iter+1) == '\0') ? CF_UNICODETEXT : CF_TEXT;
 }
 
 /******************************************************************************
@@ -857,11 +876,12 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		// Execute command?
 		case XTYP_EXECUTE:
 		{
-			CDDEData oData(g_pDDEServer, hData, CF_TEXT, true);
+			CDDEData oData(g_pDDEServer, hData, CF_NONE, true);
+			uint     nFormat = GuessTextFormat(oData);
 
 			hResult = DDE_FNOTPROCESSED;
 
-			if (g_pDDEServer->OnExecute(hConv, oData))
+			if (g_pDDEServer->OnExecute(hConv, oData, nFormat))
 				hResult = reinterpret_cast<HDDEDATA>(DDE_FACK);
 		}
 		break;

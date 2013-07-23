@@ -93,7 +93,7 @@ protected:
 	bool OnAdviseStart(HCONV hConv, const tchar* pszItem, uint nFormat);
 	bool OnAdviseRequest(HCONV hConv, const tchar* pszItem, uint nFormat, CDDEData& oData);
 	void OnAdviseStop(HCONV hConv, const tchar* pszItem, uint nFormat);
-	bool OnExecute(HCONV hConv, const CDDEData& oData);
+	bool OnExecute(HCONV hConv, const CDDEData& oData, uint nFormat);
 	bool OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const CDDEData& oData);
 
 	// The DDE Callback function.
