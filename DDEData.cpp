@@ -121,8 +121,9 @@ size_t CDDEData::Size() const
 		return 0;
 
 	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, NULL, 0, 0);
+	UINT  uLastError = m_pHandle->m_pInst->LastError();
 
-	ASSERT(m_pHandle->m_pInst->LastError() == DMLERR_NO_ERROR);
+	ASSERT(uLastError == DMLERR_NO_ERROR);
 
 	return dwResult;
 }
