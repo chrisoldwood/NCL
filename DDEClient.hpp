@@ -44,6 +44,16 @@ public:
 	virtual ~CDDEClient();
 
 	//
+	// Properties.
+	//
+
+	//! Get the default transaction timeout (ms).
+	DWORD DefaultTimeout() const;
+
+	//! Set the default transaction timeout (ms).
+	void SetDefaultTimeout(DWORD timeout);
+
+	//
 	// Conversation methods.
 	//
 	CDDECltConv* CreateConversation(const tchar* pszService, const tchar* pszTopic);
@@ -75,6 +85,7 @@ protected:
 	//
 	// Members.
 	//
+	DWORD			m_defaultTimeout;	//!< The default timeout for transactions (ms).
 	CDDECltConvs	m_aoConvs;		// The list of conversations.
 	CListeners		m_aoListeners;	// The list of event listeners.
 
@@ -111,6 +122,22 @@ typedef Core::SharedPtr<CDDEClient> ClientPtr;
 **
 *******************************************************************************
 */
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the default transaction timeout (ms).
+
+inline DWORD CDDEClient::DefaultTimeout() const
+{
+	return m_defaultTimeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Set the default transaction timeout (ms).
+
+inline void CDDEClient::SetDefaultTimeout(DWORD timeout)
+{
+	m_defaultTimeout = timeout;
+}
 
 inline size_t CDDEClient::GetNumConversations() const
 {

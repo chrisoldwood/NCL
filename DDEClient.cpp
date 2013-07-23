@@ -32,6 +32,9 @@ static const size_t MAX_SERVER_LEN = 256;
 //! The maximum length of the topic name in chars.
 static const size_t MAX_TOPIC_LEN = 256;
 
+// The default transaction timeout (ms).
+static const DWORD DEFAULT_TIMEOUT = 30000;
+
 /******************************************************************************
 **
 ** Class members.
@@ -46,7 +49,8 @@ CDDEClient* CDDEClient::g_pDDEClient = NULL;
 //! Constructor.
 
 CDDEClient::CDDEClient(DWORD dwFlags)
-	: m_aoConvs()
+	: m_defaultTimeout(DEFAULT_TIMEOUT)
+	, m_aoConvs()
 	, m_aoListeners()
 {
 	m_eType = CLIENT;
@@ -158,7 +162,7 @@ CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar
 			throw CDDEException(CDDEException::E_CONN_FAILED, ::DdeGetLastError(m_dwInst));
 
 		// Create conversation.
-		pConv = new CDDECltConv(this, hConv, pszService, pszTopic);
+		pConv = new CDDECltConv(this, hConv, pszService, pszTopic, m_defaultTimeout);
 
 		// Add to collection.
 		m_aoConvs.push_back(pConv);

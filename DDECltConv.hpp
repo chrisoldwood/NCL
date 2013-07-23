@@ -43,8 +43,8 @@ public:
 	uint RefCount() const;
 	CDDEClient*	Client() const;
 
-	DWORD  TimeOut() const;
-	void   SetTimeOut(DWORD dwTimeOut);
+	DWORD  Timeout() const;
+	void   SetTimeout(DWORD timeout);
 
 	//
 	// Command methods.
@@ -52,7 +52,8 @@ public:
 	CString  RequestString(const tchar* pszItem, uint nFormat);
 	CDDEData Request(const tchar* pszItem, uint nFormat);
 
-	void Execute(const tchar* pszCommand);
+	void ExecuteString(const tchar* pszCommand, uint nFormat);
+	void Execute(uint nFormat, const void* pValue, size_t nSize);
 
 	void PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat);
 	void Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize);
@@ -74,19 +75,14 @@ protected:
 	//
 	uint			m_nRefCount;	// The reference count.
 	CDDEClient*		m_client;		//!< The owning DDE client.
-	DWORD			m_dwTimeout;	// The timeout value for transactions.
+	DWORD			m_timeout;		//!< The timeout value for transactions.
 	CDDECltLinks	m_aoLinks;		// The list of links.
-
-	//
-	// Constants.
-	//
-	static DWORD DEF_TIMEOUT;
 
 	//
 	// Constructors/Destructor.
 	// NB: Only available to CDDEClient.
 	//
-	CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszService, const tchar* pszTopic);
+	CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszService, const tchar* pszTopic, DWORD timeout);
 	CDDECltConv(const CDDECltConv&);
 	virtual ~CDDECltConv();
 
@@ -118,14 +114,14 @@ inline CDDEClient* CDDECltConv::Client() const
 	return m_client;
 }
 
-inline DWORD CDDECltConv::TimeOut() const
+inline DWORD CDDECltConv::Timeout() const
 {
-	return m_dwTimeout;
+	return m_timeout;
 }
 
-inline void CDDECltConv::SetTimeOut(DWORD dwTimeOut)
+inline void CDDECltConv::SetTimeout(DWORD timeout)
 {
-	m_dwTimeout = dwTimeOut;
+	m_timeout = timeout;
 }
 
 inline size_t CDDECltConv::NumLinks() const

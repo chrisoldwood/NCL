@@ -18,16 +18,6 @@
 #include <algorithm>
 
 /******************************************************************************
-**
-** Class members.
-**
-*******************************************************************************
-*/
-
-// The default timeout (30 secs).
-DWORD CDDECltConv::DEF_TIMEOUT = 30000;
-
-/******************************************************************************
 ** Method:		Constructor.
 **
 ** Description:	.
@@ -39,11 +29,11 @@ DWORD CDDECltConv::DEF_TIMEOUT = 30000;
 *******************************************************************************
 */
 
-CDDECltConv::CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
+CDDECltConv::CDDECltConv(CDDEClient* client, HCONV hConv, const tchar* pszService, const tchar* pszTopic, DWORD timeout)
 	: CDDEConv(client, hConv, pszService, pszTopic)
 	, m_nRefCount(0)
 	, m_client(client)
-	, m_dwTimeout(DEF_TIMEOUT)
+	, m_timeout(timeout)
 	, m_aoLinks()
 {
 }
@@ -119,7 +109,7 @@ CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 	DWORD      dwResult;
 
 	// Make the request.
-	HDDEDATA hData = ::DdeClientTransaction(NULL, 0, m_hConv, strItem, nFormat, XTYP_REQUEST, m_dwTimeout, &dwResult);
+	HDDEDATA hData = ::DdeClientTransaction(NULL, 0, m_hConv, strItem, nFormat, XTYP_REQUEST, m_timeout, &dwResult);
 
 	// Request failed?
 	if (hData == NULL)
@@ -134,22 +124,35 @@ CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 ** Description:	Execute a command on the DDE server.
 **
 ** Parameters:	Command		The command to execute.
+**				nFormat		The clipboard format to pass the command as.
 **
 ** Returns:		Nothing.
+**
+** Notes:		The XTYP_EXECUTE transaction type does not support passing of
+**				the data format.
 **
 *******************************************************************************
 */
 
-void CDDECltConv::Execute(const tchar* pszCommand)
+void CDDECltConv::ExecuteString(const tchar* pszCommand, uint nFormat)
 {
-	ASSERT(pszCommand != NULL);
+	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
 
-	byte*  pBuffer = reinterpret_cast<byte*>(const_cast<tchar*>(pszCommand));
-	size_t nBytes  = Core::numBytes<tchar>(tstrlen(pszCommand)+1);
+	if (nFormat == CF_TEXT)
+		Execute(CF_TEXT, T2A(pszCommand), Core::numBytes<char>(tstrlen(pszCommand)+1));
+	else
+		Execute(CF_UNICODETEXT, T2W(pszCommand), Core::numBytes<wchar_t>(tstrlen(pszCommand)+1));
+}
+
+void CDDECltConv::Execute(uint /*nFormat*/, const void* pValue, size_t nSize)
+{
+	ASSERT(pValue != NULL);
+
+	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pValue));
 
 	// Execute it.
-	HDDEDATA hResult = ::DdeClientTransaction(pBuffer, static_cast<DWORD>(nBytes), m_hConv,
-												NULL, 0, XTYP_EXECUTE, m_dwTimeout, NULL);
+	HDDEDATA hResult = ::DdeClientTransaction(lpData, static_cast<DWORD>(nSize), m_hConv,
+												NULL, 0, XTYP_EXECUTE, m_timeout, NULL);
 
 	// Execute failed?
 	if (hResult == NULL)
@@ -191,7 +194,7 @@ void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, s
 
 	// Do the poke.
 	HDDEDATA hResult = ::DdeClientTransaction(lpData, static_cast<DWORD>(nSize), m_hConv,
-												strItem, nFormat, XTYP_POKE, m_dwTimeout, NULL);
+												strItem, nFormat, XTYP_POKE, m_timeout, NULL);
 
 	// Poke failed?
 	if (hResult == NULL)
@@ -224,7 +227,7 @@ CDDELink* CDDECltConv::CreateLink(const tchar* pszItem, uint nFormat)
 		DWORD      dwResult;
 
 		// Attempt to start the advise loop.
-		HDDEDATA hData = ::DdeClientTransaction(NULL, 0, m_hConv, strItem, nFormat, XTYP_ADVSTART, m_dwTimeout, &dwResult);
+		HDDEDATA hData = ::DdeClientTransaction(NULL, 0, m_hConv, strItem, nFormat, XTYP_ADVSTART, m_timeout, &dwResult);
 
 		// Advise failed?
 		if (hData == NULL)
@@ -266,7 +269,7 @@ void CDDECltConv::DestroyLink(CDDELink* pLink)
 		DWORD      dwResult;
 
 		// End advise.
-		::DdeClientTransaction(NULL, 0, m_hConv, strItem, pLink->Format(), XTYP_ADVSTOP, m_dwTimeout, &dwResult);
+		::DdeClientTransaction(NULL, 0, m_hConv, strItem, pLink->Format(), XTYP_ADVSTOP, m_timeout, &dwResult);
 
 		// Delete link.
 		delete pLink;
