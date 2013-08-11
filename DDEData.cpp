@@ -30,7 +30,11 @@ CDDEData::CHandle::~CHandle()
 
 	// Free handle?
 	if (m_bOwn)
-		::DdeFreeDataHandle(m_hData);
+	{
+		BOOL okay = ::DdeFreeDataHandle(m_hData);
+
+		ASSERT_RESULT(okay, okay != FALSE);
+	}
 }
 
 CDDEData::CDDEData(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool bOwn)
@@ -121,9 +125,16 @@ size_t CDDEData::Size() const
 		return 0;
 
 	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, NULL, 0, 0);
-	UINT  uLastError = m_pHandle->m_pInst->LastError();
 
-	ASSERT(uLastError == DMLERR_NO_ERROR);
+	// The documentation does not say how an error is detected, only that
+	// DdeGetLastError can be queried. But DdeGetData does reset it on success,
+	// so it might be a previous call that has failed instead.
+	if (dwResult == 0)
+	{
+		UINT uLastError = m_pHandle->m_pInst->LastError();
+
+		ASSERT_RESULT(uLastError, uLastError == DMLERR_NO_ERROR);
+	}
 
 	return dwResult;
 }
@@ -138,7 +149,15 @@ size_t CDDEData::GetData(void* pBuffer, size_t nSize, size_t nOffset) const
 	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, static_cast<byte*>(pBuffer),
 						static_cast<DWORD>(nSize), static_cast<DWORD>(nOffset));
 
-	ASSERT(m_pHandle->m_pInst->LastError() == DMLERR_NO_ERROR);
+	// The documentation does not say how an error is detected, only that
+	// DdeGetLastError can be queried. But DdeGetData does reset it on success,
+	// so it might be a previous call that has failed instead.
+	if (dwResult == 0)
+	{
+		UINT uLastError = m_pHandle->m_pInst->LastError();
+
+		ASSERT_RESULT(uLastError, uLastError == DMLERR_NO_ERROR);
+	}
 
 	return dwResult;
 }
@@ -259,7 +278,11 @@ void CDDEData::Free()
 	ASSERT(m_pHandle != NULL);
 
 	if (m_pHandle->m_hData != NULL)
-		::DdeFreeDataHandle(m_pHandle->m_hData);
+	{
+		BOOL okay = ::DdeFreeDataHandle(m_pHandle->m_hData);
+
+		ASSERT_RESULT(okay, okay != FALSE);
+	}
 
 	m_pHandle->m_hData = NULL;
 }
