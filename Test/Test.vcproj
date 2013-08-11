@@ -144,6 +144,9 @@
 				RelativePath=".\DDELinkTests.cpp">
 			</File>
 			<File
+				RelativePath=".\DDEServerTests.cpp">
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
