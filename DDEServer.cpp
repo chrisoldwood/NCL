@@ -18,6 +18,7 @@
 #include "DDEData.hpp"
 #include <algorithm>
 #include <malloc.h>
+#include <WCL/Exception.hpp>
 
 /******************************************************************************
 **
@@ -100,7 +101,11 @@ void CDDEServer::Uninitialise()
 {
 	// Cleanup.
 	if (m_dwInst != 0)
-		::DdeUninitialize(m_dwInst);
+	{
+		BOOL okay = ::DdeUninitialize(m_dwInst);
+
+		ASSERT_RESULT(okay, okay != FALSE);
+	}
 
 	// Delete all conversations.
 	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
@@ -157,7 +162,9 @@ void CDDEServer::Unregister(const tchar* pszService)
 
 	CDDEString strService(this, pszService);
 
-	::DdeNameService(m_dwInst, strService, NULL, DNS_UNREGISTER);
+	HDDEDATA hResult = ::DdeNameService(m_dwInst, strService, NULL, DNS_UNREGISTER);
+
+	ASSERT_RESULT(hResult, hResult != 0);
 }
 
 /******************************************************************************
@@ -663,24 +670,31 @@ bool CDDEServer::OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const C
 ////////////////////////////////////////////////////////////////////////////////
 //! Attempt to guess the format of the text data by inspecting it.
 
-static uint GuessTextFormat(const CDDEData& data)
+uint CDDEServer::GuessTextFormat(const CBuffer& buffer)
 {
-	CBuffer buffer = data.GetBuffer();
+	const size_t size = buffer.Size();
 
 	// Minimum unicode string is 1 character + EOL.
-	if (buffer.Size() < Core::numBytes<wchar_t>(2))
+	// NB: Unicode EOL (\0\0) is equivalent to ANSI EOL (\0)
+	if (size < Core::numBytes<wchar_t>(2))
 		return CF_TEXT;
 
-	byte* iter   = static_cast<byte*>(buffer.Buffer());
-//	byte* end    = iter + buffer.Size();
+	// Unicode strings are an even number of bytes.
+	if ((size % 2) != 0)
+		return CF_TEXT;
 
-	return (*(iter+1) == '\0') ? CF_UNICODETEXT : CF_TEXT;
+	const byte* begin = static_cast<const byte*>(buffer.Buffer());
+	const byte* end   = begin + size;
+
+	ASSERT(begin != end);
+
+	return (*(end-2) == '\0') ? CF_UNICODETEXT : CF_TEXT;
 }
 
 /******************************************************************************
 ** Method:		DDECallbackProc()
 **
-** Description:	The callback function used by the DDEML library.
+** Description:	The callback function invoked by the DDEML library.
 **
 ** Parameters:	See DdeCallback.
 **
@@ -690,6 +704,39 @@ static uint GuessTextFormat(const CDDEData& data)
 */
 
 HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, ULONG_PTR /*dwData1*/, ULONG_PTR /*dwData2*/)
+{
+	HDDEDATA result = DDE_FNOTPROCESSED;
+
+	try
+	{
+		result = DDECallbackProcImpl(uType, uFormat, hConv, hsz1, hsz2, hData);
+	}
+	catch (const Core::Exception& e)
+	{
+		WCL::ReportUnhandledException(	TXT("Unexpected exception caught in DDECallbackProc()\n\n")
+										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X\n\n%s"),
+										uType, uFormat, hConv, e.twhat());
+	}
+	catch (const std::exception& e)
+	{
+		WCL::ReportUnhandledException(	TXT("Unexpected exception caught in DDECallbackProc()\n\n")
+										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X\n\n%s"),
+										uType, uFormat, hConv, e.what());
+	}
+	catch (...)
+	{
+		WCL::ReportUnhandledException(	TXT("Unexpected unknown exception caught in DDECallbackProc()\n\n")
+										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X"),
+										uType, uFormat, hConv);
+	}
+
+	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! The DDE Callback function implementation.
+
+HDDEDATA CDDEServer::DDECallbackProcImpl(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData)
 {
 	ASSERT(g_pDDEServer != NULL);
 
@@ -877,7 +924,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 		case XTYP_EXECUTE:
 		{
 			CDDEData oData(g_pDDEServer, hData, CF_NONE, true);
-			uint     nFormat = GuessTextFormat(oData);
+			uint     nFormat = GuessTextFormat(oData.GetBuffer());
 
 			hResult = DDE_FNOTPROCESSED;
 
