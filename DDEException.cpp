@@ -71,6 +71,10 @@ CDDEException::CDDEException(int eErrCode, uint nDDECode)
 			m_details = Core::fmt(TXT("Failed to poke an item: %s"), strErrDef.c_str());
 			break;
 
+		case E_STRCOPY_FAILED:
+			m_details = Core::fmt(TXT("Failed to query string data: %s"), strErrDef.c_str());
+			break;
+
 		// Shouldn't happen!
 		default:
 			ASSERT_FALSE();

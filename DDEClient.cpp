@@ -117,7 +117,11 @@ void CDDEClient::Uninitialise()
 {
 	// Cleanup.
 	if (m_dwInst != 0)
-		::DdeUninitialize(m_dwInst);
+	{
+		BOOL okay = ::DdeUninitialize(m_dwInst);
+
+		ASSERT_RESULT(okay, okay != FALSE);
+	}
 
 	// Reset members.
 	m_dwInst = 0;

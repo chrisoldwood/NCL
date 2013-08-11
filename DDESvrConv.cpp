@@ -158,5 +158,5 @@ bool CDDESvrConv::PostLinkUpdate(const CDDELink* pLink)
 	CDDEString strTopic(m_pInst, m_strTopic);
 	CDDEString strItem(m_pInst, pLink->Item());
 
-	return (::DdePostAdvise(m_pInst->Handle(), strTopic, strItem) > 0);
+	return (::DdePostAdvise(m_pInst->Handle(), strTopic, strItem) != 0);
 }

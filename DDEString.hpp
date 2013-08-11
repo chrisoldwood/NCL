@@ -104,14 +104,21 @@ inline CDDEString::CDDEString(CDDEInst* pInst, HSZ hsz, bool bOwn)
 	ASSERT(pInst != NULL);
 
 	// Extract original string.
-	::DdeQueryString(m_pInst->Handle(), m_hsz, m_sz, MAX_LENGTH+1, CP_WIN_TCHAR);
+	DWORD result = ::DdeQueryString(m_pInst->Handle(), m_hsz, m_sz, MAX_LENGTH+1, CP_WIN_TCHAR);
+
+	if (result == 0)
+		throw CDDEException(CDDEException::E_STRCOPY_FAILED, m_pInst->LastError());
 }
 
 inline CDDEString::~CDDEString()
 {
 	// Free the string, if owned.
 	if (m_bOwn)
-		::DdeFreeStringHandle(m_pInst->Handle(), m_hsz);
+	{
+		BOOL okay = ::DdeFreeStringHandle(m_pInst->Handle(), m_hsz);
+
+		ASSERT_RESULT(okay, okay != FALSE);
+	}
 }
 
 inline CDDEString::operator HSZ() const

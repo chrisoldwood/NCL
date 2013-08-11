@@ -126,7 +126,11 @@ inline void CDDEConv::SetAppData(IDDEConvData* pAppData)
 inline void CDDEConv::Disconnect()
 {
 	if (m_hConv != NULL)
-		::DdeDisconnect(m_hConv);
+	{
+		BOOL okay = ::DdeDisconnect(m_hConv);
+
+		ASSERT_RESULT(okay, okay != FALSE);
+	}
 
 	m_hConv = NULL;
 }

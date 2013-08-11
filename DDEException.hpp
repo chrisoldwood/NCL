@@ -43,6 +43,7 @@ public:
 		E_QUERY_FAILED		= 17,	// Failed to query DDE servers.
 		E_EXECUTE_FAILED	= 18,	// Failed to execute a command.
 		E_POKE_FAILED		= 19,	// Failed to poke a value.
+		E_STRCOPY_FAILED	= 20,	//!< Failed to query DDE string data.
 	};
 
 	//
