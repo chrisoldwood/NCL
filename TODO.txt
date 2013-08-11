@@ -1,8 +1,3 @@
-- Faster lookup of DDE conversations and links.
-
 - WinInet classes.
 
 - Forward declarations header for DDE and Socket classes.
-
-- Fix creation of empty string as DDE string (e.g. DDECmd.exe listen -s TestServer <no topic>).
-  -> ERROR: Failed to create DDE string: DMLERR_NO_ERROR
