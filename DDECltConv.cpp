@@ -124,27 +124,29 @@ CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 ** Description:	Execute a command on the DDE server.
 **
 ** Parameters:	Command		The command to execute.
-**				nFormat		The clipboard format to pass the command as.
 **
 ** Returns:		Nothing.
 **
 ** Notes:		The XTYP_EXECUTE transaction type does not support passing of
-**				the data format.
+**				the data format. There also appears to be bug in DDEML that
+**				means passing CF_TEXT from a Unicode DDE client to an ANSI
+**				DDE server fails. DDEML seems to try and convert the payload to
+**				match the target build type, irrespective of what is sent by
+**				the client.
 **
 *******************************************************************************
 */
 
-void CDDECltConv::ExecuteString(const tchar* pszCommand, uint nFormat)
+void CDDECltConv::ExecuteString(const tchar* pszCommand)
 {
-	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
-
-	if (nFormat == CF_TEXT)
-		Execute(CF_TEXT, T2A(pszCommand), Core::numBytes<char>(tstrlen(pszCommand)+1));
-	else
-		Execute(CF_UNICODETEXT, T2W(pszCommand), Core::numBytes<wchar_t>(tstrlen(pszCommand)+1));
+#ifdef ANSI_BUILD
+	Execute(T2A(pszCommand), Core::numBytes<char>(tstrlen(pszCommand)+1));
+#else
+	Execute(T2W(pszCommand), Core::numBytes<wchar_t>(tstrlen(pszCommand)+1));
+#endif
 }
 
-void CDDECltConv::Execute(uint /*nFormat*/, const void* pValue, size_t nSize)
+void CDDECltConv::Execute(const void* pValue, size_t nSize)
 {
 	ASSERT(pValue != NULL);
 

@@ -52,8 +52,8 @@ public:
 	CString  RequestString(const tchar* pszItem, uint nFormat);
 	CDDEData Request(const tchar* pszItem, uint nFormat);
 
-	void ExecuteString(const tchar* pszCommand, uint nFormat);
-	void Execute(uint nFormat, const void* pValue, size_t nSize);
+	void ExecuteString(const tchar* pszCommand);
+	void Execute(const void* pValue, size_t nSize);
 
 	void PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat);
 	void Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize);
