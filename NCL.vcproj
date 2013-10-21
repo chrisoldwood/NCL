@@ -120,7 +120,13 @@
 				RelativePath="DDEClient.cpp">
 			</File>
 			<File
+				RelativePath=".\DDEClientFactory.cpp">
+			</File>
+			<File
 				RelativePath="DDECltConv.cpp">
+			</File>
+			<File
+				RelativePath=".\DDEConv.cpp">
 			</File>
 			<File
 				RelativePath=".\DDEData.cpp">
@@ -136,6 +142,9 @@
 			</File>
 			<File
 				RelativePath="DDEServer.cpp">
+			</File>
+			<File
+				RelativePath=".\DDEServerFactory.cpp">
 			</File>
 			<File
 				RelativePath="DDESvrConv.cpp">
@@ -208,6 +217,9 @@
 				RelativePath="DDEClient.hpp">
 			</File>
 			<File
+				RelativePath=".\DDEClientFactory.hpp">
+			</File>
+			<File
 				RelativePath="DDECltConv.hpp">
 			</File>
 			<File
@@ -232,6 +244,9 @@
 				RelativePath="DDEServer.hpp">
 			</File>
 			<File
+				RelativePath=".\DDEServerFactory.hpp">
+			</File>
+			<File
 				RelativePath="DDEString.hpp">
 			</File>
 			<File
@@ -247,6 +262,9 @@
 				RelativePath="IClientSocketListener.hpp">
 			</File>
 			<File
+				RelativePath=".\IDDEClient.hpp">
+			</File>
+			<File
 				RelativePath="IDDEClientListener.hpp">
 			</File>
 			<File
@@ -254,6 +272,9 @@
 			</File>
 			<File
 				RelativePath="IDDELinkData.hpp">
+			</File>
+			<File
+				RelativePath=".\IDDEServer.hpp">
 			</File>
 			<File
 				RelativePath="IDDEServerListener.hpp">

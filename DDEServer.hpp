@@ -16,8 +16,9 @@
 #pragma once
 #endif
 
-#include <vector>
+#include "IDDEServer.hpp"
 #include "DDEInst.hpp"
+#include <vector>
 
 // Forward declarations.
 class IDDEServerListener;
@@ -35,11 +36,16 @@ typedef std::vector<CDDESvrConv*> CDDESvrConvs;
 *******************************************************************************
 */
 
-class CDDEServer : public CDDEInst
+class CDDEServer : public DDE::IDDEServer
+                 , public CDDEInst
 {
 public:
+	//! The default configuration flags.
+	static const DWORD DEFAULT_FLAGS = CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS;
+
+public:
 	//! Constructor.
-	CDDEServer(DWORD dwFlags = CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS);
+	CDDEServer(DWORD dwFlags = DEFAULT_FLAGS);
 
 	//! Destructor.
 	virtual ~CDDEServer();

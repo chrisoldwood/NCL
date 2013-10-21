@@ -16,6 +16,7 @@
 #pragma once
 #endif
 
+#include "IDDEClient.hpp"
 #include "DDEInst.hpp"
 #include <vector>
 
@@ -34,11 +35,16 @@ typedef std::vector<CDDECltConv*> CDDECltConvs;
 *******************************************************************************
 */
 
-class CDDEClient : public CDDEInst
+class CDDEClient : public DDE::IDDEClient
+                 , public CDDEInst
 {
 public:
+	//! The default configuration flags.
+	static const DWORD DEFAULT_FLAGS = CBF_FAIL_ALLSVRXACTIONS | CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS;
+
+public:
 	//! Constructor.
-	CDDEClient(DWORD dwFlags = CBF_FAIL_ALLSVRXACTIONS | CBF_SKIP_REGISTRATIONS | CBF_SKIP_UNREGISTRATIONS);
+	CDDEClient(DWORD dwFlags = DEFAULT_FLAGS);
 
 	//! Destructor.
 	virtual ~CDDEClient();

@@ -17,8 +17,8 @@
 #endif
 
 // Forward declarations.
-class IDDEConvData;
 class CDDEInst;
+class IDDEConvData;
 
 /******************************************************************************
 **
@@ -76,23 +76,6 @@ private:
 *******************************************************************************
 */
 
-inline CDDEConv::CDDEConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const tchar* pszTopic)
-	: m_pInst(pInst)
-	, m_hConv(hConv)
-	, m_strService(pszService)
-	, m_strTopic(pszTopic)
-	, m_pAppData(NULL)
-{
-	ASSERT(m_pInst != NULL);
-	ASSERT(m_hConv != NULL);
-	ASSERT(!m_strService.Empty());
-	ASSERT(!m_strTopic.Empty());
-}
-
-inline CDDEConv::~CDDEConv()
-{
-}
-
 inline HCONV CDDEConv::Handle() const
 {
 	return m_hConv;
@@ -121,18 +104,6 @@ inline IDDEConvData* CDDEConv::AppData() const
 inline void CDDEConv::SetAppData(IDDEConvData* pAppData)
 {
 	m_pAppData = pAppData;
-}
-
-inline void CDDEConv::Disconnect()
-{
-	if (m_hConv != NULL)
-	{
-		BOOL okay = ::DdeDisconnect(m_hConv);
-
-		ASSERT_RESULT(okay, okay != FALSE);
-	}
-
-	m_hConv = NULL;
 }
 
 #endif // DDECONV_HPP
