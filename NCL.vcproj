@@ -4,10 +4,7 @@
 	Version="7.10"
 	Name="NCL"
 	ProjectGUID="{FAB8D717-85EC-4896-B5DC-FDF0A0B67C92}"
-	SccProjectName="SAK"
-	SccAuxPath="SAK"
-	SccLocalPath="SAK"
-	SccProvider="SAK">
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
 			Name="Win32"/>
