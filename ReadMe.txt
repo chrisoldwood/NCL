@@ -1,13 +1,27 @@
-NCL - Network & Comms Library
+NCL (Network & Comms) Library
 =============================
 
-This library provides classes for IPC over DDE, Named Pipes and Sockets.
+Introduction
+------------
 
+This C++ class library provides support for IPC over DDE, Named Pipes and
+Sockets.
 
-EMail: gort@cix.co.uk
-Web:   http://www.cix.co.uk/~gort
+Documentation
+-------------
 
+See http://www.chrisoldwood.com/win32/dox/ncl/index.html.
 
-Chris Oldwood 
+Development
+-----------
 
-1st March 2005
+See DevNotes.txt
+
+Contact Details
+---------------
+
+Email: gort@cix.co.uk
+Web:   http://www.chrisoldwood.com
+
+Chris Oldwood
+22nd October 2013
