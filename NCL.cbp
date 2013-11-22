@@ -54,6 +54,7 @@
 		<Unit filename="DDECltConv.cpp" />
 		<Unit filename="DDECltConv.hpp" />
 		<Unit filename="DDECltConvPtr.hpp" />
+		<Unit filename="DDEConv.cpp" />
 		<Unit filename="DDEConv.hpp" />
 		<Unit filename="DDEData.cpp" />
 		<Unit filename="DDEData.hpp" />

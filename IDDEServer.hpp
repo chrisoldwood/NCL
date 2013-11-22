@@ -23,7 +23,7 @@ class IDDEServer
 {
 public:
 	//! Destructor.
-	virtual ~IDDEServer() = 0 {}; 
+	virtual ~IDDEServer() {};
 };
 
 //! The default IDDEServer smart pointer type.

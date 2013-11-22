@@ -23,7 +23,7 @@ class IDDEClient
 {
 public:
 	//! Destructor.
-	virtual ~IDDEClient() = 0 {};
+	virtual ~IDDEClient() {};
 };
 
 //! The default IDDEClient smart pointer type.
