@@ -90,6 +90,10 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 			m_details = Core::fmt(TXT("Failed waiting for response: %s"), strSymbol.c_str());
 			break;
 
+		case E_INIT_FAILED:
+			m_details = Core::fmt(TXT("Failed to initiallise Windows sockets library: %s"), strSymbol.c_str());
+			break;
+
 		// Shouldn't happen!
 		default:
 			ASSERT_FALSE();

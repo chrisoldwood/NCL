@@ -499,6 +499,35 @@ CString CSocket::ResolveStr(const tchar* pszHost)
 	return A2T(inet_ntoa(addr));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//! Test if a hostname can be resolved.
+
+bool CSocket::canResolveHostname(const tchar* hostname)
+{
+	hostent* host = gethostbyname(T2A(hostname));
+
+	return (host != nullptr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Try and resolve a hostname.
+
+bool CSocket::tryResolveHostname(const tchar* hostname, tstring& address)
+{
+	hostent* host = gethostbyname(T2A(hostname));
+
+	if (host == nullptr)
+		return false;
+
+	in_addr addr;
+
+	memcpy(&addr, host->h_addr_list[0], host->h_length);
+
+	address = A2T(inet_ntoa(addr));
+
+	return true;
+}
+
 /******************************************************************************
 ** Method:		AsyncEventStr()
 **

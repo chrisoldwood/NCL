@@ -205,6 +205,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath=".\AutoWinSock.hpp">
+			</File>
+			<File
 				RelativePath="ClientPipe.hpp">
 			</File>
 			<File

@@ -65,6 +65,13 @@ public:
 	static bool    IsAddress(const tchar* pszHost);
 	static in_addr Resolve(const tchar* pszHost);
 	static CString ResolveStr(const tchar* pszHost);
+
+	//! Test if a hostname can be resolved.
+	static bool canResolveHostname(const tchar* hostname);
+
+	//! Try and resolve a hostname.
+	static bool tryResolveHostname(const tchar* hostname, tstring& address);
+
 	static CString AsyncEventStr(int nEvent);
 
 	// Socket modes.

@@ -39,6 +39,7 @@ public:
 
 	static int     LastError();
 	static CString ErrorToSymbol(int nError);
+	static CString LastErrorToSymbol();
 
 	static void BeginAsyncSelect(CSocket* pSocket, long lEventMask);
 	static void EndAsyncSelect(CSocket* pSocket);
@@ -74,6 +75,11 @@ private:
 inline int CWinSock::LastError()
 {
 	return ::WSAGetLastError();
+}
+
+inline CString CWinSock::LastErrorToSymbol()
+{
+	return ErrorToSymbol(LastError());
 }
 
 #endif // WINSOCK_HPP

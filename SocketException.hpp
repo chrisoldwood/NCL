@@ -47,6 +47,7 @@ public:
 		E_DISCONNECTED   = 21,	// Connection was closed.
 		E_BAD_PROTOCOL	 = 22,	// Incorrect protocol version.
 		E_WAIT_FAILED    = 23,	// Failed to wait for response.
+		E_INIT_FAILED    = 24,	// Failed to initialise the WinSock library.
 	};
 
 	//
