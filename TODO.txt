@@ -3,3 +3,5 @@
 - Forward declarations header for DDE and Socket classes.
 
 - Extract DDE client and server interfaces and create factories for mocking.
+
+- Split into separate namespaces (DDE/Pipe/Sock).
