@@ -16,11 +16,9 @@
 #pragma once
 #endif
 
-#include <vector>
+#include "DDEFwd.hpp"
 #include "DDEConv.hpp"
-
-// Forward declarations.
-class CDDELink;
+#include <vector>
 
 // Template shorthands.
 typedef std::vector<CDDELink*> CDDESvrLinks;

@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
-#include <Core/SharedPtr.hpp>
 #include "DDEServer.hpp"
+#include <Core/SharedPtr.hpp>
 
 namespace DDE
 {

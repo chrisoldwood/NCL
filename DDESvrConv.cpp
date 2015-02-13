@@ -12,6 +12,7 @@
 #include "DDESvrConv.hpp"
 #include "DDEString.hpp"
 #include "DDELink.hpp"
+#include "DDEInst.hpp"
 #include <algorithm>
 
 /******************************************************************************

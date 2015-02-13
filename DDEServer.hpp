@@ -16,14 +16,12 @@
 #pragma once
 #endif
 
+#include "DDEFwd.hpp"
 #include "IDDEServer.hpp"
 #include "DDEInst.hpp"
 #include <vector>
 
 // Forward declarations.
-class IDDEServerListener;
-class CDDESvrConv;
-class CDDEData;
 class CBuffer;
 
 // Template shorthands.

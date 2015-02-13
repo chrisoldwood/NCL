@@ -16,14 +16,10 @@
 #pragma once
 #endif
 
+#include "DDEFwd.hpp"
 #include "IDDEClient.hpp"
 #include "DDEInst.hpp"
 #include <vector>
-
-// Forward declarations.
-class CDDECltConv;
-class IDDEClientListener;
-class CDDEData;
 
 // Template shorthands.
 typedef std::vector<CDDECltConv*> CDDECltConvs;

@@ -11,8 +11,9 @@
 #pragma once
 #endif
 
-#include <Core/SharedPtr.hpp>
+#include "DDEFwd.hpp"
 #include "DDEClient.hpp"
+#include <Core/SharedPtr.hpp>
 
 namespace DDE
 {

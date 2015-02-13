@@ -16,13 +16,9 @@
 #pragma once
 #endif
 
+#include "DDEFwd.hpp"
 #include "DDEConv.hpp"
 #include <vector>
-
-// Forward declarations.
-class CDDEClient;
-class CDDELink;
-class CDDEData;
 
 // Template shorthands.
 typedef std::vector<CDDELink*> CDDECltLinks;

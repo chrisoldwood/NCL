@@ -151,6 +151,9 @@
 				RelativePath="DDEException.hpp">
 			</File>
 			<File
+				RelativePath=".\DDEFwd.hpp">
+			</File>
+			<File
 				RelativePath=".\DDEInst.cpp">
 			</File>
 			<File
@@ -161,6 +164,9 @@
 			</File>
 			<File
 				RelativePath="DDELink.hpp">
+			</File>
+			<File
+				RelativePath=".\DDEString.cpp">
 			</File>
 			<File
 				RelativePath="DDEString.hpp">
@@ -191,6 +197,9 @@
 				</File>
 				<File
 					RelativePath="DDECltConv.hpp">
+				</File>
+				<File
+					RelativePath=".\DDECltConvPtr.cpp">
 				</File>
 				<File
 					RelativePath=".\DDECltConvPtr.hpp">

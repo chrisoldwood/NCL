@@ -10,6 +10,8 @@
 
 #include "Common.hpp"
 #include "DDEData.hpp"
+#include "DDEInst.hpp"
+#include "DDEException.hpp"
 #include <Core/AnsiWide.hpp>
 #include <malloc.h>
 #include <Core/StringUtils.hpp>

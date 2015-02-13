@@ -16,9 +16,7 @@
 #pragma once
 #endif
 
-// Forward declarations.
-class CDDEConv;
-class IDDELinkData;
+#include "DDEFwd.hpp"
 
 /******************************************************************************
 **

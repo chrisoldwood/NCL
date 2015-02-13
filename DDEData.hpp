@@ -16,12 +16,8 @@
 #pragma once
 #endif
 
-#include "DDEInst.hpp"
-#include "DDEException.hpp"
+#include "DDEFwd.hpp"
 #include <WCL/Buffer.hpp>
-
-// Forward declarations.
-class CDDEInst;
 
 /******************************************************************************
 **

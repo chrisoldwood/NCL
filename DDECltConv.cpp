@@ -14,6 +14,7 @@
 #include "DDELink.hpp"
 #include "DDEData.hpp"
 #include "DDEString.hpp"
+#include "DDEException.hpp"
 #include <Core/AnsiWide.hpp>
 #include <algorithm>
 
