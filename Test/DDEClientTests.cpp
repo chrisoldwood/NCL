@@ -7,6 +7,7 @@
 #include <Core/UnitTest.hpp>
 #include <NCL/DDEClient.hpp>
 #include <WCL/StrArray.hpp>
+#include <NCL/DDECltConvPtr.hpp>
 
 TEST_SET(CDDEClient)
 {
@@ -59,6 +60,35 @@ TEST_CASE("querying for all servers and topics should return the old shell")
 
 	TEST_TRUE(servers.Find(TXT("PROGMAN")) != Core::npos);
 	TEST_TRUE(topics.Find(TXT("PROGMAN")) != Core::npos);
+}
+TEST_CASE_END
+
+	const tchar* SERVICE = TXT("PROGMAN");
+	const tchar* TOPIC = TXT("PROGMAN");
+
+TEST_CASE("A conversation is created with a service and topic name")
+{
+	DDE::CltConvPtr conv(client.CreateConversation(SERVICE, TOPIC));
+
+	TEST_FALSE(conv.empty());
+	TEST_TRUE(conv->IsConnected());
+}
+TEST_CASE_END
+
+TEST_CASE("The same conversation can be opened multiple times")
+{
+	DDE::CltConvPtr first(client.CreateConversation(SERVICE, TOPIC));
+
+	DDE::CltConvPtr second(client.CreateConversation(SERVICE, TOPIC));
+
+	TEST_FALSE(first.empty());
+	TEST_FALSE(second.empty());
+}
+TEST_CASE_END
+
+TEST_CASE("Trying to converse on an invalid service or topic throws an exception")
+{
+	TEST_THROWS(client.CreateConversation(TXT("InvalidServiceName"), TXT("InvalidTopicName")));
 }
 TEST_CASE_END
 

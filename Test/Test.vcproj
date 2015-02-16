@@ -144,6 +144,9 @@
 				<File
 					RelativePath=".\DDEClientTests.cpp">
 				</File>
+				<File
+					RelativePath=".\DDECltConvTests.cpp">
+				</File>
 			</Filter>
 			<Filter
 				Name="Server"

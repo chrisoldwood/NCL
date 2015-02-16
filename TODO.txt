@@ -1,7 +1,11 @@
 - WinInet classes.
 
-- Forward declarations header for Pipe and Socket classes.
+- Forward declarations header for the Socket classes.
 
 - Extract DDE client and server interfaces and create factories for mocking.
 
 - Split into separate namespaces (DDE/Pipe/Sock).
+
+- Replace bald pointers in API with smart pointers (e.g. CDDEClient::CreateConversation).
+
+- Remove CDDEConv::IsConnected() as the object's lifetime controls it.
