@@ -8,7 +8,7 @@
 #include <NCL/DDEData.hpp>
 #include <NCL/DDEClient.hpp>
 
-TEST_SET(CDDEData)
+TEST_SET(DDEData)
 {
 	CDDEClient instance;
 

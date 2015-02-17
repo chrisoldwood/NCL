@@ -745,6 +745,18 @@ HDDEDATA CDDEServer::DDECallbackProcImpl(UINT uType, UINT uFormat, HCONV hConv, 
 	// Forward to handler.
 	switch (uType)
 	{
+		case XTYP_REGISTER:
+		{
+			// Not implemented, skipped by default.
+		}
+		break;
+
+		case XTYP_UNREGISTER:
+		{
+			// Not implemented, skipped by default.
+		}
+		break;
+
 		// Querying supported services/topics?
 		case XTYP_WILDCONNECT:
 		{

@@ -158,6 +158,16 @@
 					RelativePath=".\DDEServerTests.cpp">
 				</File>
 			</Filter>
+			<Filter
+				Name="Mocks"
+				Filter="">
+				<File
+					RelativePath=".\DDEServerFake.cpp">
+				</File>
+				<File
+					RelativePath=".\DDEServerFake.hpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Build"

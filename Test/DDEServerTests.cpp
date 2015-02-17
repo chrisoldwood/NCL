@@ -8,7 +8,7 @@
 #include <NCL/DDEServer.hpp>
 #include <WCL/Buffer.hpp>
 
-TEST_SET(CDDEServer)
+TEST_SET(DDEServer)
 {
 
 TEST_CASE("detected data format will be CF_TEXT when less than 4 bytes long")

@@ -8,32 +8,39 @@
 #include <NCL/DDEClient.hpp>
 #include <WCL/StrArray.hpp>
 #include <NCL/DDECltConvPtr.hpp>
+#include "DDEServerFake.hpp"
 
-TEST_SET(CDDEClient)
+TEST_SET(DDEClient)
 {
-	CDDEClient client;
+	// The order of construction is important as the
+	// client dtor will hang if it is destroyed first.
+	CDDEClient    client;
+	DDEServerFake fakeServer;
 
-TEST_CASE("querying for all servers should at least find the old shell")
+	const tchar* SERVICE = DDEServerFake::SERVICE;
+	const tchar* TOPIC = DDEServerFake::TOPIC;
+
+TEST_CASE("querying for all servers returns the service names")
 {
 	CStrArray servers;
 
 	client.QueryServers(servers);
 
-	TEST_TRUE(servers.Find(TXT("PROGMAN")) != Core::npos);
+	TEST_TRUE(servers.Find(SERVICE) != Core::npos);
 }
 TEST_CASE_END
 
-TEST_CASE("querying a running server should return its topics")
+TEST_CASE("querying a running server returns the topics it supports")
 {
 	CStrArray topics;
 
-	client.QueryServerTopics(TXT("Shell"), topics);
+	client.QueryServerTopics(SERVICE, topics);
 
-	TEST_TRUE(topics.Find(TXT("AppProperties")) != Core::npos);
+	TEST_TRUE(topics.Find(TOPIC) != Core::npos);
 }
 TEST_CASE_END
 
-TEST_CASE("querying a non-running server should throw an exception")
+TEST_CASE("querying a non-running server throws an exception")
 {
 	CStrArray topics;
 
@@ -41,7 +48,7 @@ TEST_CASE("querying a non-running server should throw an exception")
 }
 TEST_CASE_END
 
-TEST_CASE("querying for all servers and topics should return two equal-sized arrays")
+TEST_CASE("querying for all servers and topics returns two equal-sized arrays")
 {
 	CStrArray servers, topics;
 
@@ -52,19 +59,16 @@ TEST_CASE("querying for all servers and topics should return two equal-sized arr
 }
 TEST_CASE_END
 
-TEST_CASE("querying for all servers and topics should return the old shell")
+TEST_CASE("querying for all servers and topics returns the server and topic names")
 {
 	CStrArray servers, topics;
 
 	client.QueryAll(servers, topics);
 
-	TEST_TRUE(servers.Find(TXT("PROGMAN")) != Core::npos);
-	TEST_TRUE(topics.Find(TXT("PROGMAN")) != Core::npos);
+	TEST_TRUE(servers.Find(SERVICE) != Core::npos);
+	TEST_TRUE(topics.Find(TOPIC) != Core::npos);
 }
 TEST_CASE_END
-
-	const tchar* SERVICE = TXT("PROGMAN");
-	const tchar* TOPIC = TXT("PROGMAN");
 
 TEST_CASE("A conversation is created with a service and topic name")
 {

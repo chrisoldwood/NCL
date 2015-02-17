@@ -8,14 +8,19 @@
 #include <NCL/DDEClient.hpp>
 #include <NCL/DDECltConvPtr.hpp>
 #include <NCL/DDEData.hpp>
+#include "DDEServerFake.hpp"
 
 TEST_SET(DDECltConv)
 {
-	CDDEClient client;
+	// The order of construction is important as the
+	// client dtor will hang if it is destroyed first.
+	CDDEClient    client;
+	DDEServerFake fakeServer;
 
-	const tchar* SERVICE = TXT("PROGMAN");
-	const tchar* TOPIC = TXT("PROGMAN");
-	const tchar* ITEM = TXT("Accessories");
+	const tchar* SERVICE = DDEServerFake::SERVICE;
+	const tchar* TOPIC = DDEServerFake::TOPIC;
+	const tchar* ITEM = DDEServerFake::ITEM;
+	const tchar* VALUE = DDEServerFake::VALUE;
 
 TEST_CASE("A conversation's connection status can be queried")
 {
@@ -40,7 +45,7 @@ TEST_CASE("The value for an item can be requested in different formats")
 
 	CDDEData value = conv->Request(ITEM, CF_TEXT);
 
-	TEST_TRUE(value.Size() != 0);
+	TEST_TRUE(value.GetString(ANSI_TEXT) == VALUE);
 }
 TEST_CASE_END
 
@@ -50,7 +55,7 @@ TEST_CASE("The value for a string-based item can be requested")
 
 	CString value = conv->RequestString(ITEM, CF_TEXT);
 
-	TEST_FALSE(value.Empty());
+	TEST_TRUE(value == VALUE);
 }
 TEST_CASE_END
 
