@@ -247,7 +247,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Pipes"
+			Name="Pipe"
 			Filter="">
 			<File
 				RelativePath="ClientPipe.cpp">
@@ -275,7 +275,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Sockets"
+			Name="Socket"
 			Filter="">
 			<File
 				RelativePath=".\AutoWinSock.hpp">

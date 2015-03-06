@@ -170,33 +170,11 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Build"
-			Filter="">
-			<File
-				RelativePath=".\stdafx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\stdafx.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="Pipes"
+			Name="Pipe"
 			Filter="">
 		</Filter>
 		<Filter
-			Name="Sockets"
+			Name="Socket"
 			Filter="">
 			<File
 				RelativePath=".\SocketTests.cpp">
@@ -210,6 +188,24 @@
 				Filter="">
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\stdafx.cpp">
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\stdafx.h">
+		</File>
 		<File
 			RelativePath=".\Test.cpp">
 		</File>
