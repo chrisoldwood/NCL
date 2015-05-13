@@ -67,11 +67,18 @@
 			<Add library="ntdll" />
 			<Add library="advapi32" />
 			<Add library="shlwapi" />
+			<Add library="ws2_32" />
 		</Linker>
+		<Unit filename="DDEClientFactoryTests.cpp" />
 		<Unit filename="DDEClientTests.cpp" />
+		<Unit filename="DDECltConvTests.cpp" />
 		<Unit filename="DDEDataTests.cpp" />
 		<Unit filename="DDELinkTests.cpp" />
+		<Unit filename="DDEServerFactoryTests.cpp" />
+		<Unit filename="DDEServerFake.cpp" />
+		<Unit filename="DDEServerFake.hpp" />
 		<Unit filename="DDEServerTests.cpp" />
+		<Unit filename="SocketTests.cpp" />
 		<Unit filename="Test.cpp" />
 		<Unit filename="stdafx.cpp" />
 		<Unit filename="stdafx.h" />

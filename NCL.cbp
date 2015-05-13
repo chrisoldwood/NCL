@@ -42,17 +42,26 @@
 			<Add option="-Wswitch-default" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option="-Werror" />
+			<Add option="-Winvalid-pch" />
+			<Add option='-include &quot;Common.hpp&quot;' />
 			<Add option="-DWIN32" />
 			<Add option="-D_LIB" />
 			<Add directory="..\..\Lib" />
 		</Compiler>
 		<Unit filename="ClientPipe.cpp" />
 		<Unit filename="ClientPipe.hpp" />
-		<Unit filename="Common.hpp" />
+		<Unit filename="Common.hpp">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
 		<Unit filename="DDEClient.cpp" />
 		<Unit filename="DDEClient.hpp" />
+		<Unit filename="DDEClientFactory.cpp" />
+		<Unit filename="DDEClientFactory.hpp" />
 		<Unit filename="DDECltConv.cpp" />
 		<Unit filename="DDECltConv.hpp" />
+		<Unit filename="DDECltConvPtr.cpp" />
 		<Unit filename="DDECltConvPtr.hpp" />
 		<Unit filename="DDEConv.cpp" />
 		<Unit filename="DDEConv.hpp" />
@@ -66,6 +75,9 @@
 		<Unit filename="DDELink.hpp" />
 		<Unit filename="DDEServer.cpp" />
 		<Unit filename="DDEServer.hpp" />
+		<Unit filename="DDEServerFactory.cpp" />
+		<Unit filename="DDEServerFactory.hpp" />
+		<Unit filename="DDEString.cpp" />
 		<Unit filename="DDEString.hpp" />
 		<Unit filename="DDESvrConv.cpp" />
 		<Unit filename="DDESvrConv.hpp" />
