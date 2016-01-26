@@ -49,6 +49,7 @@
 			<Add option="-D_LIB" />
 			<Add directory="..\..\Lib" />
 		</Compiler>
+		<Unit filename="AutoWinSock.hpp" />
 		<Unit filename="ClientPipe.cpp" />
 		<Unit filename="ClientPipe.hpp" />
 		<Unit filename="Common.hpp">
@@ -69,6 +70,7 @@
 		<Unit filename="DDEData.hpp" />
 		<Unit filename="DDEException.cpp" />
 		<Unit filename="DDEException.hpp" />
+		<Unit filename="DDEFwd.hpp" />
 		<Unit filename="DDEInst.cpp" />
 		<Unit filename="DDEInst.hpp" />
 		<Unit filename="DDELink.cpp" />
@@ -84,9 +86,11 @@
 		<Unit filename="DefDDEClientListener.hpp" />
 		<Unit filename="DefDDEServerListener.hpp" />
 		<Unit filename="IClientSocketListener.hpp" />
+		<Unit filename="IDDEClient.hpp" />
 		<Unit filename="IDDEClientListener.hpp" />
 		<Unit filename="IDDEConvData.hpp" />
 		<Unit filename="IDDELinkData.hpp" />
+		<Unit filename="IDDEServer.hpp" />
 		<Unit filename="IDDEServerListener.hpp" />
 		<Unit filename="IServerSocketListener.hpp" />
 		<Unit filename="NamedPipe.cpp" />
@@ -109,10 +113,6 @@
 		<Unit filename="TCPSvrSocket.cpp" />
 		<Unit filename="TCPSvrSocket.hpp" />
 		<Unit filename="TODO.txt" />
-		<Unit filename="TcpCltSocket.cpp" />
-		<Unit filename="TcpCltSocket.hpp" />
-		<Unit filename="TcpSvrSocket.cpp" />
-		<Unit filename="TcpSvrSocket.hpp" />
 		<Unit filename="UDPCltSocket.cpp" />
 		<Unit filename="UDPCltSocket.hpp" />
 		<Unit filename="UDPSocket.cpp" />

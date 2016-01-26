@@ -314,10 +314,10 @@
 				Name="TCP"
 				Filter="">
 				<File
-					RelativePath="TcpCltSocket.cpp">
+					RelativePath="TCPCltSocket.cpp">
 				</File>
 				<File
-					RelativePath="TcpCltSocket.hpp">
+					RelativePath="TCPCltSocket.hpp">
 				</File>
 				<File
 					RelativePath="TCPSocket.cpp">
@@ -326,10 +326,10 @@
 					RelativePath="TCPSocket.hpp">
 				</File>
 				<File
-					RelativePath="TcpSvrSocket.cpp">
+					RelativePath="TCPSvrSocket.cpp">
 				</File>
 				<File
-					RelativePath="TcpSvrSocket.hpp">
+					RelativePath="TCPSvrSocket.hpp">
 				</File>
 			</Filter>
 			<Filter
