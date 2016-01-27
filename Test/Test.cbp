@@ -50,6 +50,7 @@
 			<Add option="-Wswitch-default" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option='-include &quot;stdafx.h&quot;' />
 			<Add option="-DWIN32" />
 			<Add option="-D_CONSOLE" />
 			<Add directory="../../../Lib" />
@@ -81,7 +82,10 @@
 		<Unit filename="SocketTests.cpp" />
 		<Unit filename="Test.cpp" />
 		<Unit filename="stdafx.cpp" />
-		<Unit filename="stdafx.h" />
+		<Unit filename="stdafx.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
