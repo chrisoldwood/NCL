@@ -1,107 +1,158 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="NCL"
 	ProjectGUID="{FAB8D717-85EC-4896-B5DC-FDF0A0B67C92}"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="4"
-			CharacterSet="1">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
 				AdditionalIncludeDirectories="../../Lib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				StringPooling="TRUE"
-				ExceptionHandling="FALSE"
+				StringPooling="true"
+				ExceptionHandling="0"
 				RuntimeLibrary="0"
-				TreatWChar_tAsBuiltInType="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Common.hpp"
 				WarningLevel="4"
-				WarnAsError="TRUE"
-				DebugInformationFormat="3"/>
+				WarnAsError="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
-				Name="VCLibrarianTool"/>
+				Name="VCResourceCompilerTool"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCLibrarianTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="4"
-			CharacterSet="1">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../Lib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				MinimalRebuild="TRUE"
-				ExceptionHandling="FALSE"
+				MinimalRebuild="true"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				SmallerTypeCheck="TRUE"
+				SmallerTypeCheck="true"
 				RuntimeLibrary="1"
-				TreatWChar_tAsBuiltInType="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Common.hpp"
 				WarningLevel="4"
-				WarnAsError="TRUE"
-				DebugInformationFormat="3"/>
+				WarnAsError="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
-				Name="VCLibrarianTool"/>
+				Name="VCResourceCompilerTool"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCLibrarianTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -109,257 +160,331 @@
 	<Files>
 		<Filter
 			Name="Build"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Common.hpp">
+				RelativePath=".\Common.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\pch.cpp">
+				RelativePath=".\pch.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="DDE"
-			Filter="">
+			>
 			<File
-				RelativePath=".\DDEConv.cpp">
+				RelativePath=".\DDEConv.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DDEConv.hpp">
+				RelativePath="DDEConv.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\DDEData.cpp">
+				RelativePath=".\DDEData.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DDEData.hpp">
+				RelativePath="DDEData.hpp"
+				>
 			</File>
 			<File
-				RelativePath="DDEException.cpp">
+				RelativePath="DDEException.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DDEException.hpp">
+				RelativePath="DDEException.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\DDEFwd.hpp">
+				RelativePath=".\DDEFwd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\DDEInst.cpp">
+				RelativePath=".\DDEInst.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DDEInst.hpp">
+				RelativePath="DDEInst.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\DDELink.cpp">
+				RelativePath=".\DDELink.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DDELink.hpp">
+				RelativePath="DDELink.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\DDEString.cpp">
+				RelativePath=".\DDEString.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DDEString.hpp">
+				RelativePath="DDEString.hpp"
+				>
 			</File>
 			<File
-				RelativePath="IDDEConvData.hpp">
+				RelativePath="IDDEConvData.hpp"
+				>
 			</File>
 			<File
-				RelativePath="IDDELinkData.hpp">
+				RelativePath="IDDELinkData.hpp"
+				>
 			</File>
 			<Filter
 				Name="Client"
-				Filter="">
+				>
 				<File
-					RelativePath="DDEClient.cpp">
+					RelativePath="DDEClient.cpp"
+					>
 				</File>
 				<File
-					RelativePath="DDEClient.hpp">
+					RelativePath="DDEClient.hpp"
+					>
 				</File>
 				<File
-					RelativePath=".\DDEClientFactory.cpp">
+					RelativePath=".\DDEClientFactory.cpp"
+					>
 				</File>
 				<File
-					RelativePath=".\DDEClientFactory.hpp">
+					RelativePath=".\DDEClientFactory.hpp"
+					>
 				</File>
 				<File
-					RelativePath="DDECltConv.cpp">
+					RelativePath="DDECltConv.cpp"
+					>
 				</File>
 				<File
-					RelativePath="DDECltConv.hpp">
+					RelativePath="DDECltConv.hpp"
+					>
 				</File>
 				<File
-					RelativePath=".\DDECltConvPtr.cpp">
+					RelativePath=".\DDECltConvPtr.cpp"
+					>
 				</File>
 				<File
-					RelativePath=".\DDECltConvPtr.hpp">
+					RelativePath=".\DDECltConvPtr.hpp"
+					>
 				</File>
 				<File
-					RelativePath="DefDDEClientListener.hpp">
+					RelativePath="DefDDEClientListener.hpp"
+					>
 				</File>
 				<File
-					RelativePath=".\IDDEClient.hpp">
+					RelativePath=".\IDDEClient.hpp"
+					>
 				</File>
 				<File
-					RelativePath="IDDEClientListener.hpp">
+					RelativePath="IDDEClientListener.hpp"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="Server"
-				Filter="">
+				>
 				<File
-					RelativePath="DDEServer.cpp">
+					RelativePath="DDEServer.cpp"
+					>
 				</File>
 				<File
-					RelativePath="DDEServer.hpp">
+					RelativePath="DDEServer.hpp"
+					>
 				</File>
 				<File
-					RelativePath=".\DDEServerFactory.cpp">
+					RelativePath=".\DDEServerFactory.cpp"
+					>
 				</File>
 				<File
-					RelativePath=".\DDEServerFactory.hpp">
+					RelativePath=".\DDEServerFactory.hpp"
+					>
 				</File>
 				<File
-					RelativePath="DDESvrConv.cpp">
+					RelativePath="DDESvrConv.cpp"
+					>
 				</File>
 				<File
-					RelativePath="DDESvrConv.hpp">
+					RelativePath="DDESvrConv.hpp"
+					>
 				</File>
 				<File
-					RelativePath="DefDDEServerListener.hpp">
+					RelativePath="DefDDEServerListener.hpp"
+					>
 				</File>
 				<File
-					RelativePath=".\IDDEServer.hpp">
+					RelativePath=".\IDDEServer.hpp"
+					>
 				</File>
 				<File
-					RelativePath="IDDEServerListener.hpp">
+					RelativePath="IDDEServerListener.hpp"
+					>
 				</File>
 			</Filter>
 		</Filter>
 		<Filter
 			Name="Pipe"
-			Filter="">
+			>
 			<File
-				RelativePath="ClientPipe.cpp">
+				RelativePath="ClientPipe.cpp"
+				>
 			</File>
 			<File
-				RelativePath="ClientPipe.hpp">
+				RelativePath="ClientPipe.hpp"
+				>
 			</File>
 			<File
-				RelativePath="NamedPipe.cpp">
+				RelativePath="NamedPipe.cpp"
+				>
 			</File>
 			<File
-				RelativePath="NamedPipe.hpp">
+				RelativePath="NamedPipe.hpp"
+				>
 			</File>
 			<File
-				RelativePath="PipeException.cpp">
+				RelativePath="PipeException.cpp"
+				>
 			</File>
 			<File
-				RelativePath="PipeException.hpp">
+				RelativePath="PipeException.hpp"
+				>
 			</File>
 			<File
-				RelativePath="ServerPipe.cpp">
+				RelativePath="ServerPipe.cpp"
+				>
 			</File>
 			<File
-				RelativePath="ServerPipe.hpp">
+				RelativePath="ServerPipe.hpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Socket"
-			Filter="">
+			>
 			<File
-				RelativePath=".\AutoWinSock.hpp">
+				RelativePath=".\AutoWinSock.hpp"
+				>
 			</File>
 			<File
-				RelativePath="IClientSocketListener.hpp">
+				RelativePath="IClientSocketListener.hpp"
+				>
 			</File>
 			<File
-				RelativePath="IServerSocketListener.hpp">
+				RelativePath="IServerSocketListener.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\NetBuffer.cpp">
+				RelativePath=".\NetBuffer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\NetBuffer.hpp">
+				RelativePath=".\NetBuffer.hpp"
+				>
 			</File>
 			<File
-				RelativePath="Socket.cpp">
+				RelativePath="Socket.cpp"
+				>
 			</File>
 			<File
-				RelativePath="Socket.hpp">
+				RelativePath="Socket.hpp"
+				>
 			</File>
 			<File
-				RelativePath="SocketException.cpp">
+				RelativePath="SocketException.cpp"
+				>
 			</File>
 			<File
-				RelativePath="SocketException.hpp">
+				RelativePath="SocketException.hpp"
+				>
 			</File>
 			<File
-				RelativePath="WinSock.cpp">
+				RelativePath="WinSock.cpp"
+				>
 			</File>
 			<File
-				RelativePath="WinSock.hpp">
+				RelativePath="WinSock.hpp"
+				>
 			</File>
 			<Filter
 				Name="TCP"
-				Filter="">
+				>
 				<File
-					RelativePath="TCPCltSocket.cpp">
+					RelativePath="TCPCltSocket.cpp"
+					>
 				</File>
 				<File
-					RelativePath="TCPCltSocket.hpp">
+					RelativePath="TCPCltSocket.hpp"
+					>
 				</File>
 				<File
-					RelativePath="TCPSocket.cpp">
+					RelativePath="TCPSocket.cpp"
+					>
 				</File>
 				<File
-					RelativePath="TCPSocket.hpp">
+					RelativePath="TCPSocket.hpp"
+					>
 				</File>
 				<File
-					RelativePath="TCPSvrSocket.cpp">
+					RelativePath="TCPSvrSocket.cpp"
+					>
 				</File>
 				<File
-					RelativePath="TCPSvrSocket.hpp">
+					RelativePath="TCPSvrSocket.hpp"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="UDP"
-				Filter="">
+				>
 				<File
-					RelativePath="UDPCltSocket.cpp">
+					RelativePath="UDPCltSocket.cpp"
+					>
 				</File>
 				<File
-					RelativePath="UDPCltSocket.hpp">
+					RelativePath="UDPCltSocket.hpp"
+					>
 				</File>
 				<File
-					RelativePath="UDPSocket.cpp">
+					RelativePath="UDPSocket.cpp"
+					>
 				</File>
 				<File
-					RelativePath="UDPSocket.hpp">
+					RelativePath="UDPSocket.hpp"
+					>
 				</File>
 				<File
-					RelativePath="UDPSvrSocket.cpp">
+					RelativePath="UDPSvrSocket.cpp"
+					>
 				</File>
 				<File
-					RelativePath="UDPSvrSocket.hpp">
+					RelativePath="UDPSvrSocket.hpp"
+					>
 				</File>
 			</Filter>
 		</Filter>
 		<File
-			RelativePath="ReadMe.txt">
+			RelativePath="ReadMe.txt"
+			>
 		</File>
 		<File
-			RelativePath="TODO.txt">
+			RelativePath="TODO.txt"
+			>
 		</File>
 	</Files>
 	<Globals>
