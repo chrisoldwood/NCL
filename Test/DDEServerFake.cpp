@@ -3,7 +3,7 @@
 //! \brief  The DDEServerFake class definition.
 //! \author Chris Oldwood
 
-#include "stdafx.h"
+#include "Common.hpp"
 #include "DDEServerFake.hpp"
 #include <NCL/DDEData.hpp>
 #include <WCL/StrArray.hpp>

@@ -3,7 +3,7 @@
 //! \brief  The unit tests for the CSocket class.
 //! \author Chris Oldwood
 
-#include "stdafx.h"
+#include "Common.hpp"
 #include <Core/UnitTest.hpp>
 #include <NCL/Socket.hpp>
 #include <WCL/Module.hpp>

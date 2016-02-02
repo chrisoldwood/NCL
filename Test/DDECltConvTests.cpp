@@ -3,7 +3,7 @@
 //! \brief  The integration tests for the DDECltConv class.
 //! \author Chris Oldwood
 
-#include "stdafx.h"
+#include "Common.hpp"
 #include <Core/UnitTest.hpp>
 #include <NCL/DDEClient.hpp>
 #include <NCL/DDECltConvPtr.hpp>

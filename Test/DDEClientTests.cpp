@@ -3,7 +3,7 @@
 //! \brief  The integration tests for the CDDEClient class.
 //! \author Chris Oldwood
 
-#include "stdafx.h"
+#include "Common.hpp"
 #include <Core/UnitTest.hpp>
 #include <NCL/DDEClient.hpp>
 #include <WCL/StrArray.hpp>
