@@ -30,7 +30,7 @@ CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 	{
 		m_ptr = pPointer;
 	}
-	// Shared onership.
+	// Shared ownership.
 	else
 	{
 		ASSERT(pPointer != nullptr);

@@ -63,7 +63,7 @@ protected:
 	OVERLAPPED	m_oWriteIO;		// Write Overlapped I/O data.
 	bool		m_bPrevWrite;	// Write outstanding?
 	size_t		m_nPrevBytes;	// Previous write size.
-	DWORD		m_dwTimeOut;	// Connect/Read/Write timeout.
+	DWORD		m_dwTimeOut;	// Connect/Read/Write time-out.
 
 	//
 	// Constants.

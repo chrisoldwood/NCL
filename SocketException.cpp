@@ -91,7 +91,7 @@ CSocketException::CSocketException(int eErrCode, int nWSACode)
 			break;
 
 		case E_INIT_FAILED:
-			m_details = Core::fmt(TXT("Failed to initiallise Windows sockets library: %s"), strSymbol.c_str());
+			m_details = Core::fmt(TXT("Failed to initialise Windows sockets library: %s"), strSymbol.c_str());
 			break;
 
 		// Shouldn't happen!

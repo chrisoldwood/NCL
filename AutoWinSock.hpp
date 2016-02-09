@@ -51,7 +51,7 @@ inline AutoWinSock::~AutoWinSock()
 	if (result != 0)
 	{
 		ASSERT_FALSE();
-		Core::debugWrite(TXT("WinSock cleanup failed with result: %d [%s]\n"), result, CWinSock::LastErrorToSymbol().c_str());
+		Core::debugWrite(TXT("WinSock clean-up failed with result: %d [%s]\n"), result, CWinSock::LastErrorToSymbol().c_str());
 	}
 }
 

@@ -59,7 +59,7 @@ CClientPipe::~CClientPipe()
 /******************************************************************************
 ** Method:		Open()
 **
-** Description:	Open an exisitng named pipe.
+** Description:	Open an existing named pipe.
 **
 ** Parameters:	pszName		The pipes' name.
 **

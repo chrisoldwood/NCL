@@ -25,7 +25,7 @@
 typedef std::vector<CDDECltConv*> CDDECltConvs;
 
 /******************************************************************************
-** 
+**
 ** This class provides DDE Client services.
 **
 *******************************************************************************
@@ -49,10 +49,10 @@ public:
 	// Properties.
 	//
 
-	//! Get the default transaction timeout (ms).
+	//! Get the default transaction time-out (ms).
 	DWORD DefaultTimeout() const;
 
-	//! Set the default transaction timeout (ms).
+	//! Set the default transaction time-out (ms).
 	void SetDefaultTimeout(DWORD timeout);
 
 	//
@@ -87,7 +87,7 @@ protected:
 	//
 	// Members.
 	//
-	DWORD			m_defaultTimeout;	//!< The default timeout for transactions (ms).
+	DWORD			m_defaultTimeout;	//!< The default time-out for transactions (ms).
 	CDDECltConvs	m_aoConvs;		// The list of conversations.
 	CListeners		m_aoListeners;	// The list of event listeners.
 
@@ -126,7 +126,7 @@ typedef Core::SharedPtr<CDDEClient> ClientPtr;
 */
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Get the default transaction timeout (ms).
+//! Get the default transaction time-out (ms).
 
 inline DWORD CDDEClient::DefaultTimeout() const
 {
@@ -134,7 +134,7 @@ inline DWORD CDDEClient::DefaultTimeout() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Set the default transaction timeout (ms).
+//! Set the default transaction time-out (ms).
 
 inline void CDDEClient::SetDefaultTimeout(DWORD timeout)
 {

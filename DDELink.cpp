@@ -127,7 +127,7 @@ bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTo
 
 					::GlobalUnlock(hLinkData);
 
-					// Copy to clipbaord.
+					// Copy to clipboard.
 					if (::SetClipboardData(s_nLinkFormat, hLinkData) != NULL)
 						bCopied = true;
 				}
@@ -148,7 +148,7 @@ bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTo
 
 					::GlobalUnlock(hTextData);
 
-					// Copy to clipbaord.
+					// Copy to clipboard.
 					if (::SetClipboardData(CF_TEXT, hTextData) != NULL)
 						bCopied = true;
 				}

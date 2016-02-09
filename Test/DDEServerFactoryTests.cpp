@@ -31,7 +31,7 @@ TEST_CASE("factory creates a real DDE server by default")
 }
 TEST_CASE_END
 
-TEST_CASE("factory invokes custom creater when overridden")
+TEST_CASE("factory invokes custom creator when overridden")
 {
 	DDE::DDEServerFactory::registerFactory(TestServer::create);
 

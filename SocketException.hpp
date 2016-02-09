@@ -40,7 +40,7 @@ public:
 		E_LISTEN_FAILED  = 14,	// Failed to listen on server socket.
 		E_ACCEPT_FAILED  = 15,	// Failed to accept client connection.
 		E_SEND_FAILED    = 16,  // Failed to send data.
-		E_RECV_FAILED    = 17,	// Failed to recieve data.
+		E_RECV_FAILED    = 17,	// Failed to receive data.
 		E_PEEK_FAILED    = 18,	// Failed to peek at incoming data.
 		E_SELECT_FAILED  = 19,	// Failed to query socket state.
 		E_QUERY_FAILED   = 20,	// Failed to query socket info.

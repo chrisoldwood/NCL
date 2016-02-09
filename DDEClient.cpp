@@ -32,7 +32,7 @@ static const size_t MAX_SERVER_LEN = 256;
 //! The maximum length of the topic name in chars.
 static const size_t MAX_TOPIC_LEN = 256;
 
-// The default transaction timeout (ms).
+// The default transaction time-out (ms).
 static const DWORD DEFAULT_TIMEOUT = 30000;
 
 /******************************************************************************
@@ -78,7 +78,7 @@ CDDEClient::~CDDEClient()
 /******************************************************************************
 ** Method:		Initialise()
 **
-** Description:	Initialise the DDE Client with the DDEML libray.
+** Description:	Initialise the DDE Client with the DDEML library.
 **
 ** Parameters:	dwFlags		The additional DDEML initialisation flags.
 **
@@ -98,13 +98,13 @@ void CDDEClient::Initialise(DWORD dwFlags)
 	if (nResult != DMLERR_NO_ERROR)
 		throw CDDEException(CDDEException::E_INIT_FAILED, nResult);
 
-	ASSERT(m_dwInst != 0);	// Not guarenteed, but highly likely.
+	ASSERT(m_dwInst != 0);	// Not guaranteed, but highly likely.
 }
 
 /******************************************************************************
 ** Method:		Uninitialise()
 **
-** Description:	Uninitialise the DDE Client with the DDEML libray.
+** Description:	Uninitialise the DDE Client with the DDEML library.
 **
 ** Parameters:	None.
 **
@@ -115,7 +115,7 @@ void CDDEClient::Initialise(DWORD dwFlags)
 
 void CDDEClient::Uninitialise()
 {
-	// Cleanup.
+	// Clean-up.
 	if (m_dwInst != 0)
 	{
 		BOOL okay = ::DdeUninitialize(m_dwInst);

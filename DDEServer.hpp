@@ -28,7 +28,7 @@ class CBuffer;
 typedef std::vector<CDDESvrConv*> CDDESvrConvs;
 
 /******************************************************************************
-** 
+**
 ** This class provides DDE Server services.
 **
 *******************************************************************************
@@ -70,7 +70,7 @@ public:
 	void RemoveListener(IDDEServerListener* pListener);
 
 	//
-	// Utility methods (initally public for testing)
+	// Utility methods (initially public for testing)
 	//
 	static uint GuessTextFormat(const CBuffer& buffer);
 

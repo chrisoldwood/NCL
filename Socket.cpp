@@ -535,7 +535,7 @@ bool CSocket::tryResolveHostname(const tchar* hostname, tstring& address)
 **
 ** Parameters:	nEvent		The event ID.
 **
-** Returns:		The event synbol.
+** Returns:		The event symbol.
 **
 *******************************************************************************
 */
@@ -613,7 +613,7 @@ void CSocket::RemoveClientListener(IClientSocketListener* pListener)
 
 void CSocket::OnAsyncSelect(int nEvent, int nError)
 {
-	// Error occured BUT not due to socket closure?
+	// Error occurred BUT not due to socket closure?
 	if ( (nError != 0) && ((nEvent & FD_CLOSE) == 0) )
 	{
 		OnError(nEvent, nError);
@@ -746,7 +746,7 @@ void CSocket::OnClosed(int nReason)
 {
 	typedef CCltListeners::const_iterator iter;
 
-	// Cleanup.
+	// Clean-up.
 	Close();
 
 	// Notify listeners.

@@ -62,7 +62,7 @@ CDDEServer::~CDDEServer()
 /******************************************************************************
 ** Method:		Initialise()
 **
-** Description:	Initialise the DDE Server with the DDEML libray.
+** Description:	Initialise the DDE Server with the DDEML library.
 **
 ** Parameters:	dwFlags		The additional DDEML initialisation flags.
 **
@@ -82,13 +82,13 @@ void CDDEServer::Initialise(DWORD dwFlags)
 	if (nResult != DMLERR_NO_ERROR)
 		throw CDDEException(CDDEException::E_INIT_FAILED, nResult);
 
-	ASSERT(m_dwInst != 0);	// Not guarenteed, but highly likely.
+	ASSERT(m_dwInst != 0);	// Not guaranteed, but highly likely.
 }
 
 /******************************************************************************
 ** Method:		Uninitialise()
 **
-** Description:	Uninitialise the DDE Client with the DDEML libray.
+** Description:	Uninitialise the DDE Client with the DDEML library.
 **
 ** Parameters:	None.
 **
@@ -99,7 +99,7 @@ void CDDEServer::Initialise(DWORD dwFlags)
 
 void CDDEServer::Uninitialise()
 {
-	// Cleanup.
+	// Clean-up.
 	if (m_dwInst != 0)
 	{
 		BOOL okay = ::DdeUninitialize(m_dwInst);

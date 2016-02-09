@@ -289,7 +289,7 @@ void CTCPSvrSocket::OnClosed(int nReason)
 {
 	typedef CSvrListeners::const_iterator iter;
 
-	// Cleanup.
+	// Clean-up.
 	Close();
 
 	// Notify listeners.

@@ -31,7 +31,7 @@ TEST_CASE("factory creates a real DDE client by default")
 }
 TEST_CASE_END
 
-TEST_CASE("factory invokes custom creater when overridden")
+TEST_CASE("factory invokes custom creator when overridden")
 {
 	DDE::DDEClientFactory::registerFactory(TestClient::create);
 

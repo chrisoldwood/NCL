@@ -71,7 +71,7 @@ protected:
 	//
 	uint			m_nRefCount;	// The reference count.
 	CDDEClient*		m_client;		//!< The owning DDE client.
-	DWORD			m_timeout;		//!< The timeout value for transactions.
+	DWORD			m_timeout;		//!< The time-out value for transactions.
 	CDDECltLinks	m_aoLinks;		// The list of links.
 
 	//
