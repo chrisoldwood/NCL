@@ -120,14 +120,14 @@ void CDDESvrConv::DestroyAllLinks()
 ** Parameters:	pszItem		The item to link to.
 **				nFormat		The item data format.
 **
-** Returns:		The link or NULL if not found.
+** Returns:		The link or nullptr if not found.
 **
 *******************************************************************************
 */
 
 CDDELink* CDDESvrConv::FindLink(const tchar* pszItem, uint nFormat) const
 {
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	// Search the links list.
 	for (size_t i = 0, n = m_aoLinks.size(); i != n; ++i)
@@ -138,7 +138,7 @@ CDDELink* CDDESvrConv::FindLink(const tchar* pszItem, uint nFormat) const
 			return pLink;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /******************************************************************************

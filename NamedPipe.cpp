@@ -89,7 +89,7 @@ size_t CNamedPipe::Available()
 	DWORD dwAvail, dwMsgAvail;
 
 	// Query the bytes available.
-	if (!::PeekNamedPipe(m_hPipe, NULL, 0, NULL, &dwAvail, &dwMsgAvail))
+	if (!::PeekNamedPipe(m_hPipe, nullptr, 0, nullptr, &dwAvail, &dwMsgAvail))
 		throw CPipeException(CPipeException::E_PEEK_FAILED, ::GetLastError());
 
 	return dwAvail;
@@ -138,7 +138,7 @@ size_t CNamedPipe::Peek(void* pBuffer, size_t nBufSize)
 
 void CNamedPipe::Read(void* pBuffer, size_t nBufSize)
 {
-	ASSERT(pBuffer  != NULL);
+	ASSERT(pBuffer  != nullptr);
 	ASSERT(nBufSize != 0 );
 
 	DWORD dwRead;
@@ -189,7 +189,7 @@ void CNamedPipe::Read(void* pBuffer, size_t nBufSize)
 
 void CNamedPipe::Write(const void* pBuffer, size_t nBufSize)
 {
-	ASSERT(pBuffer  != NULL);
+	ASSERT(pBuffer  != nullptr);
 	ASSERT(nBufSize != 0 );
 
 	DWORD dwWritten;

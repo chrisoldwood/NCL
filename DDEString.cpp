@@ -18,8 +18,8 @@ CDDEString::CDDEString(CDDEInst* pInst, const tchar* pszString, bool bOwn)
 	, m_hsz()
 	, m_bOwn(bOwn)
 {
-	ASSERT(pInst     != NULL);
-	ASSERT(pszString != NULL);
+	ASSERT(pInst     != nullptr);
+	ASSERT(pszString != nullptr);
 
 	// Create the string handle.
 	m_hsz = ::DdeCreateStringHandle(m_pInst->Handle(), pszString, CP_WIN_TCHAR);
@@ -38,7 +38,7 @@ CDDEString::CDDEString(CDDEInst* pInst, HSZ hsz, bool bOwn)
 	, m_hsz(hsz)
 	, m_bOwn(bOwn)
 {
-	ASSERT(pInst != NULL);
+	ASSERT(pInst != nullptr);
 
 	// Extract original string.
 	DWORD result = ::DdeQueryString(m_pInst->Handle(), m_hsz, m_sz, MAX_LENGTH+1, CP_WIN_TCHAR);

@@ -160,7 +160,7 @@ size_t CSocket::Available()
 		FD_SET(m_hSocket, &aoSockets);
 
 		// Check for readability on the socket.
-		if (select(1, &aoSockets, NULL, NULL, &oWaitTime) == SOCKET_ERROR)
+		if (select(1, &aoSockets, nullptr, nullptr, &oWaitTime) == SOCKET_ERROR)
 			throw CSocketException(CSocketException::E_SELECT_FAILED, CWinSock::LastError());
 
 		// Anything to read?
@@ -203,7 +203,7 @@ size_t CSocket::Available()
 
 size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 {
-	ASSERT(pBuffer != NULL);
+	ASSERT(pBuffer != nullptr);
 
 	// Ignore, if nothing to send.
 	if (nBufSize == 0)
@@ -275,7 +275,7 @@ size_t CSocket::Send(const void* pBuffer, size_t nBufSize)
 
 size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 {
-	ASSERT(pBuffer  != NULL);
+	ASSERT(pBuffer  != nullptr);
 
 	// Socket closed?
 	if (m_hSocket == INVALID_SOCKET)
@@ -330,7 +330,7 @@ size_t CSocket::Recv(void* pBuffer, size_t nBufSize)
 size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 {
 	ASSERT(m_hSocket != INVALID_SOCKET);
-	ASSERT(pBuffer   != NULL);
+	ASSERT(pBuffer   != nullptr);
 
 	int nResult = 0;
 
@@ -377,7 +377,7 @@ size_t CSocket::Peek(void* pBuffer, size_t nBufSize)
 void CSocket::Connect(const tchar* pszHost, uint nPort)
 {
 	ASSERT(m_hSocket == INVALID_SOCKET);
-	ASSERT(pszHost   != NULL);
+	ASSERT(pszHost   != nullptr);
 	ASSERT(nPort     <= USHRT_MAX);
 
 	// Save parameters.
@@ -396,7 +396,7 @@ void CSocket::Connect(const tchar* pszHost, uint nPort)
 		// Resolve host name.
 		hostent* pHost = gethostbyname(T2A(pszHost));
 
-		if (pHost == NULL)
+		if (pHost == nullptr)
 			throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
 
 		memcpy(&addr.sin_addr, pHost->h_addr_list[0], pHost->h_length);
@@ -457,7 +457,7 @@ in_addr CSocket::Resolve(const tchar* pszHost)
 		// Resolve host name.
 		hostent* pHost = gethostbyname(T2A(pszHost));
 
-		if (pHost == NULL)
+		if (pHost == nullptr)
 			throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
 
 		memcpy(&addr, pHost->h_addr_list[0], pHost->h_length);
@@ -491,7 +491,7 @@ CString CSocket::ResolveStr(const tchar* pszHost)
 	// Resolve host name.
 	hostent* pHost = gethostbyname(T2A(pszHost));
 
-	if (pHost == NULL)
+	if (pHost == nullptr)
 		throw CSocketException(CSocketException::E_RESOLVE_FAILED, CWinSock::LastError());
 
 	memcpy(&addr, pHost->h_addr_list[0], pHost->h_length);
@@ -571,7 +571,7 @@ CString CSocket::AsyncEventStr(int nEvent)
 
 void CSocket::AddClientListener(IClientSocketListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	m_aoCltListeners.push_back(pListener);
 }
@@ -590,7 +590,7 @@ void CSocket::AddClientListener(IClientSocketListener* pListener)
 
 void CSocket::RemoveClientListener(IClientSocketListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	CCltListeners::iterator it = std::find(m_aoCltListeners.begin(), m_aoCltListeners.end(), pListener);
 

@@ -23,7 +23,7 @@ CDDEData::CHandle::CHandle(CDDEInst* pInst, HDDEDATA hData, uint nFormat, bool b
 	, m_nFormat(nFormat)
 	, m_bOwn(bOwn)
 {
-	ASSERT(pInst != NULL);
+	ASSERT(pInst != nullptr);
 }
 
 CDDEData::CHandle::~CHandle()
@@ -48,7 +48,7 @@ CDDEData::CDDEData(CDDEInst* pInst, HSZ hItem, uint nFormat, bool bOwn)
 	: m_pHandle()
 {
 	// Allocate data handle.
-	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), NULL, 0, 0, hItem, nFormat, 0);
+	HDDEDATA hData = ::DdeCreateDataHandle(pInst->Handle(), nullptr, 0, 0, hItem, nFormat, 0);
 
 	if (hData == NULL)
 		throw CDDEException(CDDEException::E_ALLOC_FAILED, pInst->LastError());
@@ -90,14 +90,14 @@ CDDEData::CDDEData(CDDEInst* pInst, const CBuffer& oBuffer, uint nFormat, bool b
 CDDEData::CDDEData(const CDDEData& oData)
 	: m_pHandle(oData.m_pHandle)
 {
-	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle != nullptr);
 
 	++(m_pHandle->m_nRefCount);
 }
 
 CDDEData::~CDDEData()
 {
-	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle != nullptr);
 
 	if (--(m_pHandle->m_nRefCount) == 0)
 		delete m_pHandle;
@@ -106,8 +106,8 @@ CDDEData::~CDDEData()
 CDDEData& CDDEData::operator=(const CDDEData& oData)
 {
 	ASSERT(this != &oData);
-	ASSERT(m_pHandle != NULL);
-	ASSERT(oData.m_pHandle != NULL);
+	ASSERT(m_pHandle != nullptr);
+	ASSERT(oData.m_pHandle != nullptr);
 
 	if (--(m_pHandle->m_nRefCount) == 0)
 		delete m_pHandle;
@@ -121,12 +121,12 @@ CDDEData& CDDEData::operator=(const CDDEData& oData)
 
 size_t CDDEData::Size() const
 {
-	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle != nullptr);
 
 	if (m_pHandle->m_hData == NULL)
 		return 0;
 
-	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, NULL, 0, 0);
+	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, nullptr, 0, 0);
 
 	// The documentation does not say how an error is detected, only that
 	// DdeGetLastError can be queried. But DdeGetData does reset it on success,
@@ -143,9 +143,9 @@ size_t CDDEData::Size() const
 
 size_t CDDEData::GetData(void* pBuffer, size_t nSize, size_t nOffset) const
 {
-	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle != nullptr);
 	ASSERT(m_pHandle->m_hData != NULL);
-	ASSERT(pBuffer != NULL);
+	ASSERT(pBuffer != nullptr);
 	ASSERT(nOffset+nSize <= Size());
 
 	DWORD dwResult = ::DdeGetData(m_pHandle->m_hData, static_cast<byte*>(pBuffer),
@@ -236,8 +236,8 @@ CString CDDEData::GetString(TextFormat eFormat) const
 
 void CDDEData::SetData(const void* pBuffer, size_t nSize, size_t nOffset)
 {
-	ASSERT(m_pHandle != NULL);
-	ASSERT((pBuffer != NULL) || (nSize == 0));
+	ASSERT(m_pHandle != nullptr);
+	ASSERT((pBuffer != nullptr) || (nSize == 0));
 
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pBuffer));
 
@@ -277,7 +277,7 @@ void CDDEData::SetAnsiString(const CString& str, TextFormat eFormat)
 
 void CDDEData::Free()
 {
-	ASSERT(m_pHandle != NULL);
+	ASSERT(m_pHandle != nullptr);
 
 	if (m_pHandle->m_hData != NULL)
 	{

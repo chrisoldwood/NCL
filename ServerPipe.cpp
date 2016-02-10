@@ -84,7 +84,7 @@ void CServerPipe::Create(const tchar* pszName)
 	if (::InitializeSecurityDescriptor(pSecDescriptor, SECURITY_DESCRIPTOR_REVISION) == 0)
 		throw CPipeException(CPipeException::E_CREATE_FAILED, ::GetLastError());
 
-	if (::SetSecurityDescriptorDacl(pSecDescriptor, TRUE, NULL, FALSE) == 0)
+	if (::SetSecurityDescriptorDacl(pSecDescriptor, TRUE, nullptr, FALSE) == 0)
 		throw CPipeException(CPipeException::E_CREATE_FAILED, ::GetLastError());
 
 	SECURITY_ATTRIBUTES oSecAttributes = { 0 };

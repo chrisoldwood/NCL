@@ -80,7 +80,7 @@ void CClientPipe::Open(const tchar* pszName)
 		::WaitNamedPipe(pszName, DEF_INTERVAL);
 
 		// Try and open the pipe.
-		m_hPipe = ::CreateFile(pszName, GENERIC_READWRITE, 0, NULL, OPEN_EXISTING, DEF_OPEN_MODE, NULL);
+		m_hPipe = ::CreateFile(pszName, GENERIC_READWRITE, 0, nullptr, OPEN_EXISTING, DEF_OPEN_MODE, NULL);
 
 		// Success OR NOT server busy?
 		if ( (m_hPipe != INVALID_HANDLE_VALUE) || (::GetLastError() != ERROR_PIPE_BUSY) )
@@ -94,7 +94,7 @@ void CClientPipe::Open(const tchar* pszName)
 	DWORD dwPipeMode = DEF_PIPE_MODE;
 
 	// Switch pipe to message mode.
-	if (::SetNamedPipeHandleState(m_hPipe, &dwPipeMode, NULL, NULL) == 0)
+	if (::SetNamedPipeHandleState(m_hPipe, &dwPipeMode, nullptr, nullptr) == 0)
 		throw CPipeException(CPipeException::E_OPEN_FAILED, ::GetLastError());
 }
 

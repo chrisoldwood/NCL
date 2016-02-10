@@ -20,9 +20,9 @@ CDDEConv::CDDEConv(CDDEInst* pInst, HCONV hConv, const tchar* pszService, const 
 	, m_hConv(hConv)
 	, m_strService(pszService)
 	, m_strTopic(pszTopic)
-	, m_pAppData(NULL)
+	, m_pAppData(nullptr)
 {
-	ASSERT(m_pInst != NULL);
+	ASSERT(m_pInst != nullptr);
 	ASSERT(m_hConv != NULL);
 	ASSERT(!m_strService.Empty());
 	ASSERT(!m_strTopic.Empty());

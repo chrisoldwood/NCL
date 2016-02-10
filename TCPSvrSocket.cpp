@@ -130,7 +130,7 @@ bool CTCPSvrSocket::CanAccept() const
 	FD_SET(m_hSocket, &aoSockets);
 
 	// Check for readability on the socket.
-	if (select(1, &aoSockets, NULL, NULL, &oWaitTime) == SOCKET_ERROR)
+	if (select(1, &aoSockets, nullptr, nullptr, &oWaitTime) == SOCKET_ERROR)
 		throw CSocketException(CSocketException::E_SELECT_FAILED, CWinSock::LastError());
 
 	return FD_ISSET(m_hSocket, &aoSockets);
@@ -175,7 +175,7 @@ CTCPCltSocket* CTCPSvrSocket::Accept()
 
 void CTCPSvrSocket::Accept(CTCPCltSocket* pCltSocket)
 {
-	ASSERT(pCltSocket != NULL);
+	ASSERT(pCltSocket != nullptr);
 
 	SOCKET       hSocket;
 	sockaddr_in  addr      = { 0 };;
@@ -202,7 +202,7 @@ void CTCPSvrSocket::Accept(CTCPCltSocket* pCltSocket)
 
 void CTCPSvrSocket::AddServerListener(IServerSocketListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	m_aoSvrListeners.push_back(pListener);
 }
@@ -221,7 +221,7 @@ void CTCPSvrSocket::AddServerListener(IServerSocketListener* pListener)
 
 void CTCPSvrSocket::RemoveServerListener(IServerSocketListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	CSvrListeners::iterator it = std::find(m_aoSvrListeners.begin(), m_aoSvrListeners.end(), pListener);
 

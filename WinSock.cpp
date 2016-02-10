@@ -73,7 +73,7 @@ int CWinSock::Startup(uint nMajorVer, uint nMinorVer)
 	// Create the socket window.
 	g_hSockWnd = ::CreateWindowEx(0, TXT("WinSockClass"), TXT("WinSock Message Window"),
 								WS_OVERLAPPED, 0, 0, 0, 0, HWND_DESKTOP, NULL,
-								CModule::This().Handle(), NULL);
+								CModule::This().Handle(), nullptr);
 
 	ASSERT(g_hSockWnd != NULL);
 
@@ -220,7 +220,7 @@ LRESULT CALLBACK CWinSock::WindowProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARA
 			{
 				CSocket* pSocket = it->second;
 
-				ASSERT(pSocket != NULL);
+				ASSERT(pSocket != nullptr);
 
 				// Forward event.
 				pSocket->OnAsyncSelect(nEvent, nError);
@@ -301,7 +301,7 @@ void CWinSock::BeginAsyncSelect(CSocket* pSocket, long lEventMask)
 
 void CWinSock::EndAsyncSelect(CSocket* pSocket)
 {
-	ASSERT(pSocket != NULL);
+	ASSERT(pSocket != nullptr);
 
 	// Get the socket handle.
 	SOCKET hSocket = pSocket->Handle();

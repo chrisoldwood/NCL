@@ -104,13 +104,13 @@ CString CDDECltConv::RequestString(const tchar* pszItem, uint nFormat)
 
 CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 {
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	CDDEString strItem(m_pInst, pszItem);
 	DWORD      dwResult;
 
 	// Make the request.
-	HDDEDATA hData = ::DdeClientTransaction(NULL, 0, m_hConv, strItem, nFormat, XTYP_REQUEST, m_timeout, &dwResult);
+	HDDEDATA hData = ::DdeClientTransaction(nullptr, 0, m_hConv, strItem, nFormat, XTYP_REQUEST, m_timeout, &dwResult);
 
 	// Request failed?
 	if (hData == NULL)
@@ -149,13 +149,13 @@ void CDDECltConv::ExecuteString(const tchar* pszCommand)
 
 void CDDECltConv::Execute(const void* pValue, size_t nSize)
 {
-	ASSERT(pValue != NULL);
+	ASSERT(pValue != nullptr);
 
 	LPBYTE lpData = static_cast<byte*>(const_cast<void*>(pValue));
 
 	// Execute it.
 	HDDEDATA hResult = ::DdeClientTransaction(lpData, static_cast<DWORD>(nSize), m_hConv,
-												NULL, 0, XTYP_EXECUTE, m_timeout, NULL);
+												NULL, 0, XTYP_EXECUTE, m_timeout, nullptr);
 
 	// Execute failed?
 	if (hResult == NULL)
@@ -188,8 +188,8 @@ void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint n
 
 void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize)
 {
-	ASSERT(pszItem != NULL);
-	ASSERT(pValue  != NULL);
+	ASSERT(pszItem != nullptr);
+	ASSERT(pValue  != nullptr);
 
 	CDDEString strItem(m_pInst, pszItem);
 
@@ -197,7 +197,7 @@ void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, s
 
 	// Do the poke.
 	HDDEDATA hResult = ::DdeClientTransaction(lpData, static_cast<DWORD>(nSize), m_hConv,
-												strItem, nFormat, XTYP_POKE, m_timeout, NULL);
+												strItem, nFormat, XTYP_POKE, m_timeout, nullptr);
 
 	// Poke failed?
 	if (hResult == NULL)
@@ -219,18 +219,18 @@ void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, s
 
 CDDELink* CDDECltConv::CreateLink(const tchar* pszItem, uint nFormat)
 {
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	// Already linked with format?
 	CDDELink* pLink = FindLink(pszItem, nFormat);
 
-	if (pLink == NULL)
+	if (pLink == nullptr)
 	{
 		CDDEString strItem(m_pInst, pszItem);
 		DWORD      dwResult;
 
 		// Attempt to start the advise loop.
-		HDDEDATA hData = ::DdeClientTransaction(NULL, 0, m_hConv, strItem, nFormat, XTYP_ADVSTART, m_timeout, &dwResult);
+		HDDEDATA hData = ::DdeClientTransaction(nullptr, 0, m_hConv, strItem, nFormat, XTYP_ADVSTART, m_timeout, &dwResult);
 
 		// Advise failed?
 		if (hData == NULL)
@@ -263,7 +263,7 @@ CDDELink* CDDECltConv::CreateLink(const tchar* pszItem, uint nFormat)
 
 void CDDECltConv::DestroyLink(CDDELink* pLink)
 {
-	ASSERT(pLink != NULL);
+	ASSERT(pLink != nullptr);
 
 	// Last reference?
 	if (--pLink->m_nRefCount == 0)
@@ -272,7 +272,7 @@ void CDDECltConv::DestroyLink(CDDELink* pLink)
 		DWORD      dwResult;
 
 		// End advise.
-		::DdeClientTransaction(NULL, 0, m_hConv, strItem, pLink->Format(), XTYP_ADVSTOP, m_timeout, &dwResult);
+		::DdeClientTransaction(nullptr, 0, m_hConv, strItem, pLink->Format(), XTYP_ADVSTOP, m_timeout, &dwResult);
 
 		// Delete link.
 		delete pLink;
@@ -308,14 +308,14 @@ void CDDECltConv::DestroyAllLinks()
 ** Parameters:	pszItem		The item to link to.
 **				nFormat		The item data format.
 **
-** Returns:		The link or NULL if not found.
+** Returns:		The link or nullptr if not found.
 **
 *******************************************************************************
 */
 
 CDDELink* CDDECltConv::FindLink(const tchar* pszItem, uint nFormat) const
 {
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	// Search the links list.
 	for (size_t i = 0, n = m_aoLinks.size(); i != n; ++i)
@@ -326,5 +326,5 @@ CDDELink* CDDECltConv::FindLink(const tchar* pszItem, uint nFormat) const
 			return pLink;
 	}
 
-	return NULL;
+	return nullptr;
 }

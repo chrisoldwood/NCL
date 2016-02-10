@@ -61,7 +61,7 @@ CNetBuffer::~CNetBuffer()
 
 size_t CNetBuffer::Append(const void* pBuffer, size_t nBufSize)
 {
-	ASSERT(pBuffer != NULL);
+	ASSERT(pBuffer != nullptr);
 
 	// Anything to append?
 	if (nBufSize > 0)

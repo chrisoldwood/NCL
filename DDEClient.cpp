@@ -57,7 +57,7 @@ CDDEClient::CDDEClient(DWORD dwFlags)
 
 	Initialise(dwFlags);
 
-	ASSERT(g_pDDEClient == NULL);
+	ASSERT(g_pDDEClient == nullptr);
 	g_pDDEClient = this;
 }
 
@@ -67,7 +67,7 @@ CDDEClient::CDDEClient(DWORD dwFlags)
 CDDEClient::~CDDEClient()
 {
 	ASSERT(g_pDDEClient == this);
-	g_pDDEClient = NULL;
+	g_pDDEClient = nullptr;
 
 	Uninitialise();
 
@@ -146,20 +146,20 @@ void CDDEClient::Uninitialise()
 
 CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar* pszTopic)
 {
-	ASSERT(pszService != NULL);
-	ASSERT(pszTopic   != NULL);
+	ASSERT(pszService != nullptr);
+	ASSERT(pszTopic   != nullptr);
 	ASSERT(m_dwInst   != 0);
 
 	// Already connected?
 	CDDECltConv* pConv = FindConversation(pszService, pszTopic);
 
-	if (pConv == NULL)
+	if (pConv == nullptr)
 	{
 		CDDEString strService(this, pszService);
 		CDDEString strTopic(this, pszTopic);
 
 		// Attempt to connect to the service/topic.
-		HCONV hConv = ::DdeConnect(m_dwInst, strService, strTopic, NULL);
+		HCONV hConv = ::DdeConnect(m_dwInst, strService, strTopic, nullptr);
 
 		// Connect failed?
 		if (hConv == NULL)
@@ -192,7 +192,7 @@ CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar
 
 void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 {
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv) != m_aoConvs.end());
 
 	// Last reference?
@@ -218,15 +218,15 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 **				pszTopic	The topic name.
 **				hConv		The conversation handle.
 **
-** Returns:		The conversation or NULL if not found.
+** Returns:		The conversation or nullptr if not found.
 **
 *******************************************************************************
 */
 
 CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* pszTopic) const
 {
-	ASSERT(pszService != NULL);
-	ASSERT(pszTopic   != NULL);
+	ASSERT(pszService != nullptr);
+	ASSERT(pszTopic   != nullptr);
 	ASSERT(m_dwInst   != 0);
 
 	// Search the conversation list.
@@ -238,7 +238,7 @@ CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* 
 			return pConv;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
@@ -252,7 +252,7 @@ CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 			return pConv;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /******************************************************************************
@@ -269,7 +269,7 @@ CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 
 void CDDEClient::AddListener(IDDEClientListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	m_aoListeners.push_back(pListener);
 }
@@ -288,7 +288,7 @@ void CDDEClient::AddListener(IDDEClientListener* pListener)
 
 void CDDEClient::RemoveListener(IDDEClientListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	CListeners::iterator it = std::find(m_aoListeners.begin(), m_aoListeners.end(), pListener);
 
@@ -351,7 +351,7 @@ void CDDEClient::OnDisconnect(HCONV hConv)
 	// Find the conversation from the handle.
 	CDDECltConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
 		m_aoListeners[i]->OnDisconnect(pConv);
@@ -378,13 +378,13 @@ void CDDEClient::OnAdvise(HCONV hConv, const tchar* /*pszTopic*/, const tchar* p
 	// Find the conversation for the handle.
 	CDDECltConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Find the link.
 	CDDELink* pLink = pConv->FindLink(pszItem, nFormat);
 
 	// May still be in the Advise Start.
-	if (pLink == NULL)
+	if (pLink == nullptr)
 	{
 //		TRACE3("OnAdvise('%s|%s', '%s') - Failed to find link\n", pConv->Service(), pConv->Topic(), pszItem);
 		return;
@@ -409,7 +409,7 @@ void CDDEClient::OnAdvise(HCONV hConv, const tchar* /*pszTopic*/, const tchar* p
 void CDDEClient::QueryServers(CStrArray& astrServers) const
 {
 	// Query all servers.
-	HCONVLIST hList = ::DdeConnectList(m_dwInst, NULL, NULL, NULL, NULL);
+	HCONVLIST hList = ::DdeConnectList(m_dwInst, NULL, NULL, NULL, nullptr);
 
 	// Failed?
 	if (hList == NULL)
@@ -464,12 +464,12 @@ void CDDEClient::QueryServers(CStrArray& astrServers) const
 
 void CDDEClient::QueryServerTopics(const tchar* pszServer, CStrArray& astrTopics) const
 {
-	ASSERT(pszServer != NULL);
+	ASSERT(pszServer != nullptr);
 
 	CDDEString strServer(g_pDDEClient, pszServer);
 
 	// Query all servers.
-	HCONVLIST hList = ::DdeConnectList(m_dwInst, strServer, NULL, NULL, NULL);
+	HCONVLIST hList = ::DdeConnectList(m_dwInst, strServer, NULL, NULL, nullptr);
 
 	// Failed?
 	if (hList == NULL)
@@ -525,7 +525,7 @@ void CDDEClient::QueryServerTopics(const tchar* pszServer, CStrArray& astrTopics
 void CDDEClient::QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const
 {
 	// Query all servers.
-	HCONVLIST hList = ::DdeConnectList(m_dwInst, NULL, NULL, NULL, NULL);
+	HCONVLIST hList = ::DdeConnectList(m_dwInst, NULL, NULL, NULL, nullptr);
 
 	// Failed?
 	if (hList == NULL)
@@ -586,7 +586,7 @@ void CDDEClient::QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const
 
 HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, ULONG_PTR /*dwData1*/, ULONG_PTR /*dwData2*/)
 {
-	ASSERT(g_pDDEClient != NULL);
+	ASSERT(g_pDDEClient != nullptr);
 
 	HDDEDATA hResult = NULL;
 
@@ -634,7 +634,7 @@ HDDEDATA CALLBACK CDDEClient::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 			}
 			else
 			{
-				g_pDDEClient->OnAdvise(hConv, strTopic, strItem, uFormat, NULL);
+				g_pDDEClient->OnAdvise(hConv, strTopic, strItem, uFormat, nullptr);
 			}
 
 			hResult = reinterpret_cast<HDDEDATA>(DDE_FACK);

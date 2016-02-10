@@ -41,7 +41,7 @@ CDDEServer::CDDEServer(DWORD dwFlags)
 
 	Initialise(dwFlags);
 
-	ASSERT(g_pDDEServer == NULL);
+	ASSERT(g_pDDEServer == nullptr);
 	g_pDDEServer = this;
 }
 
@@ -51,7 +51,7 @@ CDDEServer::CDDEServer(DWORD dwFlags)
 CDDEServer::~CDDEServer()
 {
 	ASSERT(g_pDDEServer == this);
-	g_pDDEServer = NULL;
+	g_pDDEServer = nullptr;
 
 	Uninitialise();
 
@@ -133,7 +133,7 @@ void CDDEServer::Uninitialise()
 
 void CDDEServer::Register(const tchar* pszService)
 {
-	ASSERT(pszService != NULL);
+	ASSERT(pszService != nullptr);
 
 	CDDEString strService(this, pszService);
 
@@ -158,7 +158,7 @@ void CDDEServer::Register(const tchar* pszService)
 
 void CDDEServer::Unregister(const tchar* pszService)
 {
-	ASSERT(pszService != NULL);
+	ASSERT(pszService != nullptr);
 
 	CDDEString strService(this, pszService);
 
@@ -181,7 +181,7 @@ void CDDEServer::Unregister(const tchar* pszService)
 
 void CDDEServer::DestroyConversation(CDDESvrConv* pConv)
 {
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv) != m_aoConvs.end());
 
 	// Disconnect from service/topic.
@@ -203,15 +203,15 @@ void CDDEServer::DestroyConversation(CDDESvrConv* pConv)
 **				pszTopic	The topic name.
 **				hConv		The conversation handle.
 **
-** Returns:		The conversation or NULL if not found.
+** Returns:		The conversation or nullptr if not found.
 **
 *******************************************************************************
 */
 
 CDDESvrConv* CDDEServer::FindConversation(const tchar* pszService, const tchar* pszTopic) const
 {
-	ASSERT(pszService != NULL);
-	ASSERT(pszTopic   != NULL);
+	ASSERT(pszService != nullptr);
+	ASSERT(pszTopic   != nullptr);
 
 	// Search the conversation list.
 	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
@@ -222,7 +222,7 @@ CDDESvrConv* CDDEServer::FindConversation(const tchar* pszService, const tchar* 
 			return pConv;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CDDESvrConv* CDDEServer::FindConversation(HCONV hConv) const
@@ -238,7 +238,7 @@ CDDESvrConv* CDDEServer::FindConversation(HCONV hConv) const
 			return pConv;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -256,7 +256,7 @@ CDDESvrConv* CDDEServer::FindConversation(HCONV hConv) const
 
 void CDDEServer::AddListener(IDDEServerListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	m_aoListeners.push_back(pListener);
 }
@@ -275,7 +275,7 @@ void CDDEServer::AddListener(IDDEServerListener* pListener)
 
 void CDDEServer::RemoveListener(IDDEServerListener* pListener)
 {
-	ASSERT(pListener != NULL);
+	ASSERT(pListener != nullptr);
 
 	CListeners::iterator it = std::find(m_aoListeners.begin(), m_aoListeners.end(), pListener);
 
@@ -314,7 +314,7 @@ bool CDDEServer::OnWildConnect(CStrArray& astrServices, CStrArray& astrTopics)
 
 bool CDDEServer::OnWildConnectService(const tchar* pszService, CStrArray& astrTopics)
 {
-	ASSERT(pszService != NULL);
+	ASSERT(pszService != nullptr);
 
 	// Query all listeners...
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -328,7 +328,7 @@ bool CDDEServer::OnWildConnectService(const tchar* pszService, CStrArray& astrTo
 
 bool CDDEServer::OnWildConnectTopic(const tchar* pszTopic, CStrArray& astrServices)
 {
-	ASSERT(pszTopic != NULL);
+	ASSERT(pszTopic != nullptr);
 
 	// Query all listeners...
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -356,8 +356,8 @@ bool CDDEServer::OnWildConnectTopic(const tchar* pszTopic, CStrArray& astrServic
 
 bool CDDEServer::OnConnect(const tchar* pszService, const tchar* pszTopic)
 {
-	ASSERT(pszService != NULL);
-	ASSERT(pszTopic   != NULL);
+	ASSERT(pszService != nullptr);
+	ASSERT(pszTopic   != nullptr);
 
 	// Query all listeners...
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -386,8 +386,8 @@ bool CDDEServer::OnConnect(const tchar* pszService, const tchar* pszTopic)
 void CDDEServer::OnConnectConfirm(HCONV hConv, const tchar* pszService, const tchar* pszTopic)
 {
 	ASSERT(hConv      != NULL);
-	ASSERT(pszService != NULL);
-	ASSERT(pszTopic   != NULL);
+	ASSERT(pszService != nullptr);
+	ASSERT(pszTopic   != nullptr);
 
 	// Allocate a new conversation and add to the collection.
 	CDDESvrConv* pConv = new CDDESvrConv(this, hConv, pszService, pszTopic);
@@ -418,7 +418,7 @@ void CDDEServer::OnDisconnect(HCONV hConv)
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Notify listeners.
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -447,12 +447,12 @@ void CDDEServer::OnDisconnect(HCONV hConv)
 bool CDDEServer::OnRequest(HCONV hConv, const tchar* pszItem, uint nFormat, CDDEData& oData)
 {
 	ASSERT(hConv   != NULL);
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Query all listeners...
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -481,14 +481,14 @@ bool CDDEServer::OnRequest(HCONV hConv, const tchar* pszItem, uint nFormat, CDDE
 bool CDDEServer::OnAdviseStart(HCONV hConv, const tchar* pszItem, uint nFormat)
 {
 	ASSERT(hConv   != NULL);
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	bool bAccept = false;
 
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Query all listeners...
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -532,17 +532,17 @@ bool CDDEServer::OnAdviseStart(HCONV hConv, const tchar* pszItem, uint nFormat)
 bool CDDEServer::OnAdviseRequest(HCONV hConv, const tchar* pszItem, uint nFormat, CDDEData& oData)
 {
 	ASSERT(hConv   != NULL);
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Find the conversations link.
 	CDDELink* pLink = pConv->FindLink(pszItem, nFormat);
 
-	ASSERT(pLink != NULL);
+	ASSERT(pLink != nullptr);
 
 	// Notify listeners.
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -571,17 +571,17 @@ bool CDDEServer::OnAdviseRequest(HCONV hConv, const tchar* pszItem, uint nFormat
 void CDDEServer::OnAdviseStop(HCONV hConv, const tchar* pszItem, uint nFormat)
 {
 	ASSERT(hConv   != NULL);
-	ASSERT(pszItem != NULL);
+	ASSERT(pszItem != nullptr);
 
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Find the conversations link.
 	CDDELink* pLink = pConv->FindLink(pszItem, nFormat);
 
-	ASSERT(pLink != NULL);
+	ASSERT(pLink != nullptr);
 
 	// Notify listeners.
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -612,7 +612,7 @@ bool CDDEServer::OnExecute(HCONV hConv, const CDDEData& oData, uint nFormat)
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	CString strCmd;
 
@@ -655,7 +655,7 @@ bool CDDEServer::OnPoke(HCONV hConv, const tchar* pszItem, uint nFormat, const C
 	// Find the conversation from the handle.
 	CDDESvrConv* pConv = FindConversation(hConv);
 
-	ASSERT(pConv != NULL);
+	ASSERT(pConv != nullptr);
 
 	// Notify listeners.
 	for (size_t i = 0, n = m_aoListeners.size(); i != n; ++i)
@@ -738,7 +738,7 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 
 HDDEDATA CDDEServer::DDECallbackProcImpl(UINT uType, UINT uFormat, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData)
 {
-	ASSERT(g_pDDEServer != NULL);
+	ASSERT(g_pDDEServer != nullptr);
 
 	HDDEDATA hResult = NULL;
 

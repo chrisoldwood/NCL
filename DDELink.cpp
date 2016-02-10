@@ -40,7 +40,7 @@ CDDELink::CDDELink(CDDEConv* pConv, const tchar* pszItem, uint nFormat)
 	, m_pConv(pConv)
 	, m_strItem(pszItem)
 	, m_nFormat(nFormat)
-	, m_pAppData(NULL)
+	, m_pAppData(nullptr)
 {
 }
 
@@ -60,8 +60,8 @@ CDDELink::CDDELink(CDDEConv* pConv, const tchar* pszItem, uint nFormat)
 bool CDDELink::CopyLink(HWND hOwner, const CDDELink* pLink)
 {
 	ASSERT(::IsWindow(hOwner));
-	ASSERT(pLink != NULL);
-	ASSERT(pLink->Conversation() != NULL);
+	ASSERT(pLink != nullptr);
+	ASSERT(pLink->Conversation() != nullptr);
 
 	CDDEConv* pConv = pLink->Conversation();
 
@@ -86,9 +86,9 @@ bool CDDELink::CopyLink(HWND hOwner, const CDDELink* pLink)
 bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTopic, const tchar* pszItem)
 {
 	ASSERT(::IsWindow(hOwner));
-	ASSERT(pszService != NULL);
-	ASSERT(pszTopic   != NULL);
-	ASSERT(pszItem    != NULL);
+	ASSERT(pszService != nullptr);
+	ASSERT(pszTopic   != nullptr);
+	ASSERT(pszItem    != nullptr);
 
 	bool bCopied = false;
 
@@ -115,7 +115,7 @@ bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTo
 				char* pszLinkData = static_cast<char*>(::GlobalLock(hLinkData));
 
 				// Locked "Link" block?
-				if (pszLinkData != NULL)
+				if (pszLinkData != nullptr)
 				{
 					char* pszData = pszLinkData;
 
@@ -135,7 +135,7 @@ bool CDDELink::CopyLink(HWND hOwner, const tchar* pszService, const tchar* pszTo
 				char* pszTextData = static_cast<char*>(::GlobalLock(hTextData));
 
 				// Locked "Text" block?
-				if (pszLinkData != NULL)
+				if (pszLinkData != nullptr)
 				{
 					char* pszData = pszTextData;
 
@@ -235,7 +235,7 @@ bool CDDELink::PasteLink(CString& strService, CString& strTopic, CString& strIte
 			const char* psz = static_cast<const char*>(::GlobalLock(hData));
 
 			// Locked block?
-			if (psz != NULL)
+			if (psz != nullptr)
 			{
 				// Format is "SERVICE\0TOPIC\0ITEM\0\0" [ANSI].
 				const char* pszService = psz;
