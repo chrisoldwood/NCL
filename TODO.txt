@@ -9,3 +9,5 @@
 - Replace bald pointers in API with smart pointers (e.g. CDDEClient::CreateConversation).
 
 - Remove CDDEConv::IsConnected() as the object's lifetime controls it.
+
+- Should CDDEData::SetAnsiString() just be SetString() as format argument can be Unicode?
