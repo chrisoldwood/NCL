@@ -12,6 +12,7 @@
 #endif
 
 #include <Core/SharedPtr.hpp>
+#include "IDDECltConv.hpp"
 
 namespace DDE
 {
@@ -24,6 +25,12 @@ class IDDEClient
 public:
 	//! Destructor.
 	virtual ~IDDEClient() {};
+
+	//! Create a conversation for the service and topic.
+	virtual CDDECltConv* CreateConversation(const tchar* service, const tchar* topic) = 0;
+
+	//! Query for all running servers and topics.
+	virtual void QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const = 0;
 };
 
 //! The default IDDEClient smart pointer type.

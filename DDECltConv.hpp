@@ -18,6 +18,7 @@
 
 #include "DDEFwd.hpp"
 #include "DDEConv.hpp"
+#include "IDDECltConv.hpp"
 #include <vector>
 
 // Template shorthands.
@@ -30,7 +31,8 @@ typedef std::vector<CDDELink*> CDDECltLinks;
 *******************************************************************************
 */
 
-class CDDECltConv : public CDDEConv
+class CDDECltConv : public DDE::IDDECltConv
+                  , public CDDEConv
 {
 public:
 	//

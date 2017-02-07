@@ -17,6 +17,7 @@
 #endif
 
 #include "DDEFwd.hpp"
+#include "IDDEConv.hpp"
 
 /******************************************************************************
 **
@@ -25,7 +26,8 @@
 *******************************************************************************
 */
 
-class CDDEConv /*: private Core::NotCopyable*/
+class CDDEConv : public DDE::IDDEConv
+             /*, private Core::NotCopyable*/
 {
 public:
 	//

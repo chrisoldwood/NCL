@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="NCL"
 	ProjectGUID="{FAB8D717-85EC-4896-B5DC-FDF0A0B67C92}"
+	RootNamespace="NCL"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -242,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\IDDEConv.hpp"
+				>
+			</File>
+			<File
 				RelativePath="IDDEConvData.hpp"
 				>
 			</File>
@@ -294,6 +299,10 @@
 				</File>
 				<File
 					RelativePath="IDDEClientListener.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IDDECltConv.hpp"
 					>
 				</File>
 			</Filter>
