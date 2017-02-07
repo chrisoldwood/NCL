@@ -58,7 +58,7 @@ public:
 	//
 	void SetData(const void* pBuffer, size_t nSize, size_t nOffset = 0);
 	void SetBuffer(const CBuffer& oBuffer);
-	void SetAnsiString(const CString& str, TextFormat eFormat);
+	void SetString(const CString& str, TextFormat eFormat);
 
 	void Free();
 
@@ -88,11 +88,11 @@ public:
 	//
 	// Members.
 	//
-	uint		m_nRefCount;	// The reference count.
-	CDDEInst*	m_pInst;		// The instance handle.
-	HDDEDATA	m_hData;		// The data handle.
-	uint		m_nFormat;		// The data format.
-	bool		m_bOwn;			// Ownership flag.
+	uint			m_nRefCount;	// The reference count.
+	const CDDEInst*	m_pInst;		// The instance handle.
+	HDDEDATA		m_hData;		// The data handle.
+	const uint		m_nFormat;		// The data format.
+	const bool		m_bOwn;			// Ownership flag.
 
 private:
 	// NotCopyable.

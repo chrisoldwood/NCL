@@ -249,12 +249,16 @@ void CDDEData::SetData(const void* pBuffer, size_t nSize, size_t nOffset)
 	m_pHandle->m_hData = hData;
 }
 
-void CDDEData::SetAnsiString(const CString& str, TextFormat eFormat)
+void CDDEData::SetString(const CString& str, TextFormat eFormat)
 {
+	ASSERT(m_pHandle != nullptr);
+
 	size_t nChars = str.Length();
 
 	if (eFormat == ANSI_TEXT)
 	{
+		ASSERT(m_pHandle->m_nFormat == CF_TEXT);
+
 		size_t nBytes = Core::numBytes<char>(nChars+1);
 
 #ifdef ANSI_BUILD
@@ -265,6 +269,8 @@ void CDDEData::SetAnsiString(const CString& str, TextFormat eFormat)
 	}
 	else // (eFormat == UNICODE_TEXT)
 	{
+		ASSERT(m_pHandle->m_nFormat == CF_UNICODETEXT);
+
 		size_t nBytes = Core::numBytes<wchar_t>(nChars+1);
 
 #ifdef ANSI_BUILD

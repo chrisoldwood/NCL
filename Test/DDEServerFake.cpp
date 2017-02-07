@@ -93,7 +93,7 @@ bool DDEServerFake::OnRequest(CDDESvrConv* /*conversation*/, const tchar* item, 
 {
 	if ( (tstricmp(item, ITEM) == 0) && (format == CF_TEXT) )
 	{
-		data.SetAnsiString(VALUE, ANSI_TEXT);
+		data.SetString(VALUE, ANSI_TEXT);
 		return true;
 	}
 
