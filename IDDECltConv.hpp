@@ -19,18 +19,18 @@ namespace DDE
 ////////////////////////////////////////////////////////////////////////////////
 //! A client DDE conversation.
 
-class IDDECltConv : public IDDEConv
+class XDDECltConv : virtual public XDDEConv
 {
 public:
 	//! Destructor.
-	virtual ~IDDECltConv() {}; 
+	virtual ~XDDECltConv() {}; 
 
 	//
 	// Properties.
 	//
 
 	//! The parent DDE client.
-	virtual CDDEClient*	Client() const = 0;
+	virtual IDDEClient*	Client() const = 0;
 };
 
 //namespace DDE

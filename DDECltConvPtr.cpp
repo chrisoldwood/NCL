@@ -14,7 +14,7 @@ namespace DDE
 //! Default constructor.
 
 CltConvPtr::CltConvPtr()
-	: Core::SmartPtr<CDDECltConv>()
+	: Core::SmartPtr<IDDECltConv>()
 {
 }
 
@@ -22,8 +22,8 @@ CltConvPtr::CltConvPtr()
 //! Attach an existing pointer. This either takes ownership of the pointer
 //! or if bAddRef is true, shares ownership by requesting a copy.
 
-CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
-	: Core::SmartPtr<CDDECltConv>()
+CltConvPtr::CltConvPtr(IDDECltConv* pPointer, bool bAddRef)
+	: Core::SmartPtr<IDDECltConv>()
 {
 	// Take ownership.
 	if (!bAddRef)
@@ -44,7 +44,7 @@ CltConvPtr::CltConvPtr(CDDECltConv* pPointer, bool bAddRef)
 //! which only needs to increase the reference count.
 
 CltConvPtr::CltConvPtr(const CltConvPtr& oPtr)
-	: Core::SmartPtr<CDDECltConv>()
+	: Core::SmartPtr<IDDECltConv>()
 {
 	if (oPtr.m_ptr != nullptr)
 		m_ptr = oPtr->Client()->CreateConversation(oPtr->Service(), oPtr->Topic());

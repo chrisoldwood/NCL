@@ -24,4 +24,29 @@ class CDDEInst;
 class CDDELink;
 class CDDESvrConv;
 
+//#define USE_DDE_INTERFACES
+#ifdef USE_DDE_INTERFACES
+
+namespace DDE
+{
+class XDDEConv;
+class XDDECltConv;
+class XDDEClient;
+
+typedef XDDEConv IDDEConv;
+typedef XDDECltConv IDDECltConv;
+typedef XDDEClient IDDEClient;
+}
+
+#else
+
+namespace DDE
+{
+typedef CDDEConv IDDEConv;
+typedef CDDECltConv IDDECltConv;
+typedef CDDEClient IDDEClient;
+}
+
+#endif
+
 #endif // NCL_DDEFWD_HPP

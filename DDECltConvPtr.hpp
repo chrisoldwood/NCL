@@ -21,14 +21,14 @@ namespace DDE
 //! The smart-pointer type used to manage a DDE Client Conversation. These are
 //! reference counted internally by the DDEClient.
 
-class CltConvPtr : public Core::SmartPtr<CDDECltConv>
+class CltConvPtr : public Core::SmartPtr<IDDECltConv>
 {
 public:
 	//! Default constructor.
 	CltConvPtr();
 
 	//! Attach an existing pointer.
-	explicit CltConvPtr(CDDECltConv* pPointer, bool bAddRef = false);
+	explicit CltConvPtr(IDDECltConv* pPointer, bool bAddRef = false);
 
 	//! Copy constructor.
 	CltConvPtr(const CltConvPtr& oPtr);

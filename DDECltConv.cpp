@@ -66,6 +66,14 @@ CDDECltConv::~CDDECltConv()
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//! Get the DDE Client that this conversation belongs to.
+
+DDE::IDDEClient* CDDECltConv::Client() const
+{
+	return m_client;
+}
+
 /******************************************************************************
 ** Method:		Request()
 **

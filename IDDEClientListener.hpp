@@ -33,7 +33,7 @@ public:
 	//
 	virtual void OnRegister(const tchar* pszBaseName, const tchar* pszInstName) = 0;
 	virtual void OnUnregister(const tchar* pszBaseName, const tchar* pszInstName) = 0;
-	virtual void OnDisconnect(CDDECltConv* pConv) = 0;
+	virtual void OnDisconnect(DDE::IDDECltConv* pConv) = 0;
 	virtual void OnAdvise(CDDELink* pLink, const CDDEData* pData) = 0;
 
 protected:

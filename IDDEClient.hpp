@@ -20,14 +20,17 @@ namespace DDE
 ////////////////////////////////////////////////////////////////////////////////
 //! A DDE client.
 
-class IDDEClient
+class XDDEClient
 {
 public:
 	//! Destructor.
-	virtual ~IDDEClient() {};
+	virtual ~XDDEClient() {};
 
-	//! Create a conversation for the service and topic.
-	virtual CDDECltConv* CreateConversation(const tchar* service, const tchar* topic) = 0;
+	//! Open a conversation for the service and topic.
+	virtual IDDECltConv* CreateConversation(const tchar* service, const tchar* topic) = 0;
+
+	//! Close the conversation.
+	virtual void DestroyConversation(IDDECltConv* conv) = 0;
 
 	//! Query for all running servers and topics.
 	virtual void QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const = 0;

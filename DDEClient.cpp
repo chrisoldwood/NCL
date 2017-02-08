@@ -18,6 +18,8 @@
 #include "DDEData.hpp"
 #include <algorithm>
 
+using namespace DDE;
+
 #if __GNUC__
 // missing initializer for member 'X'
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
@@ -144,14 +146,14 @@ void CDDEClient::Uninitialise()
 *******************************************************************************
 */
 
-CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar* pszTopic)
+DDE::IDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar* pszTopic)
 {
 	ASSERT(pszService != nullptr);
 	ASSERT(pszTopic   != nullptr);
 	ASSERT(m_dwInst   != 0);
 
 	// Already connected?
-	CDDECltConv* pConv = FindConversation(pszService, pszTopic);
+	IDDECltConv* pConv = FindConversation(pszService, pszTopic);
 
 	if (pConv == nullptr)
 	{
@@ -190,7 +192,7 @@ CDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const tchar
 *******************************************************************************
 */
 
-void CDDEClient::DestroyConversation(CDDECltConv* pConv)
+void CDDEClient::DestroyConversation(DDE::IDDECltConv* pConv)
 {
 	ASSERT(pConv != nullptr);
 	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv) != m_aoConvs.end());
@@ -223,7 +225,7 @@ void CDDEClient::DestroyConversation(CDDECltConv* pConv)
 *******************************************************************************
 */
 
-CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* pszTopic) const
+DDE::IDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* pszTopic) const
 {
 	ASSERT(pszService != nullptr);
 	ASSERT(pszTopic   != nullptr);
@@ -232,7 +234,7 @@ CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* 
 	// Search the conversation list.
 	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
-		CDDECltConv* pConv = m_aoConvs[i];
+		IDDECltConv* pConv = m_aoConvs[i];
 
 		if ( (pConv->Service() == pszService) && (pConv->Topic() == pszTopic) )
 			return pConv;
@@ -241,12 +243,12 @@ CDDECltConv* CDDEClient::FindConversation(const tchar* pszService, const tchar* 
 	return nullptr;
 }
 
-CDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
+DDE::IDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 {
 	// Search the conversation list.
 	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
-		CDDECltConv* pConv = m_aoConvs[i];
+		IDDECltConv* pConv = m_aoConvs[i];
 
 		if (pConv->Handle() == hConv)
 			return pConv;
@@ -349,7 +351,7 @@ void CDDEClient::OnUnregister(const tchar* pszBaseName, const tchar* pszInstName
 void CDDEClient::OnDisconnect(HCONV hConv)
 {
 	// Find the conversation from the handle.
-	CDDECltConv* pConv = FindConversation(hConv);
+	IDDECltConv* pConv = FindConversation(hConv);
 
 	ASSERT(pConv != nullptr);
 
@@ -376,7 +378,7 @@ void CDDEClient::OnDisconnect(HCONV hConv)
 void CDDEClient::OnAdvise(HCONV hConv, const tchar* /*pszTopic*/, const tchar* pszItem, uint nFormat, const CDDEData* pData)
 {
 	// Find the conversation for the handle.
-	CDDECltConv* pConv = FindConversation(hConv);
+	IDDECltConv* pConv = FindConversation(hConv);
 
 	ASSERT(pConv != nullptr);
 

@@ -26,16 +26,18 @@
 *******************************************************************************
 */
 
-class CDDEConv : public DDE::IDDEConv
-             /*, private Core::NotCopyable*/
+class CDDEConv
+#ifdef USE_DDE_INTERFACES
+			   : virtual public DDE::XDDEConv
+#endif
 {
 public:
 	//
 	// Accessors.
 	//
 	HCONV          Handle() const;
-	const CString& Service() const;
-	const CString& Topic() const;
+	virtual const CString& Service() const;
+	virtual const CString& Topic() const;
 
 	bool           IsConnected() const;
 

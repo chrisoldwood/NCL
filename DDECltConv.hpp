@@ -31,15 +31,17 @@ typedef std::vector<CDDELink*> CDDECltLinks;
 *******************************************************************************
 */
 
-class CDDECltConv : public DDE::IDDECltConv
-                  , public CDDEConv
+class CDDECltConv : public CDDEConv
+#ifdef USE_DDE_INTERFACES
+				  , public DDE::XDDECltConv
+#endif
 {
 public:
 	//
 	// Properties.
 	//
 	uint RefCount() const;
-	CDDEClient*	Client() const;
+	virtual DDE::IDDEClient* Client() const;
 
 	DWORD  Timeout() const;
 	void   SetTimeout(DWORD timeout);
@@ -102,14 +104,6 @@ private:
 inline uint CDDECltConv::RefCount() const
 {
 	return m_nRefCount;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Get the DDE Client that this conversation belongs to.
-
-inline CDDEClient* CDDECltConv::Client() const
-{
-	return m_client;
 }
 
 inline DWORD CDDECltConv::Timeout() const

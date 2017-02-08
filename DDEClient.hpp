@@ -22,7 +22,7 @@
 #include <vector>
 
 // Template shorthands.
-typedef std::vector<CDDECltConv*> CDDECltConvs;
+typedef std::vector<DDE::IDDECltConv*> CDDECltConvs;
 
 /******************************************************************************
 **
@@ -31,8 +31,10 @@ typedef std::vector<CDDECltConv*> CDDECltConvs;
 *******************************************************************************
 */
 
-class CDDEClient : public DDE::IDDEClient
-                 , public CDDEInst
+class CDDEClient : public CDDEInst
+#ifdef USE_DDE_INTERFACES
+				 , public DDE::XDDEClient
+#endif
 {
 public:
 	//! The default configuration flags.
@@ -58,10 +60,15 @@ public:
 	//
 	// Conversation methods.
 	//
-	CDDECltConv* CreateConversation(const tchar* pszService, const tchar* pszTopic);
-	void         DestroyConversation(CDDECltConv* pConv);
-	CDDECltConv* FindConversation(const tchar* pszService, const tchar* pszTopic) const;
-	CDDECltConv* FindConversation(HCONV hConv) const;
+
+	//! Open a conversation for the service and topic.
+	virtual DDE::IDDECltConv* CreateConversation(const tchar* pszService, const tchar* pszTopic);
+
+	//! Close the conversation.
+	virtual void DestroyConversation(DDE::IDDECltConv* pConv);
+
+	DDE::IDDECltConv* FindConversation(const tchar* pszService, const tchar* pszTopic) const;
+	DDE::IDDECltConv* FindConversation(HCONV hConv) const;
 	size_t       GetNumConversations() const;
 	size_t       GetAllConversations(CDDECltConvs& aoConvs) const;
 
@@ -78,7 +85,7 @@ public:
 	void QueryServerTopics(const tchar* pszServer, CStrArray& astrTopics) const;
 
 	//! Query for all running servers and topics.
-	void QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const;
+	virtual void QueryAll(CStrArray& astrServers, CStrArray& astrTopics) const;
 
 protected:
 	// Template shorthands.

@@ -11,27 +11,29 @@
 #pragma once
 #endif
 
+#include "DDEFwd.hpp"
+
 namespace DDE
 {
 
 ////////////////////////////////////////////////////////////////////////////////
 //! A DDE conversation.
 
-class IDDEConv
+class XDDEConv
 {
 public:
 	//! Destructor.
-	virtual ~IDDEConv() {}; 
+	virtual ~XDDEConv() {}; 
 
 	//
 	// Properties.
 	//
 
 	//! The name of the DDE service.
-	//virtual const CString& Service() const = 0;
+	virtual const CString& Service() const = 0;
 
 	//! The name of the DDE topic.
-	//virtual const CString& Topic() const = 0;
+	virtual const CString& Topic() const = 0;
 };
 
 //namespace DDE
