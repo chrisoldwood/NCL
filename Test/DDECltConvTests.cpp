@@ -22,14 +22,6 @@ TEST_SET(DDECltConv)
 	const tchar* ITEM = DDEServerFake::ITEM;
 	const tchar* VALUE = DDEServerFake::VALUE;
 
-TEST_CASE("A conversation's connection status can be queried")
-{
-	DDE::CltConvPtr conv(client.CreateConversation(SERVICE, TOPIC));
-
-	TEST_TRUE(conv->IsConnected());
-}
-TEST_CASE_END
-
 TEST_CASE("A conversation can be queried for its service and topic")
 {
 	DDE::CltConvPtr conv(client.CreateConversation(SERVICE, TOPIC));

@@ -75,7 +75,8 @@ TEST_CASE("A conversation is created with a service and topic name")
 	DDE::CltConvPtr conv(client.CreateConversation(SERVICE, TOPIC));
 
 	TEST_FALSE(conv.empty());
-	TEST_TRUE(conv->IsConnected());
+	TEST_TRUE(conv->Service() == SERVICE);
+	TEST_TRUE(conv->Topic() == TOPIC);
 }
 TEST_CASE_END
 

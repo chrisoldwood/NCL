@@ -7,5 +7,3 @@
 - Split into separate namespaces (DDE/Pipe/Sock).
 
 - Replace bald pointers in API with smart pointers (e.g. CDDEClient::CreateConversation).
-
-- Remove CDDEConv::IsConnected() as the object's lifetime controls it.

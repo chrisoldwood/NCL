@@ -39,8 +39,6 @@ public:
 	virtual const CString& Service() const;
 	virtual const CString& Topic() const;
 
-	bool           IsConnected() const;
-
 	IDDEConvData*  AppData() const;
 	void           SetAppData(IDDEConvData* pAppData);
 
@@ -91,11 +89,6 @@ inline const CString& CDDEConv::Service() const
 inline const CString& CDDEConv::Topic() const
 {
 	return m_strTopic;
-}
-
-inline bool CDDEConv::IsConnected() const
-{
-	return (m_hConv != NULL);
 }
 
 inline IDDEConvData* CDDEConv::AppData() const
