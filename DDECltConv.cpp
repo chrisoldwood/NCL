@@ -87,7 +87,7 @@ DDE::IDDEClient* CDDECltConv::Client() const
 *******************************************************************************
 */
 
-CString CDDECltConv::RequestString(const tchar* pszItem, uint nFormat)
+CString CDDECltConv::RequestString(const tchar* pszItem, uint nFormat) const
 {
 	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
 
@@ -110,7 +110,7 @@ CString CDDECltConv::RequestString(const tchar* pszItem, uint nFormat)
 *******************************************************************************
 */
 
-CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
+CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat) const
 {
 	ASSERT(pszItem != nullptr);
 
@@ -146,7 +146,7 @@ CDDEData CDDECltConv::Request(const tchar* pszItem, uint nFormat)
 *******************************************************************************
 */
 
-void CDDECltConv::ExecuteString(const tchar* pszCommand)
+void CDDECltConv::ExecuteString(const tchar* pszCommand) const
 {
 #ifdef ANSI_BUILD
 	Execute(T2A(pszCommand), Core::numBytes<char>(tstrlen(pszCommand)+1));
@@ -155,7 +155,7 @@ void CDDECltConv::ExecuteString(const tchar* pszCommand)
 #endif
 }
 
-void CDDECltConv::Execute(const void* pValue, size_t nSize)
+void CDDECltConv::Execute(const void* pValue, size_t nSize) const
 {
 	ASSERT(pValue != nullptr);
 
@@ -184,7 +184,7 @@ void CDDECltConv::Execute(const void* pValue, size_t nSize)
 *******************************************************************************
 */
 
-void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat)
+void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat) const
 {
 	ASSERT((nFormat == CF_TEXT) || (nFormat == CF_UNICODETEXT));
 
@@ -194,7 +194,7 @@ void CDDECltConv::PokeString(const tchar* pszItem, const tchar* pszValue, uint n
 		Poke(pszItem, CF_UNICODETEXT, T2W(pszValue), Core::numBytes<wchar_t>(tstrlen(pszValue)+1));
 }
 
-void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize)
+void CDDECltConv::Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize) const
 {
 	ASSERT(pszItem != nullptr);
 	ASSERT(pValue  != nullptr);

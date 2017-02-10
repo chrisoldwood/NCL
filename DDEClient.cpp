@@ -153,7 +153,7 @@ DDE::IDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const 
 	ASSERT(m_dwInst   != 0);
 
 	// Already connected?
-	IDDECltConv* pConv = FindConversation(pszService, pszTopic);
+	CDDECltConv* pConv = static_cast<CDDECltConv*>(FindConversation(pszService, pszTopic));
 
 	if (pConv == nullptr)
 	{
@@ -192,10 +192,12 @@ DDE::IDDECltConv* CDDEClient::CreateConversation(const tchar* pszService, const 
 *******************************************************************************
 */
 
-void CDDEClient::DestroyConversation(DDE::IDDECltConv* pConv)
+void CDDEClient::DestroyConversation(DDE::IDDECltConv* pIConv)
 {
-	ASSERT(pConv != nullptr);
-	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pConv) != m_aoConvs.end());
+	ASSERT(pIConv != nullptr);
+	ASSERT(std::find(m_aoConvs.begin(), m_aoConvs.end(), pIConv) != m_aoConvs.end());
+
+	CDDECltConv* pConv = static_cast<CDDECltConv*>(pIConv);
 
 	// Last reference?
 	if (--pConv->m_nRefCount == 0)
@@ -248,7 +250,7 @@ DDE::IDDECltConv* CDDEClient::FindConversation(HCONV hConv) const
 	// Search the conversation list.
 	for (size_t i = 0, n = m_aoConvs.size(); i != n; ++i)
 	{
-		IDDECltConv* pConv = m_aoConvs[i];
+		CDDECltConv* pConv = static_cast<CDDECltConv*>(m_aoConvs[i]);
 
 		if (pConv->Handle() == hConv)
 			return pConv;
@@ -378,7 +380,7 @@ void CDDEClient::OnDisconnect(HCONV hConv)
 void CDDEClient::OnAdvise(HCONV hConv, const tchar* /*pszTopic*/, const tchar* pszItem, uint nFormat, const CDDEData* pData)
 {
 	// Find the conversation for the handle.
-	IDDECltConv* pConv = FindConversation(hConv);
+	CDDECltConv* pConv = static_cast<CDDECltConv*>(FindConversation(hConv));
 
 	ASSERT(pConv != nullptr);
 

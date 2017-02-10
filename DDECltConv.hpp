@@ -41,27 +41,44 @@ public:
 	// Properties.
 	//
 	uint RefCount() const;
+
+	//! The parent DDE client.
 	virtual DDE::IDDEClient* Client() const;
 
 	DWORD  Timeout() const;
-	void   SetTimeout(DWORD timeout);
+
+	//! Set the timeout for a DDE transaction.
+	virtual void SetTimeout(DWORD timeout);
 
 	//
 	// Command methods.
 	//
-	CString  RequestString(const tchar* pszItem, uint nFormat);
-	CDDEData Request(const tchar* pszItem, uint nFormat);
 
-	void ExecuteString(const tchar* pszCommand);
-	void Execute(const void* pValue, size_t nSize);
+	//! Request a string based value.
+	virtual CString RequestString(const tchar* pszItem, uint nFormat) const;
 
-	void PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat);
-	void Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize);
+	//! Request a value in a custom format.
+	virtual CDDEData Request(const tchar* pszItem, uint nFormat) const;
+
+	//! Execute a string based command on the server.
+	void ExecuteString(const tchar* pszCommand) const;
+
+	//! Execute a command on the server.
+	void Execute(const void* pValue, size_t nSize) const;
+
+	//! Poke a sring based value.
+	void PokeString(const tchar* pszItem, const tchar* pszValue, uint nFormat) const;
+
+	//! Poke a sring based value.
+	void Poke(const tchar* pszItem, uint nFormat, const void* pValue, size_t nSize) const;
 
 	//
 	// Link methods.
 	//
-	CDDELink* CreateLink(const tchar* pszItem, uint nFormat = CF_TEXT);
+
+	//! Start an advise loop on the server for an item.
+	virtual CDDELink* CreateLink(const tchar* pszItem, uint nFormat = CF_TEXT);
+
 	void      DestroyLink(CDDELink* pLink);
 	void      DestroyAllLinks();
 	CDDELink* FindLink(const tchar* pszItem, uint nFormat = CF_TEXT) const;
