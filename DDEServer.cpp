@@ -867,7 +867,8 @@ HDDEDATA CDDEServer::DDECallbackProcImpl(UINT uType, UINT uFormat, HCONV hConv, 
 			CDDEString strService(g_pDDEServer, hsz2);
 			CDDEString strTopic(g_pDDEServer, hsz1);
 
-			hResult = reinterpret_cast<HDDEDATA>(g_pDDEServer->OnConnect(strService, strTopic));
+			const bool result = g_pDDEServer->OnConnect(strService, strTopic);
+			hResult = reinterpret_cast<HDDEDATA>(static_cast<int>(result));
 		}
 		break;
 
@@ -906,7 +907,8 @@ HDDEDATA CDDEServer::DDECallbackProcImpl(UINT uType, UINT uFormat, HCONV hConv, 
 		{
 			CDDEString strItem(g_pDDEServer, hsz2);
 
-			hResult = reinterpret_cast<HDDEDATA>(g_pDDEServer->OnAdviseStart(hConv, strItem, uFormat));
+			const bool result = g_pDDEServer->OnAdviseStart(hConv, strItem, uFormat);
+			hResult = reinterpret_cast<HDDEDATA>(static_cast<int>(result));
 		}
 		break;
 
