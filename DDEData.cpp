@@ -215,7 +215,7 @@ CString CDDEData::GetString(TextFormat eFormat) const
 
 #ifdef ANSI_BUILD
 		// Copy the Unicode string to a temporary buffer.
-		wchar_t* psz = static_cast<wchar_t*>(_alloca(nChars));
+		wchar_t* psz = static_cast<wchar_t*>(_alloca(nBytes));
 
 		GetData(reinterpret_cast<byte*>(psz), nBytes, 0);
 

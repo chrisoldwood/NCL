@@ -17,17 +17,43 @@ TEST_SET(DDEData)
 TEST_CASE("extracting CF_TEXT value should use text length not buffer size")
 {
 	const char value[] = "unit test\0garbage";
-	const size_t bufsize = Core::numBytes<char>(ARRAY_SIZE(value));
+	const size_t numChars = ARRAY_SIZE(value);
+	const size_t bufsize = Core::numBytes<char>(numChars);
 	const size_t length = strlen(value);
+
+	ASSERT(length < numChars);
 
 	CDDEData data(&instance, value, bufsize, 0, CF_TEXT, true);
 
-	ASSERT(data.Size() != length);
+	ASSERT(data.Size() > length);
 
 	CString string = data.GetString(ANSI_TEXT);
 	size_t  actual = string.Length();
 
+	TEST_TRUE(actual != numChars);
 	TEST_TRUE(actual == length);
+}
+TEST_CASE_END
+
+TEST_CASE("extracting CF_TEXT value with no string terminator should equal buffer size")
+{
+	const char value[] = "unit test";
+	const size_t numChars = strlen("unit");
+	const size_t bufsize = Core::numBytes<char>(numChars);
+	const size_t length = strlen(value);
+
+	ASSERT(numChars < length);
+
+	CDDEData data(&instance, value, bufsize, 0, CF_TEXT, true);
+
+	ASSERT(data.Size() < Core::numBytes<char>(length));
+
+	CString string = data.GetString(ANSI_TEXT);
+	size_t  actual = string.Length();
+
+	TEST_TRUE(actual == numChars);
+
+	DEBUG_USE_ONLY(length);
 }
 TEST_CASE_END
 
@@ -45,6 +71,28 @@ TEST_CASE("extracting CF_UNICODETEXT value should use text length not buffer siz
 	size_t  actual = string.Length();
 
 	TEST_TRUE(actual == length);
+}
+TEST_CASE_END
+
+TEST_CASE("extracting CF_UNICODETEXT value with no string terminator should equal buffer size")
+{
+	const wchar_t value[] = L"unit test";
+	const size_t numChars = wcslen(L"unit");
+	const size_t bufsize = Core::numBytes<wchar_t>(numChars);
+	const size_t length = wcslen(value);
+
+	ASSERT(numChars < length);
+
+	CDDEData data(&instance, value, bufsize, 0, CF_UNICODETEXT, true);
+
+	ASSERT(data.Size() < Core::numBytes<wchar_t>(length));
+
+	CString string = data.GetString(UNICODE_TEXT);
+	size_t  actual = string.Length();
+
+	TEST_TRUE(actual == numChars);
+
+	DEBUG_USE_ONLY(length);
 }
 TEST_CASE_END
 
