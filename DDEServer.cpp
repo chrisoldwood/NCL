@@ -691,6 +691,12 @@ uint CDDEServer::GuessTextFormat(const CBuffer& buffer)
 	return (*(end-2) == '\0') ? CF_UNICODETEXT : CF_TEXT;
 }
 
+#if (__GNUC__ >= 8) // GCC 8+
+// error: format '%hs' expects argument of type 'short int*', but argument 3 has type 'const char*' [-Werror=format=]
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat"
+#endif
+
 /******************************************************************************
 ** Method:		DDECallbackProc()
 **
@@ -715,23 +721,27 @@ HDDEDATA CALLBACK CDDEServer::DDECallbackProc(UINT uType, UINT uFormat, HCONV hC
 	{
 		WCL::ReportUnhandledException(	TXT("Unexpected exception caught in DDECallbackProc()\n\n")
 										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X\n\n%s"),
-										uType, uFormat, hConv, e.twhat());
+										uType, uFormat, reinterpret_cast<INT_PTR>(hConv), e.twhat());
 	}
 	catch (const std::exception& e)
 	{
 		WCL::ReportUnhandledException(	TXT("Unexpected exception caught in DDECallbackProc()\n\n")
-										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X\n\n%s"),
-										uType, uFormat, hConv, e.what());
+										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X\n\n%hs"),
+										uType, uFormat, reinterpret_cast<INT_PTR>(hConv), e.what());
 	}
 	catch (...)
 	{
 		WCL::ReportUnhandledException(	TXT("Unexpected unknown exception caught in DDECallbackProc()\n\n")
 										TXT("Args: Type=0x%08X Fmt=0x%08X C=0x%08X"),
-										uType, uFormat, hConv);
+										uType, uFormat, reinterpret_cast<INT_PTR>(hConv));
 	}
 
 	return result;
 }
+
+#if (__GNUC__ >= 8) // GCC 8+
+#pragma GCC diagnostic pop
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The DDE Callback function implementation.
