@@ -93,6 +93,8 @@
 		<Unit filename="IClientSocketListener.hpp" />
 		<Unit filename="IDDEClient.hpp" />
 		<Unit filename="IDDEClientListener.hpp" />
+		<Unit filename="IDDECltConv.hpp" />
+		<Unit filename="IDDEConv.hpp" />
 		<Unit filename="IDDEConvData.hpp" />
 		<Unit filename="IDDELinkData.hpp" />
 		<Unit filename="IDDEServer.hpp" />
